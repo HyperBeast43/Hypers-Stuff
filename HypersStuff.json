@@ -1,0 +1,16 @@
+{
+	"id": "hypa",
+	"name": "Hyper's Stuff",
+	"display_name": "Hyper's Stuff",
+	"author": ["hypabeast_"],
+	"description": "guh",
+	"prefix": "hypa",
+	"main_file": "hypr.lua",
+	"priority": 621,
+	"badge_colour": "10001f",
+	"badge_text_colour": "11ffff",
+	"version": "1.0.0",
+	"dependencies": [
+		"Steamodded"
+	]
+}
