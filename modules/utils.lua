@@ -11,3 +11,13 @@ function cmp(a, b)
     local diff = (a - b)
     return (diff == 0 and 0) or (math.abs(diff) / diff)
 end
+
+function count_if(t, predicate)
+    local count = 0
+    for _, value in pairs(t) do
+        if predicate(value) then
+            count = count + 1
+        end
+    end
+    return count
+end

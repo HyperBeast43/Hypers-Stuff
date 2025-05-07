@@ -48,7 +48,7 @@ SMODS.Joker {
 			card.ability.extra.low = card.ability.extra.high
 			card.ability.extra.high = temp
 		end
-		if context.individual and context.cardarea == G.hand and not context.end_of_round and context.other_card.base.suit == ("Clubs") then
+		if context.individual and context.cardarea == G.hand and not context.end_of_round and context.other_card:is_suit("Clubs") then
 			local random_seed = card.randomseed or "creacher"
 			random_seed = (G.GAME and G.GAME.pseudorandom.seed or "") .. random_seed
 			local factor = pseudorandom(pseudoseed(random_seed))
@@ -64,8 +64,8 @@ SMODS.Joker {
 	loc_txt = {
 		name = 'Five-Finger Discount',
 		text = {
-			"Everything is free, but",
-			"rerolls are disabled" -- always eternal
+			"Everything is {C:attention,E:1}free{}, but",
+			"{C:green}rerolls{} are {C:red}disabled{}" -- always eternal
 		}
 	},
 	config = { extra = { a = true } },
@@ -92,23 +92,30 @@ SMODS.Joker {
 		name = 'Hyper',
 		text = {
 			"Every {C:attention}7{} in your",
-			"{C:attention}full deck{} gives {X:mult,C:white}X-#1#{} Mult"
+			"{C:attention}full deck{} gives {X:mult,C:white}X-#2#{} Mult",
+			"{C:inactive}(Currently {X:mult,C:white}X#3#{C:inactive} Mult)"
 		}
 	},
-	config = { extra = { a = 2.5 } },
+	config = { extra = { a = 1.5, seven_tally = 0, guh = 5.0625} },
 	loc_vars = function(self, info_queue, card)
-		return { vars = { card.ability.extra.a } }
+		return { vars = { card.ability.extra.seven_tally, card.ability.extra.a, card.ability.extra.guh } }
 	end,
 	rarity = 4,
 	atlas = 'jokers',
 	blueprint_compat = true,
 	pos = { x = 0, y = 0 },
 	soul_pos = { x = 1, y = 0 },
-	cost = 5,
+	cost = 40,
 	calculate = function(self, card, context)
-		if context.individual and context.other_card:get_id() == 7 and not context.end_of_round then
+		if card.ability.seven_tally then card.ability.extra.guh = (-card.ability.extra.a)^card.ability.seven_tally end
+		if not context.joker_main then
+			card.ability.seven_tally = 0
+			for k, v in pairs(G.playing_cards) do
+				if v:get_id() == 7 then card.ability.seven_tally = card.ability.seven_tally+1 end
+			end
+		elseif not context.end_of_round then
 			return {
-				xmult = -card.ability.extra.a
+				xmult = card.ability.extra.guh
 			}
 		end
 	end
