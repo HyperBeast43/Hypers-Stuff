@@ -92,7 +92,7 @@ SMODS.Joker {
 		name = 'Hyper',
 		text = {
 			"Every {C:attention}7{} in your",
-			"{C:attention}full deck{} gives {X:mult,C:white}X-#2#{} Mult",
+			"{C:attention}full deck{} gives {X:mult,C:white}X#2#{} Mult",
 			"{C:inactive}(Currently {X:mult,C:white}X#3#{C:inactive} Mult)"
 		}
 	},
@@ -107,7 +107,7 @@ SMODS.Joker {
 	soul_pos = { x = 1, y = 0 },
 	cost = 40,
 	calculate = function(self, card, context)
-		if card.ability.seven_tally then card.ability.extra.guh = (-card.ability.extra.a)^card.ability.seven_tally end
+		if card.ability.seven_tally then card.ability.extra.guh = (card.ability.extra.a)^card.ability.seven_tally end
 		if not context.joker_main then
 			card.ability.seven_tally = 0
 			for k, v in pairs(G.playing_cards) do
