@@ -21,3 +21,12 @@ function count_if(t, predicate)
     end
     return count
 end
+
+function poll_random_edition() -- taken directly from cryptid
+	local random_edition = pseudorandom_element(G.P_CENTER_POOLS.Edition, pseudoseed("insertjokehere"))
+	while random_edition.key == "e_base" do
+		random_edition = pseudorandom_element(G.P_CENTER_POOLS.Edition, pseudoseed("insertjokehere"))
+	end
+	ed_table = { [random_edition.key:sub(3)] = true }
+	return ed_table
+end
