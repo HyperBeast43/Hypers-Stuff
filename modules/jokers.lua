@@ -96,7 +96,7 @@ SMODS.Joker {
 			"{C:inactive}(Currently {X:mult,C:white}X#3#{C:inactive} Mult)"
 		}
 	},
-	config = { extra = { a = 1.5, seven_tally = 0, guh = 5.0625} },
+	config = { extra = { a = 1.2, seven_tally = 0, guh = 2.0736} },
 	loc_vars = function(self, info_queue, card)
 		return { vars = { card.ability.extra.seven_tally, card.ability.extra.a, card.ability.extra.guh } }
 	end,
