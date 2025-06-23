@@ -93,7 +93,7 @@ SMODS.Joker {
 	demicoloncompat = true,
 	pos = { x = 0, y = 0 },
 	soul_pos = { x = 1, y = 0 },
-	cost = 40,
+	cost = 20,
 	calculate = function(self, card, context)
 		if card.ability.seven_tally then card.ability.extra.guh = (card.ability.extra.a)^card.ability.seven_tally end
 		if not context.joker_main then
