@@ -26,6 +26,9 @@ SMODS.Joker {
 	cost = 0,
 	update = function(self, card, dt)
 		if not(G.SETTINGS.paused) and card.edition == nil then card:set_edition(poll_edition('curator', nil, nil, true)) end
+	end,
+	calculate = function(self, card, context)
+		return
 	end
 }
 
@@ -82,7 +85,7 @@ end]]
 
 SMODS.Joker {
 	key = 'hypa',
-	config = { extra = { a = 1.4, seven_tally = 0, guh = 3.8} },
+	config = { extra = { a = 1.2, seven_tally = 0, guh = 2.1} },
 	loc_vars = function(self, info_queue, card)
 		info_queue[#info_queue + 1] = { set = "Other", key = "hypr_guest_art", vars = {"baltdev (GitHub)"} }
 		return { vars = { card.ability.extra.seven_tally, card.ability.extra.a, card.ability.extra.guh } }
