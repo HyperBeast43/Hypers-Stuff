@@ -21,7 +21,7 @@ return {
 				text = {
 					"Every {C:attention}7{} in your",
 					"{C:attention}full deck{} gives {X:mult,C:white}X#2#{} Mult,",
-					(math.random()<0.01 and "stacking {C:attention}multpiplciatev;lyl{}") or "stacking {C:attention}multiplicatively{}",
+					"stacking {C:attention}multiplicatively{}",
 					"{C:inactive}(Currently {X:mult,C:white}X#3#{C:inactive} Mult)"
 				}
 			},
