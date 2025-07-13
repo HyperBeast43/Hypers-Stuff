@@ -42,7 +42,7 @@ SMODS.Joker {
 		return { vars = { card.ability.extra.mult } }
 	end,
 	rarity = 1,
-	blueprint_compat = false
+	blueprint_compat = false,
 	atlas = 'jokers',
 	pos = { x = 4, y = 0 },
 	cost = 1,
