@@ -13,6 +13,27 @@
 	end
 }]]
 
+--[[SMODS.Joker {
+	key = 'ijh',
+	config = { extra = { copied = null } },
+	loc_vars = function(self, info_queue, card)
+		info_queue[#info_queue + 1] = { set = "Other", key = "hypr_placeholder"
+		return { vars = { card.ability.extra.mult } }
+	end,
+	blueprint_compat = true
+	rarity = 3,
+	atlas = 'jokers',
+	pos = { x = 5, y = 0 },
+	cost = 5,
+	calculate = function(self, card, context)
+		if context.ending_shop or card.ability.extra.copied == null then
+		{
+		card.ability.extra.copied = "what do i put here"
+		}
+		--and then how would i know what contexts the copied joker runs in
+	end
+}
+]]--
 SMODS.Joker {
 	key = 'curator',
 	config = { extra = { mult = 0 } },
@@ -21,9 +42,10 @@ SMODS.Joker {
 		return { vars = { card.ability.extra.mult } }
 	end,
 	rarity = 1,
+	blueprint_compat = false
 	atlas = 'jokers',
 	pos = { x = 4, y = 0 },
-	cost = 0,
+	cost = 1,
 	update = function(self, card, dt)
 		if not(G.SETTINGS.paused) and card.edition == nil then card:set_edition(poll_edition('curator', nil, nil, true)) end
 	end,
@@ -90,6 +112,15 @@ SMODS.Joker {
 		info_queue[#info_queue + 1] = { set = "Other", key = "hypr_guest_art", vars = {"baltdev (GitHub)"} }
 		return { vars = { card.ability.extra.seven_tally, card.ability.extra.a, card.ability.extra.guh } }
 	end,
+	locked_loc_vars = function(self, info_queue, card)
+	return {
+		vars = {
+			localize("joker_locked_legendary"),
+		},
+	}
+	end,
+	unlock_condition = {type = '', extra = '', hidden = true},
+	unlocked = false, discovered = false
 	rarity = 4,
 	atlas = 'jokers',
 	blueprint_compat = true,
@@ -109,5 +140,6 @@ SMODS.Joker {
 				xmult = card.ability.extra.guh
 			}
 		end
-	end
+	end,
+
 }

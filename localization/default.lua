@@ -42,7 +42,8 @@ return {
 			j_hypr_test = {
 				name = 'Blank Joker',
 				text = {
-					"Does nothing, and should never show up"
+					"Does nothing, and should never show up.",
+					"If it does somehow, there's a problem..."
 				}
 			},
 			j_hypr_thcief = {
@@ -50,6 +51,16 @@ return {
 				text = {
 					"Everything is {C:attention,E:1}free{}, but",
 					"{C:green}rerolls{} are {C:red}disabled{}"
+				}
+			},
+			j_hypr_ijh = {
+				name = 'Insert Joke Here',
+				text = {
+					"Copies a {C:green}random{} compatible joker",
+					"from your {C:dark_edition}Collection{}",
+					"that can show up in {C:attention}Buffoon Packs{},",
+					"{C:green}Rerolls{} at end of shop",
+					"{C:inactive}Currently copying {C:attention}#1#{}"
 				}
 			}
 		}
