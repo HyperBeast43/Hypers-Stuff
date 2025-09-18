@@ -120,7 +120,7 @@ SMODS.Joker {
 	}
 	end,
 	unlock_condition = {type = '', extra = '', hidden = true},
-	unlocked = false, discovered = false
+	unlocked = false, discovered = false,
 	rarity = 4,
 	atlas = 'jokers',
 	blueprint_compat = true,
