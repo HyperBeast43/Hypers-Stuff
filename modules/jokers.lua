@@ -1,4 +1,4 @@
-SMODS.Joker {
+--[[SMODS.Joker {
 	key = 'test',
 	config = { extra = { xmult = math.pi } },
 	loc_vars = function(self, info_queue, card)
@@ -17,40 +17,55 @@ SMODS.Joker {
 		if context.joker_main or context.forcetrigger then return {xmult = card.ability.extra.xmult} end
 	end,
 	joker_display_def = function(JokerDisplay)
-        ---@type JDJokerDefinition
-        return {
-            text = {
-				text = "wawa"
+		---@type JDJokerDefinition
+		return {
+			text = {
+				{
+					border_nodes = {
+						{ text = "X" },
+						{ ref_table = "card.ability.extra", ref_value = "xmult", retrigger_type = "exp"}
+					}
+				}
 			}
-        }
-    end
-}
+		}
+	end
+}]]
 
---[[SMODS.Joker {
+SMODS.Joker {
 	key = 'ijh',
 	config = { extra = { copied = nil } },
 	loc_vars = function(self, info_queue, card)
 		info_queue[#info_queue + 1] = { set = "Other", key = "hypr_placeholder" }
 		return { vars = { card.ability.extra.copied } }
 	end,
-	blueprint_compat = true
+	blueprint_compat = true,
 	rarity = 3,
 	atlas = 'jokers',
 	pos = { x = 5, y = 0 },
 	cost = 10,
-	function pickfrombuffoonpack ()
-		--what to do...
-	end
+	pickfrombuffoonpack = function()
+		return SMODS.create_card {
+		set = 'Joker',
+		skip_materialize = true,
+		no_edition = true,
+		key_append = 'hypr_ijh' -- Optional, useful for manipulating the random seed and checking the source of the creation in `in_pool`.
+		}
+	end,
 	
 	calculate = function(self, card, context)
 		if context.ending_shop or card.ability.extra.copied == nil then
-		{
-		card.ability.extra.copied = pickfrombuffoonpack()
-		}
+			card.ability.extra.copied = SMODS.create_card {
+				set = 'Joker',
+				skip_materialize = true,
+				no_edition = true,
+				key_append = 'hypr_ijh' -- Optional, useful for manipulating the random seed and checking the source of the creation in `in_pool`.
+			}
+		end
+		return SMODS.blueprint_effect(card, card.ability.extra.copied, context)
 	end
 	-- and now to figure out how blueprint/brainstorm copy jokers
 }
-]]--
+
 SMODS.Joker {
 	key = 'curator',
 	config = { extra = { mult = 0 } },
@@ -70,7 +85,7 @@ SMODS.Joker {
 
 SMODS.Joker {
 	key = 'creacher',
-	config = { extra = { low = 0.9, high = 1.33 } },
+	config = { extra = { low = 0.9, high = 5/3 } },
 	loc_vars = function(self, info_queue, card)
 		info_queue[#info_queue + 1] = { set = "Other", key = "hypr_placeholder" }
 		return { vars = { card.ability.extra.low, card.ability.extra.high } }
@@ -99,7 +114,7 @@ SMODS.Joker {
 			}
 		end
 	end,
-	joker_display_def = function(JokerDisplay) --todo: modify the display further so it's not just bloodstone
+	joker_display_def = function(JokerDisplay) 
 		---@type JDJokerDefinition
 		return {
 			text = {
@@ -107,7 +122,7 @@ SMODS.Joker {
 				{
 					border_nodes = {
 						{ text = "X" },
-						{ ref_table = "card.joker_display_values", ref_value = "ideal"}
+						{ ref_table = "card.joker_display_values", ref_value = "ideal", retrigger_type = "exp"}
 					}
 				}
 			},
@@ -136,7 +151,7 @@ SMODS.Joker {
 						end
 					end
 				end
-				card.joker_display_values.count = count
+				card.joker_display_values.count = count*JokerDisplay.calculate_joker_triggers(card)
 				card.joker_display_values.ideal = math.pow((lo+hi)/2,count)
 				card.joker_display_values.precision = 100*math.pow(math.exp((hi*math.log(hi)-lo*math.log(lo)-(hi-lo))/(hi-lo))/((lo+hi)/2), card.joker_display_values.count)
 				card.joker_display_values.localized_text = localize("Clubs", 'suits_plural')
@@ -186,20 +201,36 @@ SMODS.Joker {
 	pos = { x = 0, y = 0 },
 	soul_pos = { x = 1, y = 0 },
 	cost = 20,
+	update = function(self,card,dt)
+		if G.playing_cards then
+			local tally = 0
+			for k, v in pairs(G.playing_cards) do
+				if v:get_id() == 7 then tally = tally+1 end
+			end
+			card.ability.seven_tally = tally
+		end
+	end,
 	calculate = function(self, card, context)
 		if card.ability.seven_tally then card.ability.extra.guh = (card.ability.extra.a)^card.ability.seven_tally end
-		if not context.joker_main then
-			card.ability.seven_tally = 0
-			for k, v in pairs(G.playing_cards) do
-				if v:get_id() == 7 then card.ability.seven_tally = card.ability.seven_tally+1 end
-			end
-		elseif context.joker_main or context.forcetrigger then
+		if context.joker_main or context.forcetrigger then
 			return {
 				xmult = card.ability.extra.guh
 			}
 		end
 	end,
-
+	joker_display_def = function(JokerDisplay)
+		---@type JDJokerDefinition
+		return {
+			text = {
+				{
+					border_nodes = {
+						{ text = "X" },
+						{ ref_table = "card.ability.extra", ref_value = "guh", retrigger_type = "exp"}
+					}
+				}
+			}
+		}
+	end
 }
 
 --[[SMODS.Joker {
@@ -218,6 +249,9 @@ SMODS.Joker {
 	end
 	calculate = function(self, card, context)
 	
+	end
+	retrigger_function = function(playing_card, scoring_hand, _, joker_card)
+		return playing_card:is_suit("Hearts") and 1 or 0
 	end
 end
 }

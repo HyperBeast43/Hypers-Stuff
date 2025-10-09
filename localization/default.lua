@@ -36,7 +36,7 @@ return {
 			j_hypr_curator = {
 				name = 'Curator',
 				text = {
-					"Does nothing, but {C:attention}always{} has an edition"
+					"Does nothing, but {C:attention}always{} has an {C:dark_edition}Edition{}"
 				}
 			},
 			j_hypr_test = {
