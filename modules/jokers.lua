@@ -45,13 +45,14 @@ SMODS.Joker {
 	cost = 10,
 	calculate = function(self, card, context)
 		if context.ending_shop or card.ability.extra.copied == nil then
-			card.ability.extra.copied = nil
+			card.ability.extra.copied = false
 			card.ability.extra.copied = SMODS.create_card {
 				set = 'Joker',
 				skip_materialize = true,
 				no_edition = true,
 				key_append = 'hypr_ijh' -- Optional, useful for manipulating the random seed and checking the source of the creation in `in_pool`.
 			}
+			
 		end
 		return SMODS.blueprint_effect(card, card.ability.extra.copied, context)
 	end
