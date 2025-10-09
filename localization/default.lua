@@ -40,10 +40,11 @@ return {
 				}
 			},
 			j_hypr_test = {
-				name = 'Blank Joker',
+				name = 'Test Joker',
 				text = {
-					"Does nothing, and should never show up.",
-					"If it does somehow, there's a problem..."
+					"Always gives {X:mult,C:white}X(math.pi){} Mult.",
+					"Shouldn't actually show up, used",
+					"for testing JokerDisplay compat."
 				}
 			},
 			j_hypr_thcief = {
@@ -62,7 +63,21 @@ return {
 					"{C:green}Rerolls{} at end of shop",
 					"{C:inactive}Currently copying {C:attention}#1#{}"
 				}
+			},
+			j_hypr_jera = {
+				name = 'Runic Ruby',
+				text = {
+					"All {C:hearts}Hearts{} are retriggered",
+					"{C:attention}exactly once{}"
+				}
+			},
+			j_hypr_bypass = {
+				name = '<placeholder name>',
+				text = {
+					"{C:red}Debuffed{} cards have a {C:green}#1# in 7{}",
+					"chance to retrigger anyways"
+				}
 			}
 		}
-	},
+	}
 }

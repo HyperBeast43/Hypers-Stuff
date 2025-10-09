@@ -1,37 +1,54 @@
---[[SMODS.Joker {
-	key = 'test1',
-	config = { extra = { mult = 0 } },
+SMODS.Joker {
+	key = 'test',
+	config = { extra = { xmult = math.pi } },
 	loc_vars = function(self, info_queue, card)
-		return { vars = { card.ability.extra.mult } }
+		return { vars = { card.ability.extra.xmult } }
 	end,
 	rarity = 1,
 	atlas = 'placeholder',
+	blueprint_compat = true,
+	demicoloncompat = true,
 	pos = { x = 0, y = 0 },
-	cost = 0,
-	update = function(self, card, dt)
-		
-	end
-}]]
+	cost = math.exp(1),
+	update = function(self,card,dt)
+		if card.ability.extra.mult ~= math.pi then card.ability.extra.mult = math.pi end
+	end,
+	calculate = function(self, card, context)
+		if context.joker_main or context.forcetrigger then return {xmult = card.ability.extra.xmult} end
+	end,
+	joker_display_def = function(JokerDisplay)
+        ---@type JDJokerDefinition
+        return {
+            text = {
+				text = "wawa"
+			}
+        }
+    end
+}
 
 --[[SMODS.Joker {
 	key = 'ijh',
-	config = { extra = { copied = null } },
+	config = { extra = { copied = nil } },
 	loc_vars = function(self, info_queue, card)
-		info_queue[#info_queue + 1] = { set = "Other", key = "hypr_placeholder"
-		return { vars = { card.ability.extra.mult } }
+		info_queue[#info_queue + 1] = { set = "Other", key = "hypr_placeholder" }
+		return { vars = { card.ability.extra.copied } }
 	end,
 	blueprint_compat = true
 	rarity = 3,
 	atlas = 'jokers',
 	pos = { x = 5, y = 0 },
-	cost = 5,
-	calculate = function(self, card, context)
-		if context.ending_shop or card.ability.extra.copied == null then
-		{
-		card.ability.extra.copied = "what do i put here"
-		}
-		--and then how would i know what contexts the copied joker runs in
+	cost = 10,
+	function pickfrombuffoonpack ()
+		--what to do...
 	end
+	
+	calculate = function(self, card, context)
+		if context.ending_shop or card.ability.extra.copied == nil then
+		{
+		card.ability.extra.copied = pickfrombuffoonpack()
+		}
+	end
+	-- and now to figure out how blueprint/brainstorm copy jokers
 }
 ]]--
 SMODS.Joker {
@@ -48,9 +65,6 @@ SMODS.Joker {
 	cost = 1,
 	update = function(self, card, dt)
 		if not(G.SETTINGS.paused) and card.edition == nil then card:set_edition(poll_edition('curator', nil, nil, true)) end
-	end,
-	calculate = function(self, card, context)
-		return
 	end
 }
 
@@ -81,6 +95,53 @@ SMODS.Joker {
 				xmult = card.ability.extra.low + (factor * (card.ability.extra.high-card.ability.extra.low))
 			}
 		end
+	end,
+	joker_display_def = function(JokerDisplay) --todo: modify the display further so it's not just bloodstone
+		---@type JDJokerDefinition
+		return {
+			text = {
+				{ ref_table = "card.joker_display_values", ref_value = "count", retrigger_type = "mult" },
+				{ text = "x",                              scale = 0.35 },
+				{
+					border_nodes = {
+						{ text = "X" },
+						{ ref_table = "card.ability.extra", ref_value = "Xmult" }
+					}
+				}
+			},
+			reminder_text = {
+				{ text = "(" },
+				{ ref_table = "card.joker_display_values", ref_value = "localized_text", colour = lighten(G.C.SUITS["Clubs"], 0.35) },
+				{ text = ")" }
+			},
+			extra = {
+				{
+					{ text = "(" },
+					{ ref_table = "card.joker_display_values", ref_value = "odds" },
+					{ text = ")" },
+				}
+			},
+			extra_config = { colour = G.C.GREEN, scale = 0.3 },
+			calc_function = function(card)
+				local count = 0
+				if G.play then
+					local text, _, scoring_hand = JokerDisplay.evaluate_hand()
+					if text ~= 'Unknown' then
+						for _, scoring_card in pairs(scoring_hand) do
+							if scoring_card:is_suit("Clubs") then
+								count = count +
+									JokerDisplay.calculate_card_triggers(scoring_card, scoring_hand)
+							end
+						end
+					end
+				else
+					count = 3
+				end
+				card.joker_display_values.count = count
+				card.joker_display_values.odds = localize { type = 'variable', key = "jdis_odds", vars = { (G.GAME and G.GAME.probabilities.normal or 1), card.ability.extra.odds } }
+				card.joker_display_values.localized_text = localize("Clubs", 'suits_plural')
+			end
+		}
 	end
 }
 
@@ -91,13 +152,10 @@ SMODS.Joker {
 		info_queue[#info_queue + 1] = { set = "Other", key = "hypr_placeholder" }
 		return { vars = { card.ability.extra.a } }
 	end,
-	rarity = 3,
+	rarity = 2,
 	atlas = 'jokers',
 	pos = { x = 3, y = 0 },
-	cost = 5,
-	set_ability = function(self, card, initial, delay_sprites)	
-		card.ability.eternal = true
-	end
+	cost = 5, --when bought, set cost to -100, thus sell price to -50
 }
 function hypr_thcief_call()
 	for i,card in ipairs(G.jokers) do 
@@ -143,3 +201,44 @@ SMODS.Joker {
 	end,
 
 }
+
+--[[SMODS.Joker {
+	key = 'jera',
+	config = {},
+	loc_vars = function(self, info_queue, card)
+		return { vars = {} }
+	end,
+	rarity = 2,
+	atlas = 'jokers',
+	pos = { x = 3, y = 0 },
+	cost = 6,
+	-- all hearts are retriggered exactly once
+	update = function(self,card,context)
+	
+	end
+	calculate = function(self, card, context)
+	
+	end
+end
+}
+
+SMODS.Joker {
+	key = 'bypass',
+	config = { extra = {odds = 2}},
+	loc_vars = function(self, info_queue, card)
+		return { vars = {card.ability.extra.odds} }
+	end,
+	rarity = 2,
+	atlas = 'jokers',
+	pos = { x = 3, y = 0 },
+	cost = 6,
+	-- debuffed cards have a 2 in 7 chance to trigger anyway
+	update = function(self,card,context)
+	
+	end
+	calculate = function(self, card, context)
+	
+	end
+end
+}
+]]
