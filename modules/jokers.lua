@@ -82,17 +82,20 @@ SMODS.Joker {
 	pos = { x = 2, y = 0 },
 	cost = 5,
 	calculate = function(self, card, context)
-		if cmp(card.ability.extra.low,card.ability.extra.high) == 1 then -- this is for if cryptid or smth messes with the values
-			local temp = card.ability.extra.low
-			card.ability.extra.low = card.ability.extra.high
-			card.ability.extra.high = temp
+		local lo = card.ability.extra.low
+		local hi = card.ability.extra.high
+		if cmp(lo,hi) == 1 then -- this is for if cryptid or smth messes with the values
+			local temp = lo
+			lo = hi
+			hi = temp
 		end
+
 		if (context.individual and context.cardarea == G.hand and not context.end_of_round and context.other_card:is_suit("Clubs")) or context.forcetrigger then
 			local random_seed = card.randomseed or "creacher"
 			random_seed = (G.GAME and G.GAME.pseudorandom.seed or "") .. random_seed
 			local factor = pseudorandom(pseudoseed(random_seed))
 			return {
-				xmult = card.ability.extra.low + (factor * (card.ability.extra.high-card.ability.extra.low))
+				xmult = lo + (factor * (hi-lo))
 			}
 		end
 	end,
@@ -100,12 +103,11 @@ SMODS.Joker {
 		---@type JDJokerDefinition
 		return {
 			text = {
-				{ ref_table = "card.joker_display_values", ref_value = "count", retrigger_type = "mult" },
-				{ text = "x",                              scale = 0.35 },
+				{ text = "~",colour=G.C.GREEN,scale = 0.35 },
 				{
 					border_nodes = {
 						{ text = "X" },
-						{ ref_table = "card.ability.extra", ref_value = "Xmult" }
+						{ ref_table = "card.joker_display_values", ref_value = "ideal"}
 					}
 				}
 			},
@@ -116,29 +118,27 @@ SMODS.Joker {
 			},
 			extra = {
 				{
-					{ text = "(" },
-					{ ref_table = "card.joker_display_values", ref_value = "odds" },
-					{ text = ")" },
+					{ text = "(Precision: " },
+					{ ref_table = "card.joker_display_values", ref_value = "precision"},
+					{ text = "%)" }
 				}
 			},
 			extra_config = { colour = G.C.GREEN, scale = 0.3 },
 			calc_function = function(card)
+				local lo = card.ability.extra.low
+				local hi = card.ability.extra.high
+				local playing_hand = next(G.play.cards)
 				local count = 0
-				if G.play then
-					local text, _, scoring_hand = JokerDisplay.evaluate_hand()
-					if text ~= 'Unknown' then
-						for _, scoring_card in pairs(scoring_hand) do
-							if scoring_card:is_suit("Clubs") then
-								count = count +
-									JokerDisplay.calculate_card_triggers(scoring_card, scoring_hand)
-							end
+				for _, playing_card in ipairs(G.hand.cards) do
+					if playing_hand or not playing_card.highlighted then
+						if not (playing_card.facing == 'back') and not playing_card.debuff and playing_card:get_id() and playing_card:is_suit("Clubs") then
+							count = count + JokerDisplay.calculate_card_triggers(playing_card, nil, true)
 						end
 					end
-				else
-					count = 3
 				end
 				card.joker_display_values.count = count
-				card.joker_display_values.odds = localize { type = 'variable', key = "jdis_odds", vars = { (G.GAME and G.GAME.probabilities.normal or 1), card.ability.extra.odds } }
+				card.joker_display_values.ideal = math.pow((lo+hi)/2,count)
+				card.joker_display_values.precision = 100*math.pow(math.exp((hi*math.log(hi)-lo*math.log(lo)-(hi-lo))/(hi-lo))/((lo+hi)/2), card.joker_display_values.count)
 				card.joker_display_values.localized_text = localize("Clubs", 'suits_plural')
 			end
 		}
