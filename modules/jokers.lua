@@ -43,17 +43,9 @@ SMODS.Joker {
 	atlas = 'jokers',
 	pos = { x = 5, y = 0 },
 	cost = 10,
-	pickfrombuffoonpack = function()
-		return SMODS.create_card {
-		set = 'Joker',
-		skip_materialize = true,
-		no_edition = true,
-		key_append = 'hypr_ijh' -- Optional, useful for manipulating the random seed and checking the source of the creation in `in_pool`.
-		}
-	end,
-	
 	calculate = function(self, card, context)
 		if context.ending_shop or card.ability.extra.copied == nil then
+			card.ability.extra.copied = nil
 			card.ability.extra.copied = SMODS.create_card {
 				set = 'Joker',
 				skip_materialize = true,
@@ -63,7 +55,6 @@ SMODS.Joker {
 		end
 		return SMODS.blueprint_effect(card, card.ability.extra.copied, context)
 	end
-	-- and now to figure out how blueprint/brainstorm copy jokers
 }
 
 SMODS.Joker {
