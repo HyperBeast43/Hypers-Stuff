@@ -3,13 +3,13 @@
 	"name": "Hyper's Stuff",
 	"display_name": "Hyper's Stuff",
 	"author": ["hypabeast_"],
-	"description": "guh",
+	"description": "theres actually a bunch more jokers in jokers.lua i just have them commented out because i couldnt get them to work",
 	"prefix": "hypr",
 	"main_file": "hypr.lua",
 	"priority": 621,
 	"badge_colour": "10001f",
 	"badge_text_colour": "11ffff",
-	"version": "1.1.0",
+	"version": "1.1.1",
 	"dependencies": [
 		"Steamodded"
 	]
