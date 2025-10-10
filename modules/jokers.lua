@@ -41,7 +41,7 @@
 	blueprint_compat = true,
 	rarity = 3,
 	atlas = 'jokers',
-	pos = { x = 5, y = 0 },
+	pos = { x = 3, y = 0 },
 	cost = 10,
 	calculate = function(self, card, context)
 		if context.ending_shop or card.ability.extra.copied == nil then
@@ -60,10 +60,9 @@
 
 SMODS.Joker {
 	key = 'curator',
-	config = { extra = { mult = 0 } },
+	config = {},
 	loc_vars = function(self, info_queue, card)
-		info_queue[#info_queue + 1] = { set = "Other", key = "hypr_placeholder" }
-		return { vars = { card.ability.extra.mult } }
+		return 
 	end,
 	rarity = 1,
 	blueprint_compat = false,
@@ -161,7 +160,7 @@ SMODS.Joker {
 	end,
 	rarity = 2,
 	atlas = 'jokers',
-	pos = { x = 3, y = 0 },
+	pos = { x = 4, y = 0 },
 	cost = 5, --when bought, set cost to -100, thus sell price to -50
 	update = function(self,card,dt)
 		--calculate_reroll_cost(true)
@@ -240,7 +239,7 @@ SMODS.Joker {
 	end,
 	rarity = 2,
 	atlas = 'jokers',
-	pos = { x = 3, y = 0 },
+	pos = { x = 5, y = 0 },
 	cost = 6,
 	jeracheck = true,
 	-- all hearts are retriggered exactly once
@@ -268,7 +267,7 @@ SMODS.Joker {
     end,
 	rarity = 2,
 	atlas = 'jokers',
-	pos = { x = 2, y = 1 },
+	pos = { x = 0, y = 1 },
 	cost = 6,
 	-- debuffed cards have a 2 in 7 chance to trigger anyway
 	update = function(self,card,context)
