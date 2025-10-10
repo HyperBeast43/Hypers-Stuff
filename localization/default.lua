@@ -62,6 +62,30 @@ return {
 					"{C:green}Rerolls{} at end of shop",
 					"{C:inactive}Currently copying {C:attention}#1#{}"
 				}
+			},
+			j_hypr_ijh = {
+				name = 'Insert Joke Here',
+				text = {
+					"Copies a {C:green}random{} compatible joker",
+					"from your {C:dark_edition}Collection{}",
+					"that can show up in {C:attention}Buffoon Packs{},",
+					"{C:green}Rerolls{} at end of shop",
+					"{C:inactive}Currently copying {C:attention}#1#{}"
+				}
+			},
+			j_hypr_jera = {
+				name = 'Runic Ruby',
+				text = {
+					"All {C:hearts}Hearts{} are retriggered",
+					"{C:attention}exactly once{}"
+				}
+			},
+			j_hypr_bypass = {
+				name = '<placeholder name>',
+				text = {
+					"{C:red}Debuffed{} cards have a {C:green}#1# in #2#{}",
+					"chance to retrigger anyways"
+				}
 			}
 		}
 	},
