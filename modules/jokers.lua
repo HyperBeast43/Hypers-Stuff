@@ -31,7 +31,7 @@
 	end
 }]]
 
-SMODS.Joker {
+--[[SMODS.Joker {
 	key = 'ijh',
 	config = { extra = { copied = nil } },
 	loc_vars = function(self, info_queue, card)
@@ -56,7 +56,7 @@ SMODS.Joker {
 		end
 		return SMODS.blueprint_effect(card, card.ability.extra.copied, context)
 	end
-}
+}]]
 
 SMODS.Joker {
 	key = 'curator',
@@ -152,7 +152,7 @@ SMODS.Joker {
 	end
 }
 
---[[SMODS.Joker {
+SMODS.Joker {
 	key = 'thcief',
 	config = { extra = { hypr_thcief = true } },
 	loc_vars = function(self, info_queue, card)
@@ -163,12 +163,19 @@ SMODS.Joker {
 	atlas = 'jokers',
 	pos = { x = 3, y = 0 },
 	cost = 5, --when bought, set cost to -100, thus sell price to -50
-}
-function hypr_thcief_call()
-	for i,card in ipairs(G.jokers) do 
-		if card.ability.extra.hypr_thcief then return true end
+	update = function(self,card,dt)
+		--calculate_reroll_cost(true)
+		for _, v in pairs(G.I.CARD) do
+			if v.ability then
+				if v.ability.set == 'Voucher' then
+					v.sell_cost = math.inf
+				else
+					v.sell_cost = 0.0
+				end
+			end
+        end
 	end
-end]]
+}
 
 SMODS.Joker {
 	key = 'hypa',
@@ -225,7 +232,7 @@ SMODS.Joker {
 	end
 }
 
---[[SMODS.Joker {
+SMODS.Joker {
 	key = 'jera',
 	config = {},
 	loc_vars = function(self, info_queue, card)
@@ -236,35 +243,51 @@ SMODS.Joker {
 	pos = { x = 3, y = 0 },
 	cost = 6,
 	-- all hearts are retriggered exactly once
-	update = function(self,card,context)
-	
-	end
 	calculate = function(self, card, context)
-	
-	end
+		if context.repetition and context.other_card then
+			if context.other_card:is_suit("Hearts") then
+				return {
+					repetitions = 1
+				}
+			end
+		end
+	end,
 	retrigger_function = function(playing_card, scoring_hand, _, joker_card)
 		return playing_card:is_suit("Hearts") and 1 or 0
 	end
-end
 }
-
+--[[
 SMODS.Joker {
 	key = 'bypass',
-	config = { extra = {odds = 2}},
-	loc_vars = function(self, info_queue, card)
-		return { vars = {card.ability.extra.odds} }
-	end,
+	config = { extra = {odds = 7}},
+    loc_vars = function(self, info_queue, card)
+        local numerator, denominator = SMODS.get_probability_vars(card, 2, card.ability.extra.odds, 'hypr_bypass')
+        return { vars = { numerator, denominator} }
+    end,
 	rarity = 2,
 	atlas = 'jokers',
-	pos = { x = 3, y = 0 },
+	pos = { x = 2, y = 1 },
 	cost = 6,
 	-- debuffed cards have a 2 in 7 chance to trigger anyway
 	update = function(self,card,context)
 	
-	end
+	end,
 	calculate = function(self, card, context)
-	
+		if context.individual and context.other_card.debuff and not context.other_card.ability.bypassed and SMODS.pseudorandom_probability(card, 'hypr_bypass', 2, card.ability.extra.odds) then
+			context.other_card.ability.bypassed = true
+			card.debuff = false
+			print("asfdhasfd")
+		end
+		if context.final_scoring_step then
+			for _, v in pairs(G.playing_cards) do
+				if v.ability then
+					if v.ability.bypassed then 
+						v.debuff=true 
+						v.ability.bypassed=false --this doesnt work
+					end
+				end
+			end	
+		end
 	end
-end
 }
 ]]

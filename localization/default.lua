@@ -74,7 +74,7 @@ return {
 			j_hypr_bypass = {
 				name = '<placeholder name>',
 				text = {
-					"{C:red}Debuffed{} cards have a {C:green}#1# in 7{}",
+					"{C:red}Debuffed{} cards have a {C:green}#1# in #2#{}",
 					"chance to retrigger anyways"
 				}
 			}
