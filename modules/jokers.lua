@@ -152,7 +152,7 @@ SMODS.Joker {
 	end
 }
 
-SMODS.Joker {
+--[[SMODS.Joker {
 	key = 'thcief',
 	config = { extra = { hypr_thcief = true } },
 	loc_vars = function(self, info_queue, card)
@@ -175,7 +175,7 @@ SMODS.Joker {
 			end
         end
 	end
-}
+}]]
 
 SMODS.Joker {
 	key = 'hypa',
