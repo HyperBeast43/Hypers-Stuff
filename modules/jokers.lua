@@ -234,7 +234,7 @@ SMODS.Joker {
 
 SMODS.Joker {
 	key = 'jera',
-	config = { extra = { repetitions = 1 } },
+	config = {},
 	loc_vars = function(self, info_queue, card)
 		return { vars = {} }
 	end,
@@ -242,11 +242,12 @@ SMODS.Joker {
 	atlas = 'jokers',
 	pos = { x = 3, y = 0 },
 	cost = 6,
+	jeracheck = true,
 	-- all hearts are retriggered exactly once
     calculate = function(self, card, context)
         if context.repetition and context.cardarea == G.play then
-			local rept = 1
-			if context.other_card:is_suit("Hearts") then rept = 2 end
+			local rept = 0 -- smods doesnt like this but w/e
+			if context.other_card:is_suit("Hearts") then rept = 1 end
             return {
                 repetitions = rept,
 				jeracard = context.other_card
