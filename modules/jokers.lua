@@ -70,7 +70,7 @@ SMODS.Joker {
 	pos = { x = 4, y = 0 },
 	cost = 1,
 	update = function(self, card, dt)
-		if not(G.SETTINGS.paused) and card.edition == nil then card:set_edition(poll_edition('curator', nil, nil, true)) end
+		if --[[not(G.SETTINGS.paused) and]] card.edition == nil then card:set_edition(poll_edition('curator', nil, nil, true)) end
 	end
 }
 
