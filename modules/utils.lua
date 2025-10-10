@@ -1,6 +1,6 @@
 function cmp(a, b)
-	if not talisman then goto notalisman end
     local ta, tb = type(a), type(b)
+	if not Talisman then goto notalisman end
     if tb == "table" then return -cmp(b, a) end
     if ta == "table" then
         -- BigNum
