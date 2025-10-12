@@ -70,13 +70,31 @@ SMODS.Joker {
 	pos = { x = 4, y = 0 },
 	cost = 1,
 	update = function(self, card, dt)
-		if --[[not(G.SETTINGS.paused) and]] card.edition == nil then card:set_edition(poll_edition('curator', nil, nil, true)) end
+		if --[[not(G.SETTINGS.paused) and]] card.edition == nil then	
+			
+			local bannededitions = {["e_cry_glitched"]=true,["e_cry_oversat"]=true,["e_cry_double_sided"]=true, ["e_cry_glass"]=card.ability.eternal} -- e_cry_blurred isnt banned because ://HOOK exists. also no need to check if Cryptid is installed because we're not actually referring to the editions we're referring to their ids
+			local curatoredition = "nil"
+			::retry::
+			curatoredition = poll_edition('curator', nil, nil, true)
+			if bannededitions[curatoredition] then 
+				goto retry
+			end
+			card:set_edition(curatoredition)
+		end
+	end,
+	calculate = function(self,card,context)
+		if context.joker_main then
+			return {
+				chips = 0, -- this is so editions that fire upon joker trigger do something, like cryptid's Golden
+				remove_default_message = true
+			}
+		end
 	end
 }
 
 SMODS.Joker {
 	key = 'creacher',
-	config = { extra = { low = 0.9, high = 5/3 } },
+	config = { extra = { low = 0.9, high = 1.67 } },
 	loc_vars = function(self, info_queue, card)
 		info_queue[#info_queue + 1] = { set = "Other", key = "hypr_placeholder" }
 		return { vars = { card.ability.extra.low, card.ability.extra.high } }

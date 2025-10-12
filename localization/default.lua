@@ -89,4 +89,9 @@ return {
 			}
 		}
 	},
+	misc = {
+		challenge_names = {
+			c_hypr_no7 = "<unnamed>"
+		}
+	}
 }
