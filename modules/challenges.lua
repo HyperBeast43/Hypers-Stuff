@@ -31,7 +31,6 @@ SMODS.Challenge {
             else
                 v.eternal = true
             end
-			print(v)
         end
 		return j
 	end)(),

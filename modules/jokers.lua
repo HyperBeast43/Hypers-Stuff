@@ -70,7 +70,7 @@ SMODS.Joker {
 	pos = { x = 4, y = 0 },
 	cost = 1,
 	update = function(self, card, dt)
-		if --[[not(G.SETTINGS.paused) and]] card.edition == nil then	
+		if not(G.SETTINGS.paused) and card.edition == nil then	
 			
 			local bannededitions = {["e_cry_glitched"]=true,["e_cry_oversat"]=true,["e_cry_double_sided"]=true, ["e_cry_glass"]=card.ability.eternal} -- e_cry_blurred isnt banned because ://HOOK exists. also no need to check if Cryptid is installed because we're not actually referring to the editions we're referring to their ids
 			local curatoredition = "nil"
@@ -253,6 +253,7 @@ SMODS.Joker {
 	key = 'jera',
 	config = {},
 	loc_vars = function(self, info_queue, card)
+		info_queue[#info_queue + 1] = { set = "Other", key = "hypr_placeholder" }
 		return { vars = {} }
 	end,
 	rarity = 2,
@@ -275,12 +276,13 @@ SMODS.Joker {
 		return playing_card:is_suit("Hearts") and 1 or 0
 	end
 }]]
---[[
+
 SMODS.Joker {
 	key = 'bypass',
-	config = { extra = {odds = 7}},
+	config = { extra = {odds = 2}, bypassed = {}},
     loc_vars = function(self, info_queue, card)
-        local numerator, denominator = SMODS.get_probability_vars(card, 2, card.ability.extra.odds, 'hypr_bypass')
+        local numerator, denominator = SMODS.get_probability_vars(card, card.ability.extra.odds, 7, 'hypr_bypass')
+		info_queue[#info_queue + 1] = { set = "Other", key = "hypr_placeholder" }
         return { vars = { numerator, denominator} }
     end,
 	rarity = 2,
@@ -288,25 +290,54 @@ SMODS.Joker {
 	pos = { x = 0, y = 1 },
 	cost = 6,
 	-- debuffed cards have a 2 in 7 chance to trigger anyway
-	update = function(self,card,context)
-	
-	end,
 	calculate = function(self, card, context)
-		if context.individual and context.other_card.debuff and not context.other_card.ability.bypassed and SMODS.pseudorandom_probability(card, 'hypr_bypass', 2, card.ability.extra.odds) then
-			context.other_card.ability.bypassed = true
-			card.debuff = false
-			print("asfdhasfd")
-		end
-		if context.final_scoring_step then
+		local bypassed = 0
+		if context.before then
 			for _, v in pairs(G.playing_cards) do
-				if v.ability then
-					if v.ability.bypassed then 
-						v.debuff=true 
-						v.ability.bypassed=false --this doesnt work
-					end
+				if SMODS.pseudorandom_probability(card, 'hypr_bypass', card.ability.extra.odds, 7) then
+					if not v.bypassid then v.bypassid='id'..math.random(-10000000000,10000000000) end
+					SMODS.debuff_card(v,'prevent_debuff',v.bypassid)
+					card.ability.bypassed[v.bypassid] = true
+					bypassed = bypassed+1
+				end
+			end	
+			for _, v in pairs(G.jokers.cards) do
+				if SMODS.pseudorandom_probability(card, 'hypr_bypass', card.ability.extra.odds, 7) then
+					if not v.bypassid then v.bypassid='id'..math.random(-10000000000,10000000000) end
+					SMODS.debuff_card(v,'prevent_debuff',v.bypassid)
+					card.ability.bypassed[v.bypassid] = true
+					bypassed = bypassed+1
+				end
+			end	
+			for _, v in pairs(G.consumeables.cards) do
+				if SMODS.pseudorandom_probability(card, 'hypr_bypass', card.ability.extra.odds, 7) then
+					if not v.bypassid then v.bypassid='id'..math.random(-10000000000,10000000000) end
+					SMODS.debuff_card(v,'prevent_debuff',v.bypassid)
+					card.ability.bypassed[v.bypassid] = true
+					bypassed = bypassed+1
+				end
+			end	
+			return { message = 'Bypassed x'..bypassed..'!'}
+		end
+		if context.after then
+			for _, v in pairs(G.playing_cards) do
+				if v.bypassid and card.ability.bypassed[v.bypassid] then
+					SMODS.debuff_card(v,'reset',v.bypassid)
+					card.ability.bypassed[v.bypassid] = nil
+				end
+			end	
+			for _, v in pairs(G.jokers.cards) do
+				if v.bypassid and card.ability.bypassed[v.bypassid] then
+					SMODS.debuff_card(v,'reset',v.bypassid)
+					card.ability.bypassed[v.bypassid] = nil
+				end
+			end	
+			for _, v in pairs(G.consumeables.cards) do
+				if v.bypassid and card.ability.bypassed[v.bypassid] then
+					SMODS.debuff_card(v,'reset',v.bypassid)
+					card.ability.bypassed[v.bypassid] = nil
 				end
 			end	
 		end
 	end
 }
-]]

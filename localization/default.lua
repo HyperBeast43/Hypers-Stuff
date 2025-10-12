@@ -63,16 +63,6 @@ return {
 					"{C:inactive}Currently copying {C:attention}#1#{}"
 				}
 			},
-			j_hypr_ijh = {
-				name = 'Insert Joke Here',
-				text = {
-					"Copies a {C:green}random{} compatible joker",
-					"from your {C:dark_edition}Collection{}",
-					"that can show up in {C:attention}Buffoon Packs{},",
-					"{C:green}Rerolls{} at end of shop",
-					"{C:inactive}Currently copying {C:attention}#1#{}"
-				}
-			},
 			j_hypr_jera = {
 				name = 'Runic Ruby',
 				text = {
@@ -81,17 +71,18 @@ return {
 				}
 			},
 			j_hypr_bypass = {
-				name = '<placeholder name>',
+				name = 'Bypass',
 				text = {
-					"{C:red}Debuffed{} cards have a {C:green}#1# in #2#{}",
-					"chance to retrigger anyways"
+					"Before scoring, {C:red,E:2}debuffed{} cards have",
+					"a {C:green}#1# in #2#{} chance to temporarily",
+					"{C:G.C.ATTENTION,E:1}un-debuff{} until end of hand"
 				}
 			}
 		}
 	},
 	misc = {
 		challenge_names = {
-			c_hypr_no7 = "<unnamed>"
+			c_hypr_no7 = "Point's On"
 		}
 	}
 }
