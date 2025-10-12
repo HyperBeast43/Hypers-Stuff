@@ -94,7 +94,7 @@ SMODS.Joker {
 
 SMODS.Joker {
 	key = 'creacher',
-	config = { extra = { low = 0.9, high = 1.4 } },
+	config = { extra = { low = 0.9, high = 1.67 } },
 	loc_vars = function(self, info_queue, card)
 		info_queue[#info_queue + 1] = { set = "Other", key = "hypr_placeholder" }
 		return { vars = { card.ability.extra.low, card.ability.extra.high } }
