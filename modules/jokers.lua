@@ -397,4 +397,15 @@ SMODS.Joker {
 			end	
 		end
 	end
+	
+	--[[ more ideas:
+	Trick Coin (Uncommon): Selling any card duplicates it, with a 1/3 chance to destroy this joker
+	??/Unicorn Blood/Blue Raspberry/Midas Pop(read:soda) (if Paperback,+ Stardew/Royal Jelly) (if Bunco,+ ??/??)	(Uncommon): Selling this joker turns half of your deck into [suit], and randomizes the suits of the other half ([suit] cannot be picked during randomization)
+	Colored Honey (Uncommon): $8 when (suit) is triggered for the first time after pickup, self-destructs when no suits remaining (Starts with the base 4)
+	Pliers (Rare): Selling this joker destroys a random eternal joker
+	Thumbtack/Lipstick/Golf Ball/Washer (if Paperback, +Lightbulb/??) (if Bunco,+ ??/Pocket Knife): Triggers a random [suit] card from your remaining deck, both as held in hand and as played.
+	Clown Nose (Common): Selling this joker gives %playername%(flavor text:That's you!) +4 mult for the rest of this run
+	]]
+	
+	
 }
