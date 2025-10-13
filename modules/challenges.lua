@@ -4,8 +4,10 @@ addifmod = function(always,varying,mod)
 	if not next(SMODS.find_mod(mod)) then return always end
 	local i = #always
 	for _, v in ipairs(varying) do
+		--if mod=='Cryptid' then if v.get_gameset(center) == 'disabled' then goto continue end end
 		i = i+1
         always[i] = v
+		::continue::
     end
 	return always
 end

@@ -15,6 +15,15 @@ return {
 				}
 			}
 		},
+		Back = {
+		    b_hypr_solar={
+                name="Solar Deck",
+                text={
+					"{C:blue}+1{} cards {C:blue}playable per hand{}",
+					"{C:red}-1{} cards {C:red}discardable per discard{}"
+                },
+            }
+		},
 		Joker = {
 			j_hypr_hypa = {
 				name = 'Hyper',

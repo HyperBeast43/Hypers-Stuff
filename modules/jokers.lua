@@ -40,7 +40,7 @@
 	end,
 	blueprint_compat = true,
 	rarity = 3,
-	atlas = 'jokers',
+	atlas = 'cards',
 	pos = { x = 3, y = 0 },
 	cost = 10,
 	calculate = function(self, card, context)
@@ -66,7 +66,7 @@ SMODS.Joker {
 	end,
 	rarity = 1,
 	blueprint_compat = false,
-	atlas = 'jokers',
+	atlas = 'cards',
 	pos = { x = 4, y = 0 },
 	cost = 1,
 	update = function(self, card, dt)
@@ -91,7 +91,41 @@ SMODS.Joker {
 		end
 	end
 }
-
+if SMODS.find_mod('Talisman')[1] ~= nil then trimsci = function(s,b)
+  local t = {}
+  local i = 0
+  local sci
+  for chr in string.gmatch(s,".") do
+    i = i+1 
+    if i==2 and chr=="." and b==2 then b=1 end
+    if chr == "e" then 
+      sci=true 
+        local i2 = b
+        while i2~=0 do
+          if t[i2]=="0" or t[i2]=="." then
+            b = math.max(b-1,3)
+            i2 = i2-1
+          else
+            i2 = 0 
+          end
+        end
+      break end
+    t[i] = chr
+  end
+  if not sci and (not d or t[1]=="0") and i>b then
+    return trimsci(string.format("%e", s),b)
+  end
+  s = string.sub(table.concat(t),1,b)..(((i ~= #s) and (string.sub(s,i))) or "")
+  i = 0
+  t = {}
+  for chr in string.gmatch(s,".") do
+    if chr ~= "+" and not (chr=="0" and (t[i]=="e" or t[i]=="-")) and not (chr=="." and s.sub(i+2,i+2)=="e") then
+      i = i+1
+      t[i]=chr
+    end
+  end
+  return table.concat(t)
+end end
 SMODS.Joker {
 	key = 'creacher',
 	config = { extra = { low = 0.9, high = 1.67 } },
@@ -102,7 +136,7 @@ SMODS.Joker {
 	rarity = 2,
 	blueprint_compat = true,
 	demicoloncompat = true,
-	atlas = 'jokers',
+	atlas = 'cards',
 	pos = { x = 2, y = 0 },
 	cost = 5,
 	calculate = function(self, card, context)
@@ -161,8 +195,28 @@ SMODS.Joker {
 					end
 				end
 				card.joker_display_values.count = count*JokerDisplay.calculate_joker_triggers(card)
-				card.joker_display_values.ideal = math.pow((lo+hi)/2,count)
-				card.joker_display_values.precision = 100*math.pow(math.exp((hi*math.log(hi)-lo*math.log(lo)-(hi-lo))/(hi-lo))/((lo+hi)/2), card.joker_display_values.count)
+				if SMODS.find_mod('Talisman')[1] ~= nil then
+					lo = Big:ensureBig(lo)
+					hi = Big:ensureBig(hi) 
+					card.joker_display_values.ideal = OmegaMeta.__tostring(OmegaMeta.__pow((lo:add(hi):div(Big:create(2))),Big:ensureBig(count)))
+					card.joker_display_values.precision = trimsci(OmegaMeta.__tostring(Big:create(100):mul(
+						(
+							Big:create(B.E):pow(
+								hi:mul(hi:ln())
+								  :sub(lo:mul(lo:ln()))
+								  :sub(hi:sub(lo))
+								  :div(hi:sub(lo))
+							)
+							:div(
+								(lo:add(hi)):div(Big:create(2))
+							)
+						):pow(Big:ensureBig(card.joker_display_values.count))
+					)),4)
+				else
+					card.joker_display_values.ideal = ((lo+hi)/2)^count
+					card.joker_display_values.precision = 100*math.pow(math.exp((hi*math.log(hi)-lo*math.log(lo)-(hi-lo))/(hi-lo))/((lo+hi)/2), card.joker_display_values.count)
+				end
+
 				card.joker_display_values.localized_text = localize("Clubs", 'suits_plural')
 			end
 		}
@@ -177,7 +231,7 @@ SMODS.Joker {
 		return { vars = { card.ability.extra.a } }
 	end,
 	rarity = 2,
-	atlas = 'jokers',
+	atlas = 'cards',
 	pos = { x = 4, y = 0 },
 	cost = 5, --when bought, set cost to -100, thus sell price to -50
 	update = function(self,card,dt)
@@ -211,7 +265,7 @@ SMODS.Joker {
 	unlock_condition = {type = '', extra = '', hidden = true},
 	unlocked = false, discovered = false,
 	rarity = 4,
-	atlas = 'jokers',
+	atlas = 'cards',
 	blueprint_compat = true,
 	demicoloncompat = true,
 	pos = { x = 0, y = 0 },
@@ -257,7 +311,7 @@ SMODS.Joker {
 		return { vars = {} }
 	end,
 	rarity = 2,
-	atlas = 'jokers',
+	atlas = 'cards',
 	pos = { x = 5, y = 0 },
 	cost = 6,
 	jeracheck = true,
@@ -286,7 +340,7 @@ SMODS.Joker {
         return { vars = { numerator, denominator} }
     end,
 	rarity = 2,
-	atlas = 'jokers',
+	atlas = 'cards',
 	pos = { x = 0, y = 1 },
 	cost = 6,
 	-- debuffed cards have a 2 in 7 chance to trigger anyway
@@ -323,18 +377,21 @@ SMODS.Joker {
 			for _, v in pairs(G.playing_cards) do
 				if v.bypassid and card.ability.bypassed[v.bypassid] then
 					SMODS.debuff_card(v,'reset',v.bypassid)
+					SMODS.recalc_debuff(v)
 					card.ability.bypassed[v.bypassid] = nil
 				end
 			end	
 			for _, v in pairs(G.jokers.cards) do
 				if v.bypassid and card.ability.bypassed[v.bypassid] then
 					SMODS.debuff_card(v,'reset',v.bypassid)
+					SMODS.recalc_debuff(v)
 					card.ability.bypassed[v.bypassid] = nil
 				end
 			end	
 			for _, v in pairs(G.consumeables.cards) do
 				if v.bypassid and card.ability.bypassed[v.bypassid] then
 					SMODS.debuff_card(v,'reset',v.bypassid)
+					SMODS.recalc_debuff(v)
 					card.ability.bypassed[v.bypassid] = nil
 				end
 			end	
