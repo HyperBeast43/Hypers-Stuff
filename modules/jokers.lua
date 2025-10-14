@@ -232,7 +232,7 @@ SMODS.Joker {
 	end,
 	rarity = 2,
 	atlas = 'cards',
-	pos = { x = 4, y = 0 },
+	pos = { x = 0, y = 2 },
 	cost = 5, --when bought, set cost to -100, thus sell price to -50
 	update = function(self,card,dt)
 		--calculate_reroll_cost(true)
@@ -268,8 +268,8 @@ SMODS.Joker {
 	atlas = 'cards',
 	blueprint_compat = true,
 	demicoloncompat = true,
-	pos = { x = 0, y = 0 },
-	soul_pos = { x = 1, y = 0 },
+	pos = { x = 1, y = 0 },
+	soul_pos = { x = 1, y = 1 },
 	cost = 20,
 	update = function(self,card,dt)
 		if G.playing_cards then
@@ -397,15 +397,151 @@ SMODS.Joker {
 			end	
 		end
 	end
-	
-	--[[ more ideas:
-	Trick Coin (Uncommon): Selling any card duplicates it, with a 1/3 chance to destroy this joker
-	??/Unicorn Blood/Blue Raspberry/Midas Pop(read:soda) (if Paperback,+ Stardew/Royal Jelly) (if Bunco,+ ??/??)	(Uncommon): Selling this joker turns half of your deck into [suit], and randomizes the suits of the other half ([suit] cannot be picked during randomization)
-	Colored Honey (Uncommon): $8 when (suit) is triggered for the first time after pickup, self-destructs when no suits remaining (Starts with the base 4)
-	Pliers (Rare): Selling this joker destroys a random eternal joker
-	Thumbtack/Lipstick/Golf Ball/Washer (if Paperback, +Lightbulb/??) (if Bunco,+ ??/Pocket Knife): Triggers a random [suit] card from your remaining deck, both as held in hand and as played.
-	Clown Nose (Common): Selling this joker gives %playername%(flavor text:That's you!) +4 mult for the rest of this run
-	]]
-	
-	
 }
+
+where = function(t, thing)
+	i=0
+	for _, v in pairs(t) do
+		i = i+1
+		if v == thing then
+			return i
+		end
+	end
+	return nil
+end
+
+
+
+local drinks = {["Spades"]={2,3,"Spades",nil},["Hearts"]={3,3,"Hearts",nil},["Clubs"]={4,3,"Clubs",nil},["Diamonds"]={5,3,"Diamonds",nil}} 
+if SMODS.find_mod('paperback')[1]~=nil then
+	if PB_UTIL.config.suits_enabled then
+		drinks["Stars"]={3,4,"paperback_Stars",{requires_stars = true}}
+		drinks["Crowns"]={2,4,"paperback_Crowns",{requires_crowns = true}}
+	end
+end
+--[[if SMODS.find_mod('Bunco')[1]~=nil then --bunco is still a wip
+	drinks["Fleurons"]={4,4,"bunco_Fleurons",{}}
+	drinks["Halberds"]={5,4,"bunco_Halberds",{}}
+end]]
+
+function shuffle(t)
+    for i = #t, 2, -1 do
+        local j = math.random(i)
+        t[i], t[j] = t[j], t[i]
+    end
+end
+
+local d_joi = 0
+G.hypr["suits"] = {}
+for _ , d_j in pairs(drinks) do
+	d_joi = d_joi+1
+	G.hypr.suits[d_joi] = d_j[3]
+end
+
+
+
+for _, datlas in pairs(drinks) do
+	local drinkid = 'drink_'..string.lower(datlas[3])
+	local keepatlas = {unpack(datlas)}
+	SMODS.Joker {
+	key = drinkid,
+	config = { extra = {stored = {keepsuit,keepatlas}}},
+    loc_vars = function(self, info_queue, card)
+		info_queue[#info_queue + 1] = { set = "Other", key = "hypr_devart" }
+        return { vars = {localize(card.ability.extra.stored[2][3], 'suits_plural'), colours = {G.C.SUITS[card.ability.extra.stored[2][3]]}} }
+    end,
+	paperback = keepatlas[4],
+	rarity = 2,
+	atlas = 'cards',
+	pos = { x = datlas[1], y = datlas[2] },
+	cost = 6,
+	blueprint_compat = true,
+	demicoloncompat = true,
+	calculate = function(self,card,context)
+		if context.selling_self or context.forcetrigger then -- not sure why you'd want to forcetrigger this but. ok
+			play_sound('tarot2', 0.76, 0.4)
+			local random_seed = (G.GAME and G.GAME.pseudorandom.seed or "") .. "." .. "hypr_"..drinkid
+			local t = G.playing_cards
+			local i = 0
+			
+			G.E_MANAGER:add_event(
+                Event({
+                    trigger = 'after',
+                    delay = 0.06 * G.SETTINGS.GAMESPEED,
+                    blockable = false,
+                    blocking = false,
+                    func = function()
+						local drs = {unpack(G.hypr.suits)}
+						if SMODS.find_mod('paperback') then
+							if not(PB_UTIL.has_suit_in_deck('paperback_Stars', true) or PB_UTIL.spectrum_played()) then table.remove(drs,where(drs,'paperback_Stars')) end
+							if not(PB_UTIL.has_suit_in_deck('paperback_Crowns', true) or PB_UTIL.spectrum_played()) then table.remove(drs,where(drs,'paperback_Crowns')) end
+						end
+						table.remove(drs,where(drs,card.ability.extra.stored[2][3]))
+						local awawa = {}
+						local ababa = {}
+						for bi=1,#G.playing_cards do
+							G.playing_cards[bi]:flip()
+							G.playing_cards[bi]:juice_up(0.3, 0.4)
+							table.insert(ababa, bi) 
+							shuffle(ababa) -- never enough shuffling >:3
+						end
+						for qp=1,#G.playing_cards do
+							k = ababa[qp]
+							if k<math.ceil(#G.playing_cards/2) then
+								table.insert(awawa,card.ability.extra.stored[2][3])
+							else
+								local bucket = math.max(math.ceil(((2*k*#drs)/#G.playing_cards)-#drs),1)
+								table.insert(awawa,drs[bucket])
+							end
+						end
+						for k,v in pairs(G.playing_cards) do
+							SMODS.change_base(v,awawa[k],nil)
+							v:flip()
+						end
+						play_sound('tarot1', 0.76, 0.4)
+						return true
+					end
+				})
+			)
+		end
+    end}
+end
+
+
+
+-- note: steal PB_UTIL.has_suit_in_deck()
+--[[ i need more sleep
+junk = {("Spades"={2,1}),("Hearts"={3,1}),("Clubs"={4,1}),("Diamonds"={5,1})} -- todo: check for paperback/bunco suits
+for junksuit, junkatlas in pairs(junk) do
+	local junkid = 'trinket_'..string.lower(junksuit)
+	SMODS.Joker {
+	key = junkid,
+	config = {extra = {localdeck={}}},
+    loc_vars = function(self, info_queue, card)
+		info_queue[#info_queue + 1] = { set = "Other", key = "hypr_devart" }
+		color = G.C.SUITS[junksuit]
+        return { vars = {junksuit, colours = {color}}} }
+    end,
+	rarity = 2,
+	atlas = 'cards',
+	pos = { x = junkatlas[1], y = junkatlas[2] },
+	cost = 6,
+	calculate = function(self,card,context)
+		if context.before then 
+			card.ability.extra.localdeck = G.deck.cards -- so it doesnt spend time recalculating G.deck.cards every trigger
+		end
+		if context.joker_main then
+			--im too tired to implement it rn
+		end
+	end
+	}
+end]]
+--[[
+more ideas:
+    Trick Coin (Uncommon): Selling any card duplicates it, with a 1/3 chance to destroy this joker
+    ??/Unicorn Blood/Rasped Blueberry/Midas Pop(read:soda) (if Paperback,+ Stardew/Royal Jelly) (if Bunco,+ Rosewine/Battle Energy)    (Uncommon): Selling this joker turns half of your deck into [suit], and randomizes the suits of the other half ([suit] cannot be picked during randomization) exotic suits cannot be picked if not unlocked yet this run
+    Colored Honey (Uncommon): $8 when (suit) is triggered for the first time after pickup, self-destructs when no suits remaining (0/4) --(Starts with the base 4 suits, additional suits give +1/+1 )
+    Pliers (Rare): Selling this joker destroys a random eternal joker
+    Clown Nose (Common): Selling this joker gives %playername%(flavor text:That's you!) +4 mult for the rest of this run --player scores once context.before becomes false from true, put some sort of falling-edge observer in update - unless theres an easier way to do this and i'm just blind   
+]]
+	

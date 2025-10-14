@@ -12,3 +12,10 @@ SMODS.Atlas {
 	py = 95
 }
 
+SMODS.Atlas {
+    key = "sleeves",
+    path = "sleeves.png",
+    px = 73,
+    py = 95
+}
+

@@ -1,3 +1,15 @@
+local drinktxt = {
+	"When sold, randomly turns", -- given we're using pairs and not ipairs it's effectively random
+	"{C:attention}half{} of your deck into {V:1}#1#{},",
+	" and the other half into",
+	"{C:attention}every other suit{} evenly"
+}
+local junktxt = {
+	"Triggers a random {V:1}#1#{} card",
+	"from your {C:attention}remaining deck{} as",
+	"both played {C:attention}and{} held in hand"
+}
+
 return {
 	descriptions = {
 		Other = {
@@ -6,6 +18,13 @@ return {
 				text = {
 					"The art for this card is unfinished,",
 					"It may or may not stay that way"
+				}
+			},
+			hypr_devart = {
+				name = "Programmer Art",
+				text = {
+					"The art for this card is unfinished,",
+					"It will hopefully be updated soon"
 				}
 			},
 			hypr_guest_art = {
@@ -17,6 +36,15 @@ return {
 		},
 		Back = {
 		    b_hypr_solar={
+                name="Solar Deck",
+                text={
+					"{C:blue}+1{} cards {C:blue}playable per hand{}",
+					"{C:red}-1{} cards {C:red}discardable per discard{}"
+                },
+            }
+		},
+		Sleeve = {
+		    sleeve_hypr_solar={
                 name="Solar Deck",
                 text={
 					"{C:blue}+1{} cards {C:blue}playable per hand{}",
@@ -86,7 +114,74 @@ return {
 					"a {C:green}#1# in #2#{} chance to temporarily",
 					"{C:G.C.ATTENTION,E:1}un-debuff{} until end of hand"
 				}
-			}
+			},
+			--drinks
+			j_hypr_drink_spades = {
+				name = 'PhD Pepper',
+				text = drinktxt
+			},
+			j_hypr_drink_hearts = {
+				name = 'Unicorn Blood',
+				text = drinktxt
+			},
+			j_hypr_drink_clubs = {
+				name = 'Rasped Blueberry',
+				text = drinktxt
+			},
+			j_hypr_drink_diamonds = {
+				name = 'Midas Pop',
+				text = drinktxt
+			},
+			j_hypr_drink_paperback_stars = {
+				name = 'Stardew',
+				text = drinktxt
+			},
+			j_hypr_drink_paperback_crowns = {
+				name = 'Royal Mead',
+				text = drinktxt
+			},
+			j_hypr_drink_bunco_fleurons = {
+				name = 'Rosewine',
+				text = drinktxt
+			},
+			j_hypr_drink_bunco_halberds = {
+				name = 'Battle Energy',
+				text = drinktxt
+			},
+			--junkdrawer
+			j_hypr_junk_spades = {
+				name = 'Thumbtack',
+				text = junktxt
+			},
+			j_hypr_junk_hearts = {
+				name = 'Lipstick',
+				text = junktxt
+			},
+			j_hypr_junk_clubs = {
+				name = 'Golf Ball',
+				text = junktxt
+			},
+			j_hypr_junk_diamonds = {
+				name = 'Arcade Token',
+				text = junktxt
+			},
+			j_hypr_junk_paperback_stars = {
+				name = 'Lightbulb',
+				text = junktxt
+			},
+			j_hypr_junk_paperback_crowns = {
+				name = 'Headband',
+				text = junktxt
+			},
+			j_hypr_junk_bunco_fleurons = {
+				name = 'Pressed Clover',
+				text = junktxt
+			},
+			j_hypr_junk_bunco_halberds = {
+				name = 'Pocket Knife',
+				text = junktxt
+			},
+			--
 		}
 	},
 	misc = {

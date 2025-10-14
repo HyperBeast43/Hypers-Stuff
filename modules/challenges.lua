@@ -40,7 +40,7 @@ SMODS.Challenge {
 		{ id = 'v_magic_trick' }
 	},
     restrictions = {
-        banned_cards = addifmod({
+        banned_cards = addifmod(addifmod({
             { id = 'c_judgement' },
 			{ id = 'c_chariot' },
             { id = 'c_wraith' },
@@ -66,8 +66,16 @@ SMODS.Challenge {
 			{ id = 'v_cry_pairing' },
 			{ id = 'v_cry_repair_man' },
 			{ id = 'v_cry_pairamount_plus' }
-		},'Cryptid'),
-        banned_tags = addifmod({
+		},'Cryptid'),{
+			{ id = 'c_paperback_nine_of_cups' },
+			{ id = 'c_paperback_eight_of_wands' },
+			{ id = 'c_paperback_queen_of_wands' },
+			{ id = 'c_paperback_king_of_wands' },
+			{ id = 'c_paperback_nine_of_swords' },
+			{ id = 'c_paperback_apostle_of_wands' },
+			{ id = 'c_paperback_apostle_of_swords' },
+		},'paperback'),
+        banned_tags = addifmod(addifmod({
 			{ id = 'tag_uncommon' },
 			{ id = 'tag_rare' },
 			{ id = 'tag_negative' },
@@ -95,7 +103,9 @@ SMODS.Challenge {
 			{ id = 'tag_cry_gourmand' }, -- im sorry gourm but i have to
 			{ id = 'tag_cry_bettertop_up' },
 			{ id = 'tag_cry_rework' }
-		}, 'Cryptid'),
+		}, 'Cryptid'),{
+			{ id = 'tag_paperback_dichrome' }
+		}, 'paperback'),
         banned_other = addifmod({
             { id = 'bl_final_heart', type = 'blind' },
             { id = 'bl_final_leaf',  type = 'blind' },
