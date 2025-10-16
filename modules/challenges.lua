@@ -49,6 +49,10 @@ SMODS.Challenge {
             { id = 'p_buffoon_normal_1', ids = {
                 'p_buffoon_normal_1', 'p_buffoon_normal_2', 'p_buffoon_jumbo_1', 'p_buffoon_mega_1',
 				}
+            },
+			{ id = 'p_cry_meme_normal_1', ids = {
+                'p_cry_meme_normal_1', 'p_cry_meme_normal_2',
+				}
             }
 		},{
 			{ id = 'c_cry_variable' },
@@ -67,6 +71,7 @@ SMODS.Challenge {
 			{ id = 'v_cry_repair_man' },
 			{ id = 'v_cry_pairamount_plus' }
 		},'Cryptid'),{
+			{ id = 'c_paperback_two_of_cups' },
 			{ id = 'c_paperback_nine_of_cups' },
 			{ id = 'c_paperback_eight_of_wands' },
 			{ id = 'c_paperback_queen_of_wands' },
@@ -75,7 +80,7 @@ SMODS.Challenge {
 			{ id = 'c_paperback_apostle_of_wands' },
 			{ id = 'c_paperback_apostle_of_swords' },
 		},'paperback'),
-        banned_tags = addifmod(addifmod({
+        banned_tags = addifmod(addifmod(addifmod({
 			{ id = 'tag_uncommon' },
 			{ id = 'tag_rare' },
 			{ id = 'tag_negative' },
@@ -105,8 +110,11 @@ SMODS.Challenge {
 			{ id = 'tag_cry_rework' }
 		}, 'Cryptid'),{
 			{ id = 'tag_paperback_dichrome' }
-		}, 'paperback'),
-        banned_other = addifmod({
+		}, 'paperback'),{
+			{ id = 'tag_bunc_glitter'},
+			{ id = 'tag_bunc_fluorescent'},
+		}, 'Bunco'),
+        banned_other = addifmod(addifmod({
             { id = 'bl_final_heart', type = 'blind' },
             { id = 'bl_final_leaf',  type = 'blind' },
             { id = 'bl_final_acorn', type = 'blind' }
@@ -121,7 +129,13 @@ SMODS.Challenge {
 			{ id = 'bl_cry_repulsor', type='blind' },
 			{ id = 'bl_cry_striker', type='blind' },
 			{ id = 'bl_cry_oldfish', type='blind' }
-        },'Cryptid')
+        },'Cryptid'),{
+			{ id = 'bl_bunc_depths', type='blind' },
+			{ id = 'bl_bunc_chasm', type='blind' },
+			{ id = 'bl_bunc_wind', type='blind' },
+			{ id = 'bl_bunc_depths', type='blind' },
+			{ id = 'bl_bunc_depths', type='blind' },
+		},'Bunco')
     },
 	deck = {
         type = 'Challenge Deck',

@@ -13,3 +13,9 @@ path = "hypr_icon.png",
 px = 32,
 py = 32
 }
+
+SMODS.current_mod.optional_features = {
+	cardareas = {
+		deck = true
+	},
+}
