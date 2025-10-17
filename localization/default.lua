@@ -224,6 +224,9 @@ loc = {
 			k_hypr_addhand = "+1 Hand",
 			k_hypr_active_true = "Active",
 			k_hypr_active_false = "Inactive"
+		},
+		poker_hands = {
+			['hypr-Three Pair'] = "Three Pair"
 		}
 	}
 }

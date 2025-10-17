@@ -10,6 +10,16 @@ function SMODS.create_mod_badges(obj, badges)
 	end end
 end
 
+local pokerhandinforef = G.FUNCS.get_poker_hand_info
+function G.FUNCS.get_poker_hand_info(_cards)
+	local text, loc_disp_text, poker_hands, scoring_hand, disp_text = pokerhandinforef(_cards)
+	if #scoring_hand and #get_X_same(2,scoring_hand)==3 then
+		disp_text = "hypr-Three Pair"
+		loc_disp_text = localize(disp_text, "poker_hands")
+	end
+	return text, loc_disp_text, poker_hands, scoring_hand, disp_text
+end
+
 --[[local insrep = SMODS.insert_repetitions
 SMODS.insert_repetitions = function(ret, eval, effect_card, _type)
     if eval == nil then goto allow end
