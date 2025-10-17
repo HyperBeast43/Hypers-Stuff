@@ -220,7 +220,7 @@ SMODS.Joker {
 					)),4)
 				else
 					card.joker_display_values.ideal = (((lo+hi)/2)^count)*(hi^count2)
-					card.joker_display_values.precision = 100*math.pow(math.exp((hi*math.log(hi)-lo*math.log(lo)-(hi-lo))/(hi-lo))/((lo+hi)/2), (card.joker_display_values.count+card.joker_display_values.count2))
+					card.joker_display_values.precision = 100*math.pow(math.exp((hi*math.log(hi)-lo*math.log(lo)-(hi-lo))/(hi-lo))/((lo+hi)/2), (card.joker_display_values.count+(2*card.joker_display_values.count2)))
 				end
 			end
 		}
@@ -645,6 +645,9 @@ SMODS.Joker {
 		end
 		if context.end_of_round then
 			card.ability.extra.used = false
+			if beat_boss then
+				card.ability.extra.chance = card.ability.extra.chance + 100
+			end
 		end
 	end
 }
@@ -757,7 +760,7 @@ SMODS.Joker {
 	key = 'saltines',
 	config = { extra = { xmult = 1.5, exp = 0.95, min=1.2, init = 1.5 } },
 	loc_vars = function(self, info_queue, card)
-		table.insert(info_queue,{ set = "Other", key = "hypr_devart" })
+		table.insert(info_queue,{ set = "Other", key = "hypr_placeholder" })
 		return { vars = { card.ability.extra.xmult, card.ability.extra.exp, card.ability.extra.min } }
 	end,
 	rarity = 1,
@@ -827,7 +830,7 @@ SMODS.Joker {
 
 --[[
 more ideas:
-    Pliers (Rare): Selling this joker destroys a random Eternal joker
+    Pliers (Rare,$10): Selling this joker destroys a random joker, prioritizes Eternals
     Clown Nose (Common): Selling this joker gives %playername%(flavor text:That's you!) +4 mult for the rest of this run --player scores in context.before, i somehow need to spoof a joker
 	Melatonin:
 ]]

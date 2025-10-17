@@ -193,15 +193,15 @@ loc = {
 				text = 	{
 					"Once per round, on hand played,",
 					"{X:green,C:white}#1#%{} chance to {C:blue,E:1}refund used hand{}",
+					"+{X:green,C:white}1%{} after defeating a {C:attention}Boss Blind{}",
 					"{C:inactive}(Max chance is 33.3%){}"
 				}
 			},
 			j_hypr_coloredhoney = {
 				name = 'Colored Honey',
 				text = {
-					"When a base suit is scored for",
-					"the first time after picking up",
-					"this joker, give {C:money}$#1#{}",
+					"When a suit is scored for the first time",
+					"after picking up this joker, give {C:money}$#1#{}",
 					"{C:red,E:2}Self destructs{} if no suits remaining"
 				}
 			},
