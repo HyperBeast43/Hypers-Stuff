@@ -423,6 +423,7 @@ SMODS.Joker {
 }
 
 where = function(t, thing)
+	if not t then return end
 	for k, v in ipairs(t) do
 		if v == thing then
 			return k
@@ -718,12 +719,26 @@ SMODS.Joker {
 			for i=1,#scoring_hand do
 				local other_card=scoring_hand[i]
 				if where(card.ability.extra.suits,other_card.base.suit) then
+					if card.joker_display_values then 
+						if not card.joker_display_values.rmtable then card.joker_display_values.rmtable = {other_card.base.suit} goto break1 end
+						if card.joker_display_values.rmtable and not where(card.joker_display_values.rmtable,other_card.base.suit) then
+							table.insert(card.joker_display_values.rmtable,other_card.base.suit)
+						end
+						::break1::
+					end
 					table.remove(card.ability.extra.suits,where(card.ability.extra.suits,other_card.base.suit))
 					table.insert(effects, {
 						dollars = card.ability.extra.dollars,
 						message_card = other_card
 					} )
 				elseif not where(card.ability.extra.other,other_card.base.suit) and not where(basesuits,other_card.base.suit) then
+					if card.joker_display_values then 
+						if not card.joker_display_values.rmtable then card.joker_display_values.rmtable = {other_card.base.suit} goto break2 end
+						if not where(card.joker_display_values.rmtable,other_card.base.suit) then
+							table.insert(card.joker_display_values.rmtable,other_card.base.suit)
+						end
+						::break2::
+					end
 					table.insert(card.ability.extra.other,other_card.base.suit)
 					table.insert(effects, {
 						dollars = card.ability.extra.dollars,
@@ -740,17 +755,29 @@ SMODS.Joker {
 	end,
 	update = function(self,card,dt)
 		if not card.joker_display_values then card.joker_display_values = {remsuits = ''} end
-		card.joker_display_values.remsuits = '('..table.concat(card.ability.extra.suits,', ')..')'
+		local var = {}
+		if not card.joker_display_values.rmtable then card.joker_display_values.remsuits = 'None' return end
+		for _, v in ipairs(card.joker_display_values.rmtable) do
+			var[#var+1]=string.sub(localize(v,'suits_plural'),1,2)
+		end
+		card.joker_display_values.remsuits = table.concat(var,',')
 	end,
 	joker_display_def = function(JokerDisplay)
 		---@type JDJokerDefinition
 		return {
 			text = {
-				{ text = "$" , colour=G.C.MONEY},
-				{ ref_table = "card.ability.extra", ref_value = "dollars", retrigger_type = "mult", colour=G.C.MONEY}
+				{ text = "$"},
+				{ ref_table = "card.ability.extra", ref_value = "dollars", retrigger_type = "mult"}
+			},
+			text_config = {
+				colour = G.C.MONEY
 			},
 			reminder_text = {
+				{ text = "Used: "},
 				{ ref_table = "card.joker_display_values", ref_value = "remsuits"}
+			},
+			reminder_text_config = {
+				scale = 0.3
 			}
 		}
 	end
