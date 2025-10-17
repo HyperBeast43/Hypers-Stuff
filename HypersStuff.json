@@ -1,9 +1,10 @@
 {
 	"id": "hypa",
 	"name": "Hyper's Stuff",
-	"display_name": "Hyper's Stuff",
+	"display_name": "Hyper's ​Stuff",
+	"no_marquee": true,
 	"author": ["hypabeast_"],
-	"description": "There's actually a bunch more jokers in jokers.lua, I just have them commented out because I couldn't get them to work.",
+	"description": "Never really feels like anything is added per update, but somehow we're still here.",
 	"prefix": "hypr",
 	"main_file": "hypr.lua",
 	"priority": 621,

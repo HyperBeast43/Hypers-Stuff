@@ -204,6 +204,13 @@ loc = {
 					"this joker, give {C:money}$#1#{}",
 					"{C:red,E:2}Self destructs{} if no suits remaining"
 				}
+			},
+			j_hypr_saltines = {
+				name = 'Saltines',
+				text = {
+					"{X:mult,C:white}X#1#{} Mult, {C:dark_edition}^#2#{} per card scored",
+					"{C:red,E:2}Self destructs{} when below {X:mult,C:white}X#3#{}"
+				}
 			}
 		}
 	},
@@ -214,7 +221,7 @@ loc = {
 		dictionary = {
 			k_hypr_empty = "Empty Deck!",
 			k_hypr_failsafe = "Failsafe?!",
-			k_hypr_addhand = "{C:blue}+1 Hand{}",
+			k_hypr_addhand = "+1 Hand",
 			k_hypr_active_true = "Active",
 			k_hypr_active_false = "Inactive"
 		}

@@ -651,7 +651,7 @@ SMODS.Joker {
 
 local function expire_joker(card, key, sound, color) -- taken from Jimbotomy
     card_eval_status_text(card, 'extra', nil, nil, nil, { sound = sound, message = localize(key), colour = color })
-    card:juice_up(0.3, 0.4)
+    --card:juice_up(0.3, 0.4)
     G.E_MANAGER:add_event(
         Event({
             trigger = 'after',
@@ -706,6 +706,7 @@ SMODS.Joker {
 	eternal_compat = false,
 	pos = { x = 0, y = 3 },
 	cost = 4,
+	pools = { ["Food"] = true },
 	calculate = function(self, card, context)
 		if context.before then 
 			if not scoring_hand then return end -- cryptid 'None' handling 
@@ -752,14 +753,82 @@ SMODS.Joker {
 	end
 }
 
-
+SMODS.Joker {
+	key = 'saltines',
+	config = { extra = { xmult = 1.5, exp = 0.95, min=1.2, init = 1.5 } },
+	loc_vars = function(self, info_queue, card)
+		table.insert(info_queue,{ set = "Other", key = "hypr_devart" })
+		return { vars = { card.ability.extra.xmult, card.ability.extra.exp, card.ability.extra.min } }
+	end,
+	rarity = 1,
+	atlas = 'cards',
+	blueprint_compat = true,
+	perishable_compat = true,
+	demicoloncompat = true,
+	eternal_compat = false,
+	pos = { x = 1, y = 3 },
+	cost = 3,
+	pools = { ["Food"] = true },
+	update = function(self,card,dt)
+		if card.ability.extra.exp > 0.99 then card.ability.extra.exp = 0.99 end
+	end,
+	calculate = function(self, card, context)
+		if (context.before or context.end_of_round or context.drawing_cards) and card.joker_display_values then
+			card.joker_display_values.storedxmult = card.ability.extra.xmult
+		end
+		if context.individual and context.cardarea == G.play then
+			card.ability.extra.xmult = card.ability.extra.xmult^card.ability.extra.exp
+		end
+		if context.joker_main or context.forcetrigger then 
+			if card.ability.extra.xmult<(card.ability.extra.min) and not card.ability.extra.eaten then 
+				card.ability.extra.eaten=true
+			end
+			return {xmult = card.ability.extra.xmult, func = function() if card.ability.extra.eaten then expire_joker(card,'k_eaten_ex','tarot1',G.C.RED) end end } 
+		end
+	end,
+	joker_display_def = function(JokerDisplay)
+		---@type JDJokerDefinition
+		return {
+			calc_function = function(card)
+				local _,_,cards = JokerDisplay.evaluate_hand(JokerDisplay.current_hand,true) 
+				local count = 0
+				if not playing_hand then 
+					for _,v in ipairs(cards) do
+						count = count + JokerDisplay.calculate_card_triggers(v)
+					end
+				end
+				if playing_hand then count = 0 end
+				if not card.joker_display_values.storedxmult then card.joker_display_values.storedxmult=card.ability.extra.xmult end
+				card.joker_display_values.calcmult = card.joker_display_values.storedxmult^(card.ability.extra.exp^count)
+				local ln = math.log
+				local f = function(a,b,c) return math.floor(ln(ln(c)/ln(a))/ln(b))+1 end
+				card.joker_display_values.fullamt = f(card.ability.extra.init,card.ability.extra.exp,card.ability.extra.min)
+				card.joker_display_values.remamt = math.max(0,f(card.joker_display_values.calcmult,card.ability.extra.exp,card.ability.extra.min))
+			end,
+			text = {
+				{
+					border_nodes = {
+						{ text = "X" },
+						{ ref_table = "card.joker_display_values", ref_value = "calcmult", retrigger_type = "exp"}
+					}
+				}
+			},
+			reminder_text = {
+				{ text = "(" },
+				{ ref_table = "card.joker_display_values", ref_value = "remamt"},
+				{ text = "/" },
+				{ ref_table = "card.joker_display_values", ref_value = "fullamt"},
+				{ text = ")" }
+			}
+		}
+	end
+}
 
 
 --[[
 more ideas:
     Pliers (Rare): Selling this joker destroys a random Eternal joker
-    Clown Nose (Common): Selling this joker gives %playername%(flavor text:That's you!) +4 mult for the rest of this run --player scores in context.before
+    Clown Nose (Common): Selling this joker gives %playername%(flavor text:That's you!) +4 mult for the rest of this run --player scores in context.before, i somehow need to spoof a joker
 	Melatonin:
-	Saltines (Common): x1.5 mult, ^0.9 when/per non-scoring card played, self-destructs when xmult<1.05 (0/20)
 ]]
 	
