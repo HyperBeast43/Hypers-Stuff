@@ -827,13 +827,25 @@ SMODS.Joker {
 						count = count + JokerDisplay.calculate_card_triggers(v)
 					end
 				end
-				if playing_hand then count = 0 end
+				if playing_hand then count = 0 end 
 				if not card.joker_display_values.storedxmult then card.joker_display_values.storedxmult=card.ability.extra.xmult end
-				card.joker_display_values.calcmult = card.joker_display_values.storedxmult^(card.ability.extra.exp^count)
-				local ln = math.log
-				local f = function(a,b,c) return math.floor(ln(ln(c)/ln(a))/ln(b))+1 end
-				card.joker_display_values.fullamt = f(card.ability.extra.init,card.ability.extra.exp,card.ability.extra.min)
-				card.joker_display_values.remamt = math.max(0,f(card.joker_display_values.calcmult,card.ability.extra.exp,card.ability.extra.min))
+				
+				local notalis = not SMODS.find_mod('Talisman')[1]
+				if notalis then card.joker_display_values.calcmult = card.joker_display_values.storedxmult^(card.ability.extra.exp^count)
+				else card.joker_display_values.calcmult = Big:ensureBig(card.joker_display_values.storedxmult):pow(Big:ensureBig(card.ability.extra.exp):pow(count))
+				end
+				local maximum = function(x,y)
+					if notalis then return math.max(x,y)
+					else return Big:ensureBig(x):max(y) end
+				end
+				local ln = function(x) if notalis then return math.log(x) else return Big:ensureBig(x):ln() end end
+				local tfloor = function(x) if notalis then return math.floor(x) else return Big:ensureBig(x):floor() end end
+				local tsucc = function(x) if notalis then return x+1 else return Big:ensureBig(x):add(Big:create(1)) end end --it's called that because it's the succession operator
+				local tdiv = function(x,y) if notalis then return x/y else return Big:ensureBig(x):div(y) end end
+				local talistr = function(x) if notalis then return tostring(x) else return OmegaMeta.__tostring(x) end end
+				local f = function(a,b,c) return tsucc(tfloor(tdiv(ln(tdiv(ln(c),ln(a))),ln(b)))) end
+				card.joker_display_values.fullamt = talistr(f(card.ability.extra.init,card.ability.extra.exp,card.ability.extra.min))
+				card.joker_display_values.remamt = talistr(maximum(0,f(card.joker_display_values.calcmult,card.ability.extra.exp,card.ability.extra.min)))
 			end,
 			text = {
 				{
