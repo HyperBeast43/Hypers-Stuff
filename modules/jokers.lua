@@ -599,7 +599,7 @@ SMODS.Joker {
 			if eval.playing_card then table.insert(effects, eval.playing_card) end
 			if eval.enhancement then table.insert(effects, eval.enhancement) end
 			if eval.edition then table.insert(effects, eval.edition) end
-			eval = eval_card(other_card, {cardarea = G.hand, main_scoring = true})
+			eval = eval_card(triggercard, {cardarea = G.hand, main_scoring = true})
 			if eval.playing_card then table.insert(effects, eval.playing_card) end
 			if eval.enhancement then table.insert(effects, eval.enhancement) end
 			if eval.edition then table.insert(effects, eval.edition) end
