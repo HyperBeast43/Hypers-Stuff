@@ -2,7 +2,7 @@ SMODS.Back {
 	key = "solar",
 	atlas = 'cards', pos = { x = 0, y = 0 },
 	apply = function (self, back)
-        G.E_MANAGER:add_event(Event({
+		G.E_MANAGER:add_event(Event({
 			trigger = "after",
 			delay = 0.7,
 			func = function()
@@ -15,13 +15,13 @@ SMODS.Back {
 }
 if SMODS.find_mod('CardSleeves')[1]~=nil then
 CardSleeves.Sleeve {
-    key = "solar",
-    name = "Solar Sleeve",
-    atlas = "sleeves",
-    pos = { x = 0, y = 0 },
-    config = {},
-    unlocked = false,
-    unlock_condition = { deck = "b_hypr_solar", stake = "stake_red" },
+	key = "solar",
+	name = "Solar Sleeve",
+	atlas = "sleeves",
+	pos = { x = 0, y = 0 },
+	config = {},
+	unlocked = false,
+	unlock_condition = { deck = "b_hypr_solar", stake = "stake_red" },
 	apply = function (self, back)
 		G.E_MANAGER:add_event(Event({
 			trigger = "after",
@@ -32,5 +32,5 @@ CardSleeves.Sleeve {
 				return true
 			end,
 		}))
-    end
+	end
 } end

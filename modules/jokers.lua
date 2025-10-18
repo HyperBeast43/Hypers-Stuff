@@ -641,7 +641,7 @@ SMODS.Joker {
 			if SMODS.pseudorandom_probability(card, 'hypr_trickcoin', a, 100) then
 			card.ability.extra.used = true
 			
-			return {message = G.localization.misc.dictionary['k_hypr_addhand'], func = function() ease_hands_played(1) card:juice_up(0.4,0.3) end }
+			return {message = G.localization.misc.dictionary['k_hypr_addhand'], func = function() ease_hands_played(1) end }
 			end
 		end
 		if context.end_of_round then
@@ -813,7 +813,7 @@ SMODS.Joker {
 			if card.ability.extra.xmult<(card.ability.extra.min) and not card.ability.extra.eaten then 
 				card.ability.extra.eaten=true
 			end
-			return {xmult = card.ability.extra.xmult, func = function() if card.ability.extra.eaten then expire_joker(card,'k_eaten_ex','tarot1',G.C.RED) end end } 
+			return {xmult = card.ability.extra.xmult, func = function() if card.ability.extra.eaten==true then expire_joker(card,'k_eaten_ex','tarot1',G.C.RED) card.ability.extra.eaten='sent' end end } 
 		end
 	end,
 	joker_display_def = function(JokerDisplay)
@@ -855,10 +855,14 @@ SMODS.Joker {
 }
 
 
+
+
 --[[
 more ideas:
 	Pliers (Rare,$10): Selling this joker destroys a random joker, prioritizes Eternals
 	Clown Nose (Common): Selling this joker gives %playername%(flavor text:That's you!) +4 mult for the rest of this run --player scores in context.before, i somehow need to spoof a joker
 	Melatonin:
+	--unlock something by reducing discard size to 0
+
 ]]
 	

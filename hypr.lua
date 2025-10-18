@@ -7,6 +7,7 @@ assert(SMODS.load_file("modules/jokers.lua"))()
 assert(SMODS.load_file("modules/challenges.lua"))()
 assert(SMODS.load_file("modules/decks.lua"))()
 assert(SMODS.load_file("modules/hooks.lua"))()
+assert(SMODS.load_file("modules/consumables.lua"))()
 
 SMODS.Atlas {
 key = "modicon",
@@ -19,4 +20,13 @@ SMODS.current_mod.optional_features = {
 	cardareas = {
 		deck = true
 	},
+	retrigger_joker = true
 }
+
+tablepeek = function(table)
+	local ret = ''
+	for k,_ in pairs(table) do
+		ret = ret..','..k
+	end
+	return string.sub(ret,2,-1)
+end

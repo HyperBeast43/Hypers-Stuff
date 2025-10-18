@@ -20,9 +20,20 @@ function G.FUNCS.get_poker_hand_info(_cards)
 	return text, loc_disp_text, poker_hands, scoring_hand, disp_text
 end
 
+if JokerDisplay then
+	local jokerdispcjt = JokerDisplay.calculate_joker_triggers
+	function JokerDisplay.calculate_joker_triggers(card)
+		local evaltriggers = jokerdispcjt(card)
+		if card.ability.hypr_fakeRed then evaltriggers = evaltriggers+1 end
+		return evaltriggers
+	end 
+end
+
+
+
 --[[local insrep = SMODS.insert_repetitions
 SMODS.insert_repetitions = function(ret, eval, effect_card, _type)
-    if eval == nil then goto allow end
+	if eval == nil then goto allow end
 	print("ret", ret)
 	print("eval", eval)
 	if eval then for k,v in pairs(eval) do print("eval",k,v) end end
@@ -30,15 +41,15 @@ SMODS.insert_repetitions = function(ret, eval, effect_card, _type)
 	print("effect_card type", type(effect_card))
 	print("effect_card keys", effect_card and effect_card.key)
 	print("_type", _type)
-    if effect_card then
+	if effect_card then
 		if eval.jeracard then end
-        if not((effect_card.label or nil)=="j_hypr_jera") and (eval.jeracard and eval.jeracard:is_suit("Hearts")) then
-            return -- Block this repetition!
-        end
-    end
+		if not((effect_card.label or nil)=="j_hypr_jera") and (eval.jeracard and eval.jeracard:is_suit("Hearts")) then
+			return -- Block this repetition!
+		end
+	end
 
-    -- Otherwise, allow as normal
+	-- Otherwise, allow as normal
 	::allow::
-    return insrep(ret, eval, effect_card, _type)
+	return insrep(ret, eval, effect_card, _type)
 end
 ]]

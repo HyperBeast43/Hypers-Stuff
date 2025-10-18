@@ -45,25 +45,39 @@ loc = {
 			hypr_suitsremaining0 = {
 				name = "Remaining Suits",
 				text = {"None!"}
+			},
+			fakeRed={
+				name="Red Seal",
+				text={"this text should never show up"}
+			},
+		},
+		Spectral = {
+			c_hypr_recursion = {
+				name = "Recursion",
+				text = {
+					"Add a {C:red}Red Seal{}",
+					"to a random {C:attention}Joker,{}",
+					"{C:red}-#1#{} discard size{}"
+				}
 			}
 		},
 		Back = {
-		    b_hypr_solar={
-                name="Solar Deck",
-                text={
+			b_hypr_solar={
+				name="Solar Deck",
+				text={
 					"{C:blue}+1{} cards {C:blue}playable per hand{}",
 					"{C:red}-1{} cards {C:red}discardable per discard{}"
-                },
-            }
+				},
+			}
 		},
 		Sleeve = {
-		    sleeve_hypr_solar={
-                name="Solar Sleeve",
-                text={
+			sleeve_hypr_solar={
+				name="Solar Sleeve",
+				text={
 					"{C:blue}+1{} cards {C:blue}playable per hand{}",
 					"{C:red}-1{} cards {C:red}discardable per discard{}"
-                },
-            }
+				},
+			}
 		},
 		Blind = {
 			b_hypr_dice={
@@ -227,6 +241,9 @@ loc = {
 		},
 		poker_hands = {
 			['hypr-Three Pair'] = "Three Pair"
+		},
+		labels = {
+			hypr_fakeRed = "Red Seal"
 		}
 	}
 }
