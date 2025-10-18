@@ -75,33 +75,33 @@ if SMODS.find_mod('Talisman')[1] ~= nil then trimsci = function(s,b)
   local i = 0
   local sci
   for chr in string.gmatch(s,".") do
-    i = i+1 
-    if i==2 and chr=="." and b==2 then b=1 end
-    if chr == "e" then 
-      sci=true 
-        local i2 = b
-        while i2~=0 do
-          if t[i2]=="0" or t[i2]=="." then
-            b = math.max(b-1,3)
-            i2 = i2-1
-          else
-            i2 = 0 
-          end
-        end
-      break end
-    t[i] = chr
+	i = i+1 
+	if i==2 and chr=="." and b==2 then b=1 end
+	if chr == "e" then 
+	  sci=true 
+		local i2 = b
+		while i2~=0 do
+		  if t[i2]=="0" or t[i2]=="." then
+			b = math.max(b-1,3)
+			i2 = i2-1
+		  else
+			i2 = 0 
+		  end
+		end
+	  break end
+	t[i] = chr
   end
   if not sci and (not d or t[1]=="0") and i>b then
-    return trimsci(string.format("%e", s),b)
+	return trimsci(string.format("%e", s),b)
   end
   s = string.sub(table.concat(t),1,b)..(((i ~= #s) and (string.sub(s,i))) or "")
   i = 0
   t = {}
   for chr in string.gmatch(s,".") do
-    if chr ~= "+" and not (chr=="0" and (t[i]=="e" or t[i]=="-")) and not (chr=="." and s.sub(i+2,i+2)=="e") then
-      i = i+1
-      t[i]=chr
-    end
+	if chr ~= "+" and not (chr=="0" and (t[i]=="e" or t[i]=="-")) and not (chr=="." and s.sub(i+2,i+2)=="e") then
+	  i = i+1
+	  t[i]=chr
+	end
   end
   return table.concat(t)
 end end
@@ -253,7 +253,7 @@ SMODS.Joker {
 					v.sell_cost = 0.0
 				end
 			end
-        end
+		end
 	end
 	calculate = function(self,card,context)
 		if context.selling_self then -- does this also apply when destroyed other ways
@@ -261,7 +261,7 @@ SMODS.Joker {
 			if v.tcsell_cost then
 				v.sell_cost = v.tcsell_cost
 			end
-        end
+		end
 	end
 }]]
 
@@ -335,16 +335,16 @@ SMODS.Joker {
 	cost = 6,
 	jeracheck = true,
 	-- all hearts are retriggered exactly once
-    calculate = function(self, card, context)
-        if context.repetition and context.cardarea == G.play then
+	calculate = function(self, card, context)
+		if context.repetition and context.cardarea == G.play then
 			local rept = 0 -- smods doesnt like this but w/e
 			if context.other_card:is_suit("Hearts") then rept = 1 end
-            return {
-                repetitions = rept,
+			return {
+				repetitions = rept,
 				jeracard = context.other_card
-            }
-        end
-    end,
+			}
+		end
+	end,
 	retrigger_function = function(playing_card, scoring_hand, _, joker_card)
 		return playing_card:is_suit("Hearts") and 1 or 0
 	end
@@ -353,11 +353,11 @@ SMODS.Joker {
 SMODS.Joker {
 	key = 'bypass',
 	config = { extra = {odds = 2}, bypassed = {}},
-    loc_vars = function(self, info_queue, card)
-        local numerator, denominator = SMODS.get_probability_vars(card, card.ability.extra.odds, 7, 'hypr_bypass')
+	loc_vars = function(self, info_queue, card)
+		local numerator, denominator = SMODS.get_probability_vars(card, card.ability.extra.odds, 7, 'hypr_bypass')
 		info_queue[#info_queue + 1] = { set = "Other", key = "hypr_placeholder" }
-        return { vars = { numerator, denominator} }
-    end,
+		return { vars = { numerator, denominator} }
+	end,
 	blueprint_compat = true,
 	perishable_compat = true,
 	demicoloncompat = false,
@@ -479,10 +479,10 @@ if SMODS.find_mod('Bunco')[1]~=nil then --bunco is still a wip
 end
 
 function shuffle(t)
-    for i = #t, 2, -1 do
-        local j = math.random(i)
-        t[i], t[j] = t[j], t[i]
-    end
+	for i = #t, 2, -1 do
+		local j = math.random(i)
+		t[i], t[j] = t[j], t[i]
+	end
 end
 
 local d_joi = 0
@@ -502,10 +502,10 @@ for _, datlas in ipairs(drinks) do
 	SMODS.Joker {
 	key = drinkid,
 	config = { extra = {stored = keepatlas}},
-    loc_vars = function(self, info_queue, card)
+	loc_vars = function(self, info_queue, card)
 		info_queue[#info_queue + 1] = { set = "Other", key = "hypr_placeholder" }
-        return { vars = {localize(card.ability.extra.stored[3], 'suits_plural'), colours = {G.C.SUITS[card.ability.extra.stored[3] ]}} }
-    end,
+		return { vars = {localize(card.ability.extra.stored[3], 'suits_plural'), colours = {G.C.SUITS[card.ability.extra.stored[3] ]}} }
+	end,
 	paperback = keepatlas[4],
 	rarity = 2,
 	atlas = 'cards',
@@ -523,12 +523,12 @@ for _, datlas in ipairs(drinks) do
 			local i = 0
 			
 			G.E_MANAGER:add_event(
-                Event({
-                    trigger = 'after',
-                    delay = 0.06 * G.SETTINGS.GAMESPEED,
-                    blockable = false,
-                    blocking = false,
-                    func = function()
+				Event({
+					trigger = 'after',
+					delay = 0.06 * G.SETTINGS.GAMESPEED,
+					blockable = false,
+					blocking = false,
+					func = function()
 						local drs = {}
 						for k,v in ipairs(G.hypr.suits) do
 							drs[k]=v
@@ -569,7 +569,7 @@ for _, datlas in ipairs(drinks) do
 				})
 			)
 		end
-    end}
+	end}
 end
 
 
@@ -577,10 +577,10 @@ end
 SMODS.Joker {
 	key = 'junkdrawer',
 	config = {extra={}},
-    loc_vars = function(self, info_queue, card)
+	loc_vars = function(self, info_queue, card)
 		info_queue[#info_queue + 1] = { set = "Other", key = "hypr_placeholder" }
-        return {}
-    end,
+		return {}
+	end,
 	eternal_compat = true,
 	perishable_compat = true,
 	blueprint_compat = true,
@@ -617,11 +617,11 @@ SMODS.Joker {
 SMODS.Joker {
 	key = 'trickcoin',
 	config = {extra={ chance = 1000, used=false}},
-    loc_vars = function(self, info_queue, card)
+	loc_vars = function(self, info_queue, card)
 		info_queue[#info_queue + 1] = { set = "Other", key = "hypr_placeholder" }
 		roll, _ = SMODS.get_probability_vars(card, card.ability.extra.chance, 0) 
 		return { vars = {math.min(roll/100,100/3)}}
-    end,
+	end,
 	eternal_compat = true,
 	perishable_compat = true,
 	blueprint_compat = false,
@@ -654,31 +654,31 @@ SMODS.Joker {
 }
 
 local function expire_joker(card, key, sound, color) -- taken from Jimbotomy
-    card_eval_status_text(card, 'extra', nil, nil, nil, { sound = sound, message = localize(key), colour = color })
-    --card:juice_up(0.3, 0.4)
-    G.E_MANAGER:add_event(
-        Event({
-            trigger = 'after',
-            delay = 0.2,
-            func = function()
-                card.T.r = -0.2
-                card.states.drag.is = true
-                card.children.center.pinch.x = true
-                return true;
-            end
-        })
-    )
-    G.E_MANAGER:add_event(
-        Event({
-            trigger = 'after',
-            delay = 0.6,
-            func = function()
-                G.jokers:remove_card(card)
-                card:remove()
-                return true;
-            end
-        })
-    )
+	card_eval_status_text(card, 'extra', nil, nil, nil, { sound = sound, message = localize(key), colour = color })
+	--card:juice_up(0.3, 0.4)
+	G.E_MANAGER:add_event(
+		Event({
+			trigger = 'after',
+			delay = 0.2,
+			func = function()
+				card.T.r = -0.2
+				card.states.drag.is = true
+				card.children.center.pinch.x = true
+				return true;
+			end
+		})
+	)
+	G.E_MANAGER:add_event(
+		Event({
+			trigger = 'after',
+			delay = 0.6,
+			func = function()
+				G.jokers:remove_card(card)
+				card:remove()
+				return true;
+			end
+		})
+	)
 end
 
 SMODS.Joker {
@@ -767,7 +767,7 @@ SMODS.Joker {
 		return {
 			text = {
 				{ text = "$"},
-				{ ref_table = "card.ability.extra", ref_value = "dollars", retrigger_type = "mult"}
+				{ ref_table = "card.ability.extra", ref_value = "dollars"}
 			},
 			text_config = {
 				colour = G.C.MONEY
@@ -857,8 +857,8 @@ SMODS.Joker {
 
 --[[
 more ideas:
-    Pliers (Rare,$10): Selling this joker destroys a random joker, prioritizes Eternals
-    Clown Nose (Common): Selling this joker gives %playername%(flavor text:That's you!) +4 mult for the rest of this run --player scores in context.before, i somehow need to spoof a joker
+	Pliers (Rare,$10): Selling this joker destroys a random joker, prioritizes Eternals
+	Clown Nose (Common): Selling this joker gives %playername%(flavor text:That's you!) +4 mult for the rest of this run --player scores in context.before, i somehow need to spoof a joker
 	Melatonin:
 ]]
 	
