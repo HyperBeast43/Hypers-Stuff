@@ -592,24 +592,31 @@ SMODS.Joker {
 	calculate = function(self,card,context)
 		if context.joker_main or context.forcetrigger then
 			if #G.deck.cards==0 then return { message = G.localization.misc.dictionary['k_hypr_empty']} end -- def a better way to do that but idc
+			local ctx = { -- taken from paperback's Nichola
+				cardarea = G.play,
+				full_hand = G.play.cards,
+				scoring_hand = context.scoring_hand,
+				scoring_name = context.scoring_name,
+				poker_hands = context.poker_hands
+			}
 			local random_seed = (G.GAME and G.GAME.pseudorandom.seed or "") .. "." .. "hypr_junkdrawer"
 			local triggercard = pseudorandom_element(G.deck.cards, random_seed)
-			local eval = eval_card(triggercard, {cardarea = G.play, main_scoring = true})
-			local effects = {}
-			if eval.playing_card then table.insert(effects, eval.playing_card) end
-			if eval.enhancement then table.insert(effects, eval.enhancement) end
-			if eval.edition then table.insert(effects, eval.edition) end
-			eval = eval_card(triggercard, {cardarea = G.hand, main_scoring = true})
-			if eval.playing_card then table.insert(effects, eval.playing_card) end
-			if eval.enhancement then table.insert(effects, eval.enhancement) end
-			if eval.edition then table.insert(effects, eval.edition) end
-			local effect
-			if next(effects) then
-				effect = SMODS.merge_effects(effects)
+			if triggercard:can_calculate() then
+				local val = triggercard.base.value
+				for i=1,string.len(val) do
+					if string.sub(val,i,i)=='_' then
+						val = string.sub(val,i+1,-1)
+						break
+					end
+				end
+				local ret = {message = val..' of '..localize(triggercard.base.suit, 'suits_plural')}
+				SMODS.score_card(triggercard, ctx)
+				ctx.cardarea = G.hand
+				SMODS.score_card(triggercard, ctx)
+				return ret
+			else 
+				return({message=localize('k_hypr_jddebuffed'), colour=G.C.RED})
 			end
-			effect['message']=triggercard.base.value..' of '..localize(triggercard.base.suit, 'suits_plural')
-			if not effect then return {message=G.localization.misc.dictionary['k_hypr_empty']} end
-			return effect
 		end
 	end
 }
@@ -637,8 +644,8 @@ SMODS.Joker {
 		if context.before and not card.ability.extra.used then
 			local random_seed = (G.GAME and G.GAME.pseudorandom.seed or "") .. "." .. "hypr_trickcoin"
 			local a,_ = SMODS.get_probability_vars(card, card.ability.extra.chance, 0) 
-			a = math.min(a,100/3)
-			if SMODS.pseudorandom_probability(card, 'hypr_trickcoin', a, 100) then
+			a = math.min(a,10000/3)
+			if SMODS.pseudorandom_probability(card, 'hypr_trickcoin', a, 10000) then
 			card.ability.extra.used = true
 			
 			return {message = G.localization.misc.dictionary['k_hypr_addhand'], func = function() ease_hands_played(1) end }
@@ -646,7 +653,7 @@ SMODS.Joker {
 		end
 		if context.end_of_round then
 			card.ability.extra.used = false
-			if beat_boss then
+			if context.beat_boss then
 				card.ability.extra.chance = card.ability.extra.chance + 100
 			end
 		end
@@ -785,7 +792,7 @@ SMODS.Joker {
 
 SMODS.Joker {
 	key = 'saltines',
-	config = { extra = { xmult = 1.5, exp = 0.95, min=1.2, init = 1.5 } },
+	config = { extra = { xmult = 1.5, exp = 0.95, min=1.2} },
 	loc_vars = function(self, info_queue, card)
 		table.insert(info_queue,{ set = "Other", key = "hypr_placeholder" })
 		return { vars = { card.ability.extra.xmult, card.ability.extra.exp, card.ability.extra.min } }
@@ -800,6 +807,9 @@ SMODS.Joker {
 	cost = 3,
 	pools = { ["Food"] = true },
 	update = function(self,card,dt)
+		if not card.ability.extra.init then
+			card.ability.extra.init = card.ability.extra.xmult 
+		end
 		if card.ability.extra.exp > 0.99 then card.ability.extra.exp = 0.99 end
 	end,
 	calculate = function(self, card, context)
@@ -867,7 +877,145 @@ SMODS.Joker {
 }
 
 
+if Cryptid or PB_UTIL then
+SMODS.Joker {
+	key = '',
+	config = { extra = { xmult = 1, scale = .5, immutable = {base = 1, lastknown = 0}} },
+	loc_vars = function(self, info_queue, card)
+		return { vars = { card.ability.extra.scale, card.ability.extra.xmult } }
+	end,
+	rarity = (Cryptid and 3) or 2, -- ://DELETE is way more common than 9 of Swords
+	atlas = 'cards',
+	blueprint_compat = true,
+	perishable_compat = true,
+	demicoloncompat = true,
+	eternal_compat = true,
+	pos = { x = 4, y = 3 },
+	cost = 5,
+	update = function(self,card,dt)
+		local i = 0
+		if G.GAME.paperback then if G.GAME.paperback.banned_run_keys then
+			for _,_ in pairs(G.GAME.paperback.banned_run_keys) do 
+				i = i+1
+			end
+		end end
+		if G.GAME.cry_banished_keys then
+			for _,_ in pairs(G.GAME.cry_banished_keys) do -- because #G.GAME.cry_banished_keys isn't working somehow
+				i = i+1
+			end
+		end
+		card.ability.extra.xmult = card.ability.extra.immutable.base + card.ability.extra.scale*i
+		if card.ability.extra.immutable.lastknown ~= i then
+			card.ability.extra.immutable.lastknown = i
+			if not(G.SETTINGS.paused) then
+				card_eval_status_text(card,'extra',nil,nil,nil,{
+				message = localize('k_upgrade_ex'),
+				delay = 0.1
+				})
+			end
+		end
+	end,
+	calculate = function(self,card,context)
+		if context.joker_main or context.forcetrigger then
+			return {xmult = card.ability.extra.xmult}
+		end
+	end,
+	joker_display_def = function(JokerDisplay)
+		---@type JDJokerDefinition
+		return {
+			text = {
+				{
+					border_nodes = {
+						{ text = "X" },
+						{ ref_table = "card.ability.extra", ref_value = "xmult", retrigger_type = "exp"}
+					}
+				}
+			}
+		}
+	end
+}
+end
+if Cryptid then
+SMODS.Joker {
+	key = 'tedium',
+	config = { extra = { emult = 1, scale = .2, immutable = {base = 1,rounds = 0,interacted = true,lasthighlighted = false} } },
+	dependencies = {
+		items = {
+			"set_cry_epic",
+		},
+	},
+	loc_vars = function(self, info_queue, card)
+		--table.insert(info_queue,{ set = "Other", key = "hypr_devart" }) --you know what no this works
+		return { vars = { card.ability.extra.scale, card.ability.extra.emult } }
+	end,
+	rarity = 'cry_epic',
+	atlas = 'placeholder',
+	blueprint_compat = true,
+	perishable_compat = true,
+	demicoloncompat = true,
+	eternal_compat = true,
+	pos = { x = 0, y = 0 },
+	cost = 5,
+	update = function(self,card,dt)
+		if card.ability.extra.immutable.lasthighlighted ~= card.highlighted then
+			card.ability.extra.immutable.lasthighlighted = card.highlighted
+			card.ability.extra.immutable.interacted = true
+		end
+	end,
+	calculate = function(self,card,context)
+		if context.joker_main or context.forcetrigger then
+			if card.ability.extra.emult==1 then return end
+			return {
+				message = localize({
+					type = "variable",
+					key = "a_powmult",
+					vars = {
+						number_format(card.ability.extra.emult),
+					},
+				}),
+				Emult_mod = lenient_bignum(card.ability.extra.emult),
+				colour = G.C.DARK_EDITION,
+			}
+		end
+		if context.end_of_round and context.cardarea == G.jokers then
+			if not card.ability.extra.immutable.interacted then
+				card.ability.extra.emult = card.ability.extra.immutable.base
+				return {message = localize('k_reset')}
+			else
+				card.ability.extra.immutable.rounds = card.ability.extra.immutable.rounds+1
+				card.ability.extra.emult = card.ability.extra.immutable.base + card.ability.extra.scale*card.ability.extra.immutable.rounds
+				card.ability.extra.immutable.interacted = false
+				return {message = localize('k_upgrade_ex')}
+			end
+		end
+	end,
+	joker_display_def = function(JokerDisplay)
+		---@type JDJokerDefinition
+		return {
+			text = {
+				{
+					border_nodes = {
+						{ text = "^" },
+						{
+							ref_table = "card.ability.extra",
+							ref_value = "emult",
+							retrigger_type = function(number, triggers)
+								local num = number
+								for i = 1, triggers - 1 do
+									num = num ^ number
+								end
+								return num
+							end,
+						}
+					},
+					border_colour = G.C.DARK_EDITION
+				}
+			}
+		}
+	end
+}
 
+end
 
 --[[
 more ideas:

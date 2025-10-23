@@ -24,8 +24,8 @@ SMODS.Challenge {
     },
     jokers = (function()
 		local j = {
-			{id = 'j_hypr_hypa'},
-			{id = 'j_blueprint', pinned = true}
+			{id = 'j_blueprint', pinned = true},
+			{id = 'j_hypr_hypa' }
 		}
 		for _, v in ipairs(j) do
             if next(SMODS.find_mod('Cryptid')) then

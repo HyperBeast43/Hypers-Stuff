@@ -74,8 +74,8 @@ loc = {
 			sleeve_hypr_solar={
 				name="Solar Sleeve",
 				text={
-					"{C:blue}+1{} cards {C:blue}playable per hand{}",
-					"{C:red}-1{} cards {C:red}discardable per discard{}"
+					"{C:blue}+1{} cards {C:blue}per hand{}",
+					"{C:red}-1{} cards {C:red}per discard{}"
 				},
 			}
 		},
@@ -159,6 +159,22 @@ loc = {
 					"{C:attention,E:1}un-debuff{} until end of hand"
 				}
 			},
+			j_hypr_ = {
+				name = ' ',
+				text = {
+					"For every {C:attention}banished{}",
+					"card, give {X:mult,C:white}X#1#{} Mult",
+					"{C:inactive}(Currently {X:mult,C:white}X#2#{C:inactive} Mult)"
+				}
+			},
+			j_hypr_tedium = {
+				name = 'Tedium',
+				text = {
+					"Every round, gain {X:dark_edition,C:white}^#1#{} Mult",
+					"{C:red}Resets{} if not {C:attention}clicked{} during a round",
+					"{C:inactive}(Currently {X:dark_edition,C:white}^#2#{C:inactive} Mult)"
+				}
+			},
 			--drinks
 				j_hypr_drink_spades = {
 					name = 'PhD Pepper',
@@ -197,9 +213,7 @@ loc = {
 				text = 	{
 					"Triggers a random card",
 					"from your {C:attention}remaining deck{} as",
-					"both played {C:attention}and{} held in hand",
-					"{C:inactive}(Only counts the base card, its{}",
-					"{C:inactive}Editions, and its Enhancements){}"
+					"both played {C:attention}and{} held in hand"
 				}
 			},
 			j_hypr_trickcoin = {
@@ -237,7 +251,8 @@ loc = {
 			k_hypr_failsafe = "Failsafe?!",
 			k_hypr_addhand = "+1 Hand",
 			k_hypr_active_true = "Active",
-			k_hypr_active_false = "Inactive"
+			k_hypr_active_false = "Inactive",
+			k_hypr_jddebuffed = 'Card Debuffed!'
 		},
 		poker_hands = {
 			['hypr-Three Pair'] = "Three Pair"
