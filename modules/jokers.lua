@@ -350,78 +350,6 @@ SMODS.Joker {
 	end
 }]]
 
-SMODS.Joker {
-	key = 'bypass',
-	config = { extra = {odds = 2}, bypassed = {}},
-	loc_vars = function(self, info_queue, card)
-		local numerator, denominator = SMODS.get_probability_vars(card, card.ability.extra.odds, 7, 'hypr_bypass')
-		info_queue[#info_queue + 1] = { set = "Other", key = "hypr_placeholder" }
-		return { vars = { numerator, denominator} }
-	end,
-	blueprint_compat = true,
-	perishable_compat = true,
-	demicoloncompat = false,
-	eternal_compat = true,
-	rarity = 2,
-	atlas = 'cards',
-	pos = { x = 0, y = 1 },
-	cost = 6,
-	-- debuffed cards have a 2 in 7 chance to trigger anyway
-	calculate = function(self, card, context)
-		local bypassed = 0
-		if context.before then
-			for _, v in pairs(G.playing_cards) do
-				if SMODS.pseudorandom_probability(card, 'hypr_bypass', card.ability.extra.odds, 7) then
-					if not v.bypassid then v.bypassid='id'..math.random(-10000000000,10000000000) end
-					SMODS.debuff_card(v,'prevent_debuff',v.bypassid)
-					card.ability.bypassed[v.bypassid] = true
-					bypassed = bypassed+1
-				end
-			end	
-			for _, v in pairs(G.jokers.cards) do
-				if SMODS.pseudorandom_probability(card, 'hypr_bypass', card.ability.extra.odds, 7) then
-					if not v.bypassid then v.bypassid='id'..math.random(-10000000000,10000000000) end
-					SMODS.debuff_card(v,'prevent_debuff',v.bypassid)
-					card.ability.bypassed[v.bypassid] = true
-					bypassed = bypassed+1
-				end
-			end	
-			for _, v in pairs(G.consumeables.cards) do
-				if SMODS.pseudorandom_probability(card, 'hypr_bypass', card.ability.extra.odds, 7) then
-					if not v.bypassid then v.bypassid='id'..math.random(-10000000000,10000000000) end
-					SMODS.debuff_card(v,'prevent_debuff',v.bypassid)
-					card.ability.bypassed[v.bypassid] = true
-					bypassed = bypassed+1
-				end
-			end	
-			return { message = 'Bypassed x'..bypassed..'!'}
-		end
-		if context.after then
-			for _, v in pairs(G.playing_cards) do
-				if v.bypassid and card.ability.bypassed[v.bypassid] then
-					SMODS.debuff_card(v,'reset',v.bypassid)
-					SMODS.recalc_debuff(v)
-					card.ability.bypassed[v.bypassid] = nil
-				end
-			end	
-			for _, v in pairs(G.jokers.cards) do
-				if v.bypassid and card.ability.bypassed[v.bypassid] then
-					SMODS.debuff_card(v,'reset',v.bypassid)
-					SMODS.recalc_debuff(v)
-					card.ability.bypassed[v.bypassid] = nil
-				end
-			end	
-			for _, v in pairs(G.consumeables.cards) do
-				if v.bypassid and card.ability.bypassed[v.bypassid] then
-					SMODS.debuff_card(v,'reset',v.bypassid)
-					SMODS.recalc_debuff(v)
-					card.ability.bypassed[v.bypassid] = nil
-				end
-			end	
-		end
-	end
-}
-
 where = function(t, thing)
 	if not t then return end
 	for k, v in ipairs(t) do
@@ -656,6 +584,78 @@ SMODS.Joker {
 			if context.beat_boss then
 				card.ability.extra.chance = card.ability.extra.chance + 100
 			end
+		end
+	end
+}
+
+SMODS.Joker {
+	key = 'bypass',
+	config = { extra = {odds = 2}, bypassed = {}},
+	loc_vars = function(self, info_queue, card)
+		local numerator, denominator = SMODS.get_probability_vars(card, card.ability.extra.odds, 7, 'hypr_bypass')
+		info_queue[#info_queue + 1] = { set = "Other", key = "hypr_placeholder" }
+		return { vars = { numerator, denominator} }
+	end,
+	blueprint_compat = true,
+	perishable_compat = true,
+	demicoloncompat = false,
+	eternal_compat = true,
+	rarity = 2,
+	atlas = 'cards',
+	pos = { x = 0, y = 1 },
+	cost = 6,
+	-- debuffed cards have a 2 in 7 chance to trigger anyway
+	calculate = function(self, card, context)
+		local bypassed = 0
+		if context.before then
+			for _, v in pairs(G.playing_cards) do
+				if SMODS.pseudorandom_probability(card, 'hypr_bypass', card.ability.extra.odds, 7) then
+					if not v.bypassid then v.bypassid='id'..math.random(-10000000000,10000000000) end
+					SMODS.debuff_card(v,'prevent_debuff',v.bypassid)
+					card.ability.bypassed[v.bypassid] = true
+					bypassed = bypassed+1
+				end
+			end	
+			for _, v in pairs(G.jokers.cards) do
+				if SMODS.pseudorandom_probability(card, 'hypr_bypass', card.ability.extra.odds, 7) then
+					if not v.bypassid then v.bypassid='id'..math.random(-10000000000,10000000000) end
+					SMODS.debuff_card(v,'prevent_debuff',v.bypassid)
+					card.ability.bypassed[v.bypassid] = true
+					bypassed = bypassed+1
+				end
+			end	
+			for _, v in pairs(G.consumeables.cards) do
+				if SMODS.pseudorandom_probability(card, 'hypr_bypass', card.ability.extra.odds, 7) then
+					if not v.bypassid then v.bypassid='id'..math.random(-10000000000,10000000000) end
+					SMODS.debuff_card(v,'prevent_debuff',v.bypassid)
+					card.ability.bypassed[v.bypassid] = true
+					bypassed = bypassed+1
+				end
+			end	
+			return { message = 'Bypassed x'..bypassed..'!'}
+		end
+		if context.after then
+			for _, v in pairs(G.playing_cards) do
+				if v.bypassid and card.ability.bypassed[v.bypassid] then
+					SMODS.debuff_card(v,'reset',v.bypassid)
+					SMODS.recalc_debuff(v)
+					card.ability.bypassed[v.bypassid] = nil
+				end
+			end	
+			for _, v in pairs(G.jokers.cards) do
+				if v.bypassid and card.ability.bypassed[v.bypassid] then
+					SMODS.debuff_card(v,'reset',v.bypassid)
+					SMODS.recalc_debuff(v)
+					card.ability.bypassed[v.bypassid] = nil
+				end
+			end	
+			for _, v in pairs(G.consumeables.cards) do
+				if v.bypassid and card.ability.bypassed[v.bypassid] then
+					SMODS.debuff_card(v,'reset',v.bypassid)
+					SMODS.recalc_debuff(v)
+					card.ability.bypassed[v.bypassid] = nil
+				end
+			end	
 		end
 	end
 }
