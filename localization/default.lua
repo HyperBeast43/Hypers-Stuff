@@ -241,21 +241,23 @@ loc = {
 				}
 			},
 			j_hypr_melatonin = {
-				name = 'Melatonin',
+				name = 'Lights Out',
 				text = {
-					"While {V:2}inactive{}, {C:hearts}Hearts{} or {C:diamonds}Diamonds{} give this joker {C:chips}+#1#{} Chips",
-					"While {V:3}active{}, {C:hearts}Hearts{} or {C:diamonds}Diamonds{} {C:red,E:hypr_2}reset and deactivate{} this joker",
-					"Activates when a {C:spades}Spade{} or {C:clubs}Club{} is scored {C:inactive}--{} {B:1,C:white}#3#{}",
-					"{C:attention,E:1}Only scores while active{} {C:inactive}(Currently {C:chips}+#2#{C:inactive} Chips){}"
+					"Gains {C:chips}+#1#{} Chips if a {C:hearts}Heart{} or {C:diamonds}Diamond{} is scored while {V:2}inactive{}",
+					"{C:red,E:hypr_2}Resets{} if a {C:hearts}Heart{} or {C:diamonds}Diamond{} is scored while {V:3}active{}",
+					"{V:3}Activates{} if a {C:spades}Spade{} or {C:clubs}Club{} is scored",
+					"Only triggers while {V:3}active{}",
+					"{C:inactive}(Currently {C:chips}+#2#{C:inactive} Chips, {B:1,C:white}#3#{C:inactive}){}"
 				}
 			},
 			j_hypr_melatonin_pb = {
-				name = 'Melatonin',
+				name = 'Lights Out',
 				text = {
-					"While {V:2}inactive{}, {C:paperback_light_suit}light suits{} give this joker {C:chips}+#1#{} Chips",
-					"While {V:3}active{}, {C:paperback_light_suit}light suits{} {C:red,E:hypr_2}reset and deactivate{} this joker",
-					"Activates when a {C:paperback_dark_suit}dark suit{} is scored {C:inactive}--{} {B:1,C:white}#3#{}",
-					"{C:attention,E:1}Only scores while active{} {C:inactive}(Currently {C:chips}+#2#{C:inactive} Chips){}"
+					"Gains {C:chips}+#1#{} Chips if a {C:paperback_light_suit}light suit{} is scored while {V:2}inactive{}",
+					"{C:red,E:hypr_2}Resets{} if a {C:paperback_light_suit}light suit{} is scored while {V:3}active{}",
+					"{V:3}Activates{} if a {C:paperback_dark_suit}dark suit{} is scored",
+					"Only triggers while {V:3}active{}",
+					"{C:inactive}(Currently {C:chips}+#2#{C:inactive} Chips, {B:1,C:white}#3#{C:inactive}){}"
 				}
 			}
 		}

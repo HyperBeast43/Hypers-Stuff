@@ -1066,6 +1066,7 @@ addjkr( {
 			return
 		end
 		if (context.joker_main or context.forcetrigger) and card.ability.extra.active then return {chips = card.ability.extra.chips} end
+		if context.forcetrigger and not card.ability.extra.active then return {message=localize('k_hypr_active_false'..'...'),colour=G.C.JOKER_GREY} end
 	end,
 	joker_display_def = function(JokerDisplay)
 		---@type JDJokerDefinition
