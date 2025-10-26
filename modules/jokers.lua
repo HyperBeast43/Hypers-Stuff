@@ -1,4 +1,11 @@
---[[SMODS.Joker {
+local jkrs = {}
+
+local function addjkr(joker)
+	jkrs[#jkrs+1]=joker
+end
+
+
+--[[addjkr( {
 	key = 'test',
 	config = { extra = { xmult = math.pi } },
 	loc_vars = function(self, info_queue, card)
@@ -34,7 +41,7 @@
 }]]
 
 
-SMODS.Joker {
+addjkr( {
 	key = 'curator',
 	config = {},
 	loc_vars = function(self, info_queue, card)
@@ -69,7 +76,7 @@ SMODS.Joker {
 			}
 		end
 	end
-}
+})
 if SMODS.find_mod('Talisman')[1] ~= nil then trimsci = function(s,b)
   local t = {}
   local i = 0
@@ -106,11 +113,11 @@ if SMODS.find_mod('Talisman')[1] ~= nil then trimsci = function(s,b)
   return table.concat(t)
 end end
 
-SMODS.Joker {
+addjkr( {
 	key = 'creacher',
 	config = { extra = { low = 0.9, high = 1.66666666666667 } },
 	loc_vars = function(self, info_queue, card)
-		table.insert(info_queue,{ set = "Other", key = "hypr_placeholder" })
+		table.insert(info_queue,{ set = "Other", key = "hypr_devart" })
 		local c
 		local suffix = ''
 		if SMODS.find_mod('Bunco')[1] then 
@@ -225,9 +232,9 @@ SMODS.Joker {
 			end
 		}
 	end
-}
+})
 
---[[SMODS.Joker {
+--[[addjkr( {
 	key = 'thcief',
 	config = { extra = { hypr_thcief = true } },
 	loc_vars = function(self, info_queue, card)
@@ -263,9 +270,9 @@ SMODS.Joker {
 			end
 		end
 	end
-}]]
+})]]
 
-SMODS.Joker {
+addjkr( {
 	key = 'hypa',
 	config = { extra = { a = 1.2, seven_tally = 0, guh = 2.1} },
 	loc_vars = function(self, info_queue, card)
@@ -320,9 +327,9 @@ SMODS.Joker {
 			}
 		}
 	end
-}
+})
 
---[[SMODS.Joker {
+--[[addjkr( {
 	key = 'jera',
 	config = {},
 	loc_vars = function(self, info_queue, card)
@@ -348,16 +355,7 @@ SMODS.Joker {
 	retrigger_function = function(playing_card, scoring_hand, _, joker_card)
 		return playing_card:is_suit("Hearts") and 1 or 0
 	end
-}]]
-
-where = function(t, thing)
-	if not t then return end
-	for k, v in ipairs(t) do
-		if v == thing then
-			return k
-		end
-	end
-end
+})]]
 
 --[[
 G.hypr.ijhjokers = {}
@@ -369,7 +367,7 @@ for k,v in pairs(G.P_CENTERS) do
 	end
 end
 
-SMODS.Joker { -- errors
+addjkr( { -- errors
 	key = 'ijh',
 	config = { extra = { copied = G.P_CENTERS["j_joker"] } },
 	loc_vars = function(self, info_queue, card)
@@ -392,7 +390,7 @@ SMODS.Joker { -- errors
 		end
 		return SMODS.blueprint_effect(card, card.ability.extra.copied, context)
 	end
-}]]
+})]]
 
 drinks = {{2,1,"Spades",nil,true},{3,1,"Hearts",nil,true},{4,1,"Clubs",nil,true},{5,1,"Diamonds",nil,true}} 
 if SMODS.find_mod('paperback')[1]~=nil then
@@ -401,7 +399,7 @@ if SMODS.find_mod('paperback')[1]~=nil then
 		table.insert(drinks,{2,2,"paperback_Crowns",{requires_crowns = true},true})
 	end
 end
-if SMODS.find_mod('Bunco')[1]~=nil then --bunco is still a wip
+if SMODS.find_mod('Bunco')[1]~=nil then 
 	table.insert(drinks,{4,2,"bunc_Fleurons",nil,BUNCOMOD.funcs.exotic_in_pool})
 	table.insert(drinks,{5,2,"bunc_Halberds",nil,BUNCOMOD.funcs.exotic_in_pool})
 end
@@ -427,7 +425,7 @@ end
 for _, datlas in ipairs(drinks) do
 	local drinkid = 'drink_'..string.lower(datlas[3])
 	local keepatlas = {unpack(datlas)}
-	SMODS.Joker {
+	addjkr( {
 	key = drinkid,
 	config = { extra = {stored = keepatlas}},
 	loc_vars = function(self, info_queue, card)
@@ -497,12 +495,12 @@ for _, datlas in ipairs(drinks) do
 				})
 			)
 		end
-	end}
+	end})
 end
 
 
 
-SMODS.Joker {
+addjkr( {
 	key = 'junkdrawer',
 	config = {extra={}},
 	loc_vars = function(self, info_queue, card)
@@ -547,9 +545,9 @@ SMODS.Joker {
 			end
 		end
 	end
-}
+})
 
-SMODS.Joker {
+addjkr( {
 	key = 'trickcoin',
 	config = {extra={ chance = 1000, used=false}},
 	loc_vars = function(self, info_queue, card)
@@ -586,9 +584,9 @@ SMODS.Joker {
 			end
 		end
 	end
-}
+})
 
-SMODS.Joker {
+addjkr( {
 	key = 'bypass',
 	config = { extra = {odds = 2}, bypassed = {}},
 	loc_vars = function(self, info_queue, card)
@@ -658,7 +656,7 @@ SMODS.Joker {
 			end	
 		end
 	end
-}
+})
 
 local function expire_joker(card, key, sound, color) -- taken from Jimbotomy
 	card_eval_status_text(card, 'extra', nil, nil, nil, { sound = sound, message = localize(key), colour = color })
@@ -688,7 +686,7 @@ local function expire_joker(card, key, sound, color) -- taken from Jimbotomy
 	)
 end
 
-SMODS.Joker {
+addjkr( {
 	key = 'coloredhoney',
 	config = { extra = { dollars = 2, suits = {'Spades', 'Hearts', 'Clubs', 'Diamonds'}, other = {} ,eaten=false} },
 	loc_vars = function(self, info_queue, card)
@@ -788,9 +786,9 @@ SMODS.Joker {
 			}
 		}
 	end
-}
+})
 
-SMODS.Joker {
+addjkr( {
 	key = 'saltines',
 	config = { extra = { xmult = 1.5, exp = 0.95, min=1.2} },
 	loc_vars = function(self, info_queue, card)
@@ -874,11 +872,11 @@ SMODS.Joker {
 			}
 		}
 	end
-}
+})
 
 
 if Cryptid or PB_UTIL then
-SMODS.Joker {
+addjkr( {
 	key = '',
 	config = { extra = { xmult = 1, scale = .5, immutable = {base = 1, lastknown = 0}} },
 	loc_vars = function(self, info_queue, card)
@@ -933,10 +931,10 @@ SMODS.Joker {
 			}
 		}
 	end
-}
+})
 end
-if Cryptid then
-SMODS.Joker {
+if SMODS.find_mod('Cryptid')[1] then
+addjkr( {
 	key = 'tedium',
 	config = { extra = { emult = 1, scale = .2, immutable = {base = 1,rounds = 0,interacted = true,lasthighlighted = false} } },
 	dependencies = {
@@ -1013,8 +1011,136 @@ SMODS.Joker {
 			}
 		}
 	end
-}
+}) end
 
+
+
+addjkr( {
+	key = 'melatonin',
+	config = { extra = { active = false, chips = 0, inc_chips = 3 } },
+	loc_vars = function(self, info_queue, card)
+		local suffix = ''
+		if PB_UTIL and not G.hypr.forcenopb then -- G.hypr.forcenopb is set manually in DebugPlus with eval. it's a debugging feature i don't need a proper config for it
+			suffix = '_pb'
+		    info_queue[#info_queue + 1] = PB_UTIL.suit_tooltip('light')
+			info_queue[#info_queue + 1] = PB_UTIL.suit_tooltip('dark')
+		end
+        card.melatonin_ui = card.melatonin_ui or ''
+        return {
+			key = self.key..suffix,
+            vars = { card.ability.extra.inc_chips, card.ability.extra.chips, localize('k_hypr_active_'..tostring(card.ability.extra.active)), colours = {mix_colours((card.ability.extra.active and G.C.GREEN) or G.C.RED,G.C.JOKER_GREY, 0.8),mix_colours(G.C.RED,G.C.JOKER_GREY, 0.8),mix_colours(G.C.GREEN,G.C.JOKER_GREY, 0.8)} },
+        }
+	end,
+	rarity = 2,
+	atlas = 'cards',
+	blueprint_compat = true,
+	perishable_compat = true,
+	demicoloncompat = true,
+	eternal_compat = true,
+	pos = { x = 5, y = 3 },
+	cost = 3,
+	calculate = function(self, card, context)
+		if context.individual and context.cardarea == G.play and not context.end_of_round then
+			local lite = false
+			local dark = false
+			if PB_UTIL then
+				lite = PB_UTIL.is_suit(context.other_card, 'light')
+				dark = PB_UTIL.is_suit(context.other_card, 'dark')
+			else
+				lite = context.other_card:is_suit('Hearts') or context.other_card:is_suit('Diamonds')
+				dark = context.other_card:is_suit('Spades') or context.other_card:is_suit('Clubs')
+			end
+			if card.ability.extra.active then
+				if lite then
+					card.ability.extra.active = false
+					card.ability.extra.chips = 0
+					return {message = localize('k_reset'), message_card=card}
+				end
+			else
+				if dark then
+					card.ability.extra.active = true
+				elseif lite then
+					card.ability.extra.chips = card.ability.extra.chips+card.ability.extra.inc_chips
+				end
+			end
+			return
+		end
+		if (context.joker_main or context.forcetrigger) and card.ability.extra.active then return {chips = card.ability.extra.chips} end
+	end,
+	joker_display_def = function(JokerDisplay)
+		---@type JDJokerDefinition
+		local ret = {
+			calc_function = function(card)
+				card.joker_display_values.stored = card.ability.extra.chips
+				if next(G.play.cards) then return end
+				local active = card.ability.extra.active
+				local _,_,cards = JokerDisplay.evaluate_hand(JokerDisplay.current_hand,true) 
+				local brightness = function(card)
+					local lite
+					local dark
+					if PB_UTIL then
+						lite = PB_UTIL.is_suit(card, 'light')
+						dark = PB_UTIL.is_suit(card, 'dark')
+					else
+						lite = card:is_suit('Hearts') or card:is_suit('Diamonds')
+						dark = card:is_suit('Spades') or card:is_suit('Clubs')
+					end
+					return lite,dark
+				end
+				for _,playing_card in ipairs(cards) do
+					if not (playing_card.facing == 'back') and not playing_card.debuff and playing_card:get_id() then
+						local lite, dark = brightness(playing_card)
+						if dark then 
+							active = true
+						end
+						if lite then 
+							if active then
+								active = false 
+								card.joker_display_values.stored = 0 
+							else
+								card.joker_display_values.stored = card.joker_display_values.stored + JokerDisplay.calculate_card_triggers(playing_card, nil, true)*card.ability.extra.inc_chips
+							end
+						end
+					end
+				end
+				card.joker_display_values.active = active
+			end,
+			style_function = function(card, text, reminder_text, extra)
+				if text and text.children[1] and text.children[2] then
+					text.children[1].config.colour = card.joker_display_values.active and G.C.CHIPS or mix_colours(G.C.JOKER_GREY,G.C.UI.TEXT_INACTIVE,0.5)
+					text.children[2].config.colour = card.joker_display_values.active and G.C.CHIPS or mix_colours(G.C.JOKER_GREY,G.C.UI.TEXT_INACTIVE,0.5)
+				end
+				return false
+			end,
+			text = {
+				{ text = "+" },
+				{ ref_table = "card.joker_display_values", ref_value = "stored", retrigger_type = "mult" },
+			}
+		}
+		return ret
+	end
+})
+
+
+local rarities = {
+	1,
+	2,
+	3,
+	'cry_epic',
+	4,
+	'cry_exotic'
+}	
+
+for _,v in pairs(jkrs) do
+	assert(where(rarities,v.rarity), 'Rarity '..tostring(v.rarity)..' not found in rarity table!')
+end
+
+for i=1,#rarities do
+	for _,v in ipairs(jkrs) do
+		if v.rarity == rarities[i] then
+			SMODS.Joker(v)
+		end
+	end
 end
 
 --[[

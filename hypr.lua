@@ -1,8 +1,8 @@
 G.hypr = {}
 G.GAME = G.GAME or {}
 
-assert(SMODS.load_file("modules/assets.lua"))()
 assert(SMODS.load_file("modules/utils.lua"))()
+assert(SMODS.load_file("modules/assets.lua"))()
 assert(SMODS.load_file("modules/jokers.lua"))()
 assert(SMODS.load_file("modules/challenges.lua"))()
 assert(SMODS.load_file("modules/decks.lua"))()
@@ -22,11 +22,3 @@ SMODS.current_mod.optional_features = {
 	},
 	retrigger_joker = true
 }
-
-tablepeek = function(table)
-	local ret = ''
-	for k,_ in pairs(table) do
-		ret = ret..','..k
-	end
-	return string.sub(ret,2,-1)
-end

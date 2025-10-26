@@ -1,3 +1,20 @@
+function where(t, thing)
+	if not t then return end
+	for k, v in ipairs(t) do
+		if v == thing then
+			return k
+		end
+	end
+end
+
+function tablepeek(table)
+	local ret = ''
+	for k,_ in pairs(table) do
+		ret = ret..','..k
+	end
+	return string.sub(ret,2,-1)
+end
+
 function cmp(a, b)
     local ta, tb = type(a), type(b)
 	if not Talisman then goto notalisman end
@@ -22,13 +39,4 @@ function count_if(t, predicate)
         end
     end
     return count
-end
-
-function poll_random_edition() -- taken directly from cryptid
-	local random_edition = pseudorandom_element(G.P_CENTER_POOLS.Edition, pseudoseed("hypr_curator"))
-	while random_edition.key == "e_base" do
-		random_edition = pseudorandom_element(G.P_CENTER_POOLS.Edition, pseudoseed("hypr_curator"))
-	end
-	ed_table = { [random_edition.key:sub(3)] = true }
-	return ed_table
 end

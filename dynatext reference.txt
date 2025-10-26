@@ -1,0 +1,381 @@
+INFO - [G] Table:
+click_offset: Table:
+  y: 0
+  x: 0
+
+children: Table:
+
+pop_in_rate: 3
+font: Table:
+  TEXT_HEIGHT_SCALE: 0.83
+  FONT: Font: 0x01d07d51b8c0
+  TEXT_OFFSET: Table:
+    y: -20
+    x: 10
+
+  squish: 1
+  file: resources/fonts/m6x11plus.ttf
+  render_scale: 200
+  DESCSCALE: 1
+  +1 more value.
+
+T: Table:
+  x: 14.141936217674
+  w: 0.3264
+  y: 3.9227141344963
+  h: 0.2988
+  scale: 1
+  r: 0
+
+offset: Table:
+  y: 0
+  x: 0
+
+role: Table:
+  xy_bond: Strong
+  offset: Table:
+    y: 0
+    x: 0
+
+  scale_bond: Weak
+  major: Table:
+    click_offset: Table:
+      y: 0
+      +1 more value.
+
+    children: Table:
+
+    parent: Table:
+      click_offset: table: 0x14154420
+      +34 more values.
+
+    T: Table:
+      x: 14.141936217674
+      +5 more values.
+
+    +32 more values.
+
+  draw_major: Table:
+    click_offset: Table:
+      y: 0
+      +1 more value.
+
+    children: Table:
+
+    pop_in_rate: 3
+    font: Table:
+      TEXT_HEIGHT_SCALE: 0.83
+      +7 more values.
+
+    +42 more values.
+
+  wh_bond: Weak
+  r_bond: Strong
+  +1 more value.
+
+last_aligned: -1
+bump_rate: 2.666
+text_offset: Table:
+  y: -6.4
+  x: 3.2
+
+silent: true
+VT: Table:
+  x: 14.141936217674
+  w: 0.3264
+  y: 3.9227141344963
+  h: 0.2988
+  scale: 1
+  r: 0
+
+states: Table:
+  drag: Table:
+    can: false
+    is: false
+
+  collide: Table:
+    can: false
+    is: false
+
+  release_on: Table:
+    can: false
+    is: false
+
+  visible: true
+  hover: Table:
+    can: false
+    is: false
+
+  click: Table:
+    can: false
+    is: false
+
+  focus: Table:
+    can: false
+    is: false
+
+
+RETS: Table:
+
+ID: 978
+created_time: 15.895680405797
+container: Table:
+  jiggle: 0.11293001116194
+  click_offset: Table:
+    y: 0
+    x: 0
+
+  under_overlay: false
+  children: Table:
+
+  FRAME: Table:
+    MOVE: -1
+    DRAW: -1
+
+  ARGS: Table:
+    collides_with_point_point: Table:
+      y: 8.7940972222222
+      +1 more value.
+
+    collides_with_point_translation: Table:
+
+    collides_with_point_rotation: Table:
+
+    set_offset_translation: Table:
+      y: 5.0454049199602
+      +1 more value.
+
+    +1 more value.
+
+  hover_offset: Table:
+    y: 2.6967105824002
+    x: 7.054212700658
+
+  +8 more values.
+
+config: Table:
+  text_effect: hypr_obfuscate
+  W: 0.3264
+  colours: Table:
+    1: Table:
+      1: 0.30980392156863
+      +3 more values.
+
+
+  H: 0.2988
+  scale: 0.32
+  silent: true
+  string: Table:
+    1: foo
+
+
+velocity: Table:
+  x: 0
+  mag: 0
+  y: 0
+  r: 0
+  scale: 0
+
+scale: 0.32
+alignment: Table:
+  prev_type: a
+  offset: Table:
+    y: 0
+    x: 0
+
+  type: a
+  type_list: Table:
+    a: true
+
+  prev_offset: Table:
+    y: 0
+    x: 0
+
+
+STATIONARY: false
+CALCING: true
+reset_pop_in: false
+focused_string: 1
+under_overlay: false
+shadow_parrallax: Table:
+  y: -1.5
+  x: 0.64577043265106
+
+parent: Table:
+  click_offset: Table:
+    y: 0
+    x: 0
+
+  children: Table:
+
+  parent: Table:
+    click_offset: Table:
+      y: 0
+      +1 more value.
+
+    children: Table:
+      1: table: 0x146e7a98
+
+    parent: Table:
+      click_offset: table: 0x1404c700
+      +34 more values.
+
+    T: Table:
+      x: 14.111936217674
+      +5 more values.
+
+    +31 more values.
+
+  T: Table:
+    x: 14.141936217674
+    w: 0.3264
+    y: 3.9227141344963
+    h: 0.2988
+    +2 more values.
+
+  offset: Table:
+    y: 0
+    x: 0
+
+  role: Table:
+    xy_bond: Strong
+    offset: Table:
+      y: 2.3800875
+      +1 more value.
+
+    scale_bond: Weak
+    major: Table:
+      click_offset: table: 0x14b260b8
+      +34 more values.
+
+    +4 more values.
+
+  last_aligned: -1
+  +29 more values.
+
+shadow_height: 0.2
+layered_parallax: Table:
+  y: 0
+  x: 0
+
+NEW_ALIGNMENT: false
+Mid: Table:
+  click_offset: Table:
+    y: 0
+    x: 0
+
+  children: Table:
+
+  pop_in_rate: 3
+  font: Table:
+    TEXT_HEIGHT_SCALE: 0.83
+    FONT: Font: 0x01d07d51b8c0
+    TEXT_OFFSET: Table:
+      y: -20
+      +1 more value.
+
+    squish: 1
+    +4 more values.
+
+  T: Table:
+    x: 14.141936217674
+    w: 0.3264
+    y: 3.9227141344963
+    h: 0.2988
+    +2 more values.
+
+  offset: Table:
+    y: 0
+    x: 0
+
+  role: Table:
+    xy_bond: Strong
+    offset: Table:
+      y: 0
+      +1 more value.
+
+    scale_bond: Weak
+    major: Table:
+      click_offset: table: 0x13bc43a0
+      +35 more values.
+
+    +4 more values.
+
+  +39 more values.
+
+bump_amount: 1
+static_rotation: false
+colours: Table:
+  1: Table:
+    1: 0.30980392156863
+    2: 0.38823529411765
+    3: 0.40392156862745
+    4: 1
+
+
+FRAME: Table:
+  MOVE: 1362
+  DRAW: -1
+
+last_moved: -1
+hover_offset: Table:
+  y: 0
+  x: 0
+
+start_pop_in: false
+created_on_pause: true
+ARGS: Table:
+  draw_shadow_norm: Table:
+    y: -0.0045924894974841
+    x: 0.0019771292864905
+
+
+string: foo
+CT: Table:
+  x: 14.141936217674
+  w: 0.3264
+  y: 3.9227141344963
+  h: 0.2988
+  scale: 1
+  r: 0
+
+pinch: Table:
+  y: false
+  x: false
+
+strings: Table:
+  1: Table:
+    W_offset: 0
+    letters: Table:
+      1: table: 0x146e70e8
+      +2 more values.
+
+    W: 0.3264
+    H: 0.2988
+    +2 more values.
+
+
+original_T: Table:
+  x: 0
+  w: 0.3264
+  y: 0
+  h: 0.2988
+  r: 0
+  scale: 1
+
+
+INFO - [G] Table:
+1: 1
+2: Table:
+  letter: Text: 0x01d0466b8ce0
+  scale: 1
+  r: 0
+  pop_in: 1
+  char:
+  dims: Table:
+    y: 59.76
+    x: 28.16
+
+  offset: Table:
+    y: 0
+    x: 0

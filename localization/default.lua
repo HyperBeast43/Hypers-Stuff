@@ -112,7 +112,7 @@ loc = {
 					"{C:clubs}Clubs{} and {C:bunc_fleurons}Fleurons{} held in hand",
 					"give a random value from",
 					"{X:mult,C:white}X#1#{} up to {X:mult,C:white}X#2#{} Mult",
-					"{C:bunc_fleurons}Fleurons{} roll with {C:attention,E:2}advantage{}"
+					"{C:bunc_fleurons}Fleurons{} roll with {C:attention,E:hypr_2}advantage{}"
 				}
 			},
 			j_hypr_curator = {
@@ -154,7 +154,7 @@ loc = {
 			j_hypr_bypass = {
 				name = 'Bypass',
 				text = {
-					"Before scoring, {C:red,E:2}debuffed{} cards have",
+					"Before scoring, {C:red,E:hypr_2}debuffed{} cards have",
 					"a {C:green}#1# in #2#{} chance to temporarily",
 					"{C:attention,E:1}un-debuff{} until end of hand"
 				}
@@ -230,14 +230,32 @@ loc = {
 				text = {
 					"When a suit is scored for the first time",
 					"after picking up this joker, give {C:money}$#1#{}",
-					"{C:red,E:2}Self destructs{} if no suits remaining"
+					"{C:red,E:hypr_2}Self destructs{} if no suits remaining"
 				}
 			},
 			j_hypr_saltines = {
 				name = 'Saltines',
 				text = {
 					"{X:mult,C:white}X#1#{} Mult, {C:dark_edition}^#2#{} per card scored",
-					"{C:red,E:2}Self destructs{} when below {X:mult,C:white}X#3#{}"
+					"{C:red,E:hypr_2}Self destructs{} when below {X:mult,C:white}X#3#{}"
+				}
+			},
+			j_hypr_melatonin = {
+				name = 'Melatonin',
+				text = {
+					"While {V:2}inactive{}, {C:hearts}Hearts{} or {C:diamonds}Diamonds{} give this joker {C:chips}+#1#{} Chips",
+					"While {V:3}active{}, {C:hearts}Hearts{} or {C:diamonds}Diamonds{} {C:red,E:hypr_2}reset and deactivate{} this joker",
+					"Activates when a {C:spades}Spade{} or {C:clubs}Club{} is scored {C:inactive}--{} {B:1,C:white}#3#{}",
+					"{C:attention,E:1}Only scores while active{} {C:inactive}(Currently {C:chips}+#2#{C:inactive} Chips){}"
+				}
+			},
+			j_hypr_melatonin_pb = {
+				name = 'Melatonin',
+				text = {
+					"While {V:2}inactive{}, {C:paperback_light_suit}light suits{} give this joker {C:chips}+#1#{} Chips",
+					"While {V:3}active{}, {C:paperback_light_suit}light suits{} {C:red,E:hypr_2}reset and deactivate{} this joker",
+					"Activates when a {C:paperback_dark_suit}dark suit{} is scored {C:inactive}--{} {B:1,C:white}#3#{}",
+					"{C:attention,E:1}Only scores while active{} {C:inactive}(Currently {C:chips}+#2#{C:inactive} Chips){}"
 				}
 			}
 		}

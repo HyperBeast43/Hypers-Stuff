@@ -29,6 +29,9 @@ if JokerDisplay then
 	end 
 end
 
+if PB_UTIL and BUNCOMOD then
+
+end
 
 
 --[[local insrep = SMODS.insert_repetitions
