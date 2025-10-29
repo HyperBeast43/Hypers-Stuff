@@ -5,6 +5,8 @@ local drinktxt = {
 	"{C:attention}every other suit{} evenly"
 }
 
+
+
 loc = {
 	descriptions = {
 		Other = {
@@ -49,6 +51,15 @@ loc = {
 			fakeRed={
 				name="Red Seal",
 				text={"this text should never show up"}
+			},
+			hypr_ijh = {
+				name = 'Insert Joke Here',
+				text = {
+					"Copies a {C:green}random{} compatible joker",
+					"from your {C:dark_edition}Collection{}",
+					"Cannot copy self or above {C:rare}Rare{}",
+					"Keeps any scaling if scaled joker is rolled again"
+				}
 			},
 		},
 		Spectral = {
@@ -135,15 +146,6 @@ loc = {
 					"{C:green}rerolls{} are {C:red}disabled{}"
 				}
 			},
-			j_hypr_ijh = {
-				name = 'Insert Joke Here',
-				text = {
-					"Copies a {C:green}random{} compatible joker",
-					"from your {C:dark_edition}Collection{}",
-					"Cannot copy {C:legendary}Legendary{} or above",
-					"{C:inactive}Currently copying {C:attention}#1#{}"
-				}
-			},
 			j_hypr_jera = {
 				name = 'Runic Ruby',
 				text = {
@@ -154,7 +156,7 @@ loc = {
 			j_hypr_bypass = {
 				name = 'Bypass',
 				text = {
-					"Before scoring, {C:red,E:hypr_2}debuffed{} cards have",
+					"Before scoring, anything {C:red,E:hypr_2}debuffed{} has",
 					"a {C:green}#1# in #2#{} chance to temporarily",
 					"{C:attention,E:1}un-debuff{} until end of hand"
 				}
@@ -166,6 +168,10 @@ loc = {
 					"card, give {X:mult,C:white}X#1#{} Mult",
 					"{C:inactive}(Currently {X:mult,C:white}X#2#{C:inactive} Mult)"
 				}
+			},
+			j_hypr_ijh = {
+				name = 'Failsafe?!',
+				text = {"This should never show up"}
 			},
 			j_hypr_tedium = {
 				name = 'Tedium',
@@ -258,6 +264,31 @@ loc = {
 					"{V:3}Activates{} if a {C:paperback_dark_suit}dark suit{} is scored",
 					"Only triggers while {V:3}active{}",
 					"{C:inactive}(Currently {C:chips}+#2#{C:inactive} Chips, {B:1,C:white}#3#{C:inactive}){}"
+				}
+			},
+			j_hypr_rhapsody = {
+				name = 'Bohemian Joker',
+				text = {
+					"When a {C:attention}Queen{} is scored, gain {C:chips}+#1#{} Chips",
+					"{C:red}Resets{} when a Joker is {C:money,E:hypr_2}sold{}",
+					"{C:inactive}(Currently {C:chips}+#2#{C:inactive} Chips){}"
+				}
+			},
+			j_hypr_rhapsody_perishable = {
+				name = 'Bohemian Joker',
+				text = {
+					"When a {C:attention}Queen{} is scored, gain {C:chips}+#1#{} Chips",
+					"{C:red}Resets{} when a Joker is {C:money,E:hypr_2}sold{} without",
+					"it being debuffed by {V:1,E:hypr_circle}Perishable{}",
+					"{C:inactive}(Currently {C:chips}+#2#{C:inactive} Chips){}"
+				}
+			},
+			j_hypr_widescreen = {
+				name = 'Landscape Joker',
+				text = {
+					"Currently, this joker only exists for testing.",
+					"It's not supposed to be able to show up naturally.",
+					"{C:red}+#1#{} Mult"
 				}
 			}
 		}

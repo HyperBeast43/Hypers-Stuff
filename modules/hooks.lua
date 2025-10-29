@@ -29,10 +29,11 @@ if JokerDisplay then
 	end 
 end
 
-if PB_UTIL and BUNCOMOD then
-
+local gencardui = generate_card_ui
+function generate_card_ui(_c, full_UI_table, specific_vars, card_type, badges, hide_desc, main_start, main_end)
+	_c.loc_vars = _c.loc_vars or function(_,_,_) return {vars=specific_vars} end
+	return gencardui(_c, full_UI_table, specific_vars, card_type, badges, hide_desc, main_start, main_end)
 end
-
 
 --[[local insrep = SMODS.insert_repetitions
 SMODS.insert_repetitions = function(ret, eval, effect_card, _type)

@@ -1,5 +1,6 @@
 G.hypr = {}
 G.GAME = G.GAME or {}
+G.hypr.storedlocvars = {}
 
 assert(SMODS.load_file("modules/utils.lua"))()
 assert(SMODS.load_file("modules/assets.lua"))()

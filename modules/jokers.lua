@@ -38,7 +38,7 @@ end
 			}
 		}
 	end
-}]]
+})]]
 
 
 addjkr( {
@@ -357,38 +357,84 @@ addjkr( {
 	end
 })]]
 
---[[
+--[[ --commented out for now
 G.hypr.ijhjokers = {}
-for k,v in pairs(G.P_CENTERS) do
-	if string.sub(k,1,2)=='j_' then
-		if v.inpool ~= false and v.rarity < 4 then 
-			table.insert(G.hypr.ijhjokers,v)
-		end
+for k,v in pairs(G.P_CENTER_POOLS.Joker) do
+	if 
+		v.inpool ~= false and 
+		v.rarity <= 3 and 
+		v.key ~= 'j_hypr_ijh' and
+		v.blueprint_compat and
+		not v.perishable_compat and
+		v.eternal_compat
+	then 
+		G.hypr.ijhjokers[k]=v
 	end
 end
 
-addjkr( { -- errors
+local ijhmanage = function(modcard,tokey) -- this was written interely in the DebugPlus console
+	local modkey = assert(modcard,'ijhmanage called with nil modcard!').config.center_key
+	local modabil = SMODS.shallow_copy(modcard.ability)
+	assert(modabil.hypr_ijh, 'Tried to call ijhmanage on a card without hypr_ijh!')
+	if modkey == tokey then return false end
+	local ens = function(t) return t or {} end
+	modabil.extra = ens(modabil.extra)
+	modcard.ijhstored = ens(modcard.ijhstored)
+	local abil = modcard.ijhstored[tokey]
+	modcard:set_ability(tokey)
+	if abil then modcard.ability = abil else modcard.ijhstored[modkey] = modabil end
+	modcard.ability.extra = ens(modcard.ability.extra)
+	return true
+end
+
+SMODS.Sticker {
 	key = 'ijh',
-	config = { extra = { copied = G.P_CENTERS["j_joker"] } },
+	should_apply = false, --dont show up naturally
+	atlas = 'cards',
+	no_collection = true,
+	no_sticker_sheet = true, -- cryptid
+	pos = { x = 3, y = 0 },
+	sets = {},
+	--hide_badge = true,
 	loc_vars = function(self, info_queue, card)
-		info_queue[#info_queue + 1] = { set = "Other", key = "hypr_placeholder" }
-		info_queue[#info_queue + 1] = { set = "Joker", key = card.ability.extra.copied.key }
-		return { vars = { G.localization.descriptions.Joker[card.ability.extra.copied.key].name } }
+		info_queue[#info_queue + 1] = { set = "Joker", key = card.config.center_key, vars = card.config.center.loc_vars(self, info_queue, card) }
 	end,
+	calculate = function (self,card,context)
+		if context.ending_shop then
+			play_sound('tarot1')
+			card:flip()
+			G.E_MANAGER:add_event(Event({
+				trigger = 'after', delay=1,
+				func = function()
+					ijhmanage(card,pseudorandom_element(G.hypr.ijhjokers).key)
+					play_sound('tarot2')
+					card:flip()
+					return true
+				end
+			}))
+		end
+	end,
+	draw = function(self, card) -- thank you metanite64 from the cryptid discord
+		G.shared_stickers[self.key].role.draw_major = card
+		G.shared_stickers[self.key]:draw_shader('dissolve', nil, nil, nil, card.children.center)
+	end,
+}
+
+addjkr( {
+	key = 'ijh',
+	config = {},
+	loc_vars = {},
 	blueprint_compat = true,
 	perishable_compat = false,
+	eternal_compat = false,
 	rarity = 3,
-	atlas = 'cards',
-	pos = { x = 3, y = 0 },
-	cost = 10,
-	calculate = function(self, card, context)
-		if context.ending_shop or card.ability.extra.copied == nil then
-			card.ability.extra.copied = false
-			local random_seed = card.randomseed or "ijh"
-			random_seed = (G.GAME and G.GAME.pseudorandom.seed or "") .. random_seed 
-			card.ability.extra.copied = G.hypr.ijhjokers[math.ceil(pseudorandom(pseudoseed(random_seed))*#G.hypr.ijhjokers)]
-		end
-		return SMODS.blueprint_effect(card, card.ability.extra.copied, context)
+	atlas = G.P_CENTERS['j_joker'].atlas,
+	pos = {x=0,y=0},
+	cost = 7,
+	set_ability = function(self,card,_,_)
+		key = pseudorandom_element(G.hypr.ijhjokers).key
+		card.ability.hypr_ijh = true
+		ijhmanage(card,key)
 	end
 })]]
 
@@ -608,25 +654,22 @@ addjkr( {
 		if context.before then
 			for _, v in pairs(G.playing_cards) do
 				if SMODS.pseudorandom_probability(card, 'hypr_bypass', card.ability.extra.odds, 7) then
-					if not v.bypassid then v.bypassid='id'..math.random(-10000000000,10000000000) end
-					SMODS.debuff_card(v,'prevent_debuff',v.bypassid)
-					card.ability.bypassed[v.bypassid] = true
+					SMODS.debuff_card(v,'prevent_debuff',v.unique_val)
+					card.ability.bypassed[v.unique_val] = true
 					bypassed = bypassed+1
 				end
 			end	
 			for _, v in pairs(G.jokers.cards) do
 				if SMODS.pseudorandom_probability(card, 'hypr_bypass', card.ability.extra.odds, 7) then
-					if not v.bypassid then v.bypassid='id'..math.random(-10000000000,10000000000) end
-					SMODS.debuff_card(v,'prevent_debuff',v.bypassid)
-					card.ability.bypassed[v.bypassid] = true
+					SMODS.debuff_card(v,'prevent_debuff',v.unique_val)
+					card.ability.bypassed[v.unique_val] = true
 					bypassed = bypassed+1
 				end
 			end	
 			for _, v in pairs(G.consumeables.cards) do
 				if SMODS.pseudorandom_probability(card, 'hypr_bypass', card.ability.extra.odds, 7) then
-					if not v.bypassid then v.bypassid='id'..math.random(-10000000000,10000000000) end
-					SMODS.debuff_card(v,'prevent_debuff',v.bypassid)
-					card.ability.bypassed[v.bypassid] = true
+					SMODS.debuff_card(v,'prevent_debuff',v.unique_val)
+					card.ability.bypassed[v.unique_val] = true
 					bypassed = bypassed+1
 				end
 			end	
@@ -634,24 +677,24 @@ addjkr( {
 		end
 		if context.after then
 			for _, v in pairs(G.playing_cards) do
-				if v.bypassid and card.ability.bypassed[v.bypassid] then
-					SMODS.debuff_card(v,'reset',v.bypassid)
+				if card.ability.bypassed[v.unique_val] then
+					SMODS.debuff_card(v,'reset',v.unique_val)
 					SMODS.recalc_debuff(v)
-					card.ability.bypassed[v.bypassid] = nil
+					card.ability.bypassed[v.unique_val] = nil
 				end
 			end	
 			for _, v in pairs(G.jokers.cards) do
-				if v.bypassid and card.ability.bypassed[v.bypassid] then
-					SMODS.debuff_card(v,'reset',v.bypassid)
+				if card.ability.bypassed[v.unique_val] then
+					SMODS.debuff_card(v,'reset',v.unique_val)
 					SMODS.recalc_debuff(v)
-					card.ability.bypassed[v.bypassid] = nil
+					card.ability.bypassed[v.unique_val] = nil
 				end
 			end	
 			for _, v in pairs(G.consumeables.cards) do
-				if v.bypassid and card.ability.bypassed[v.bypassid] then
-					SMODS.debuff_card(v,'reset',v.bypassid)
+				if card.ability.bypassed[v.unique_val] then
+					SMODS.debuff_card(v,'reset',v.unique_val)
 					SMODS.recalc_debuff(v)
-					card.ability.bypassed[v.bypassid] = nil
+					card.ability.bypassed[v.unique_val] = nil
 				end
 			end	
 		end
@@ -936,7 +979,7 @@ end
 if SMODS.find_mod('Cryptid')[1] then
 addjkr( {
 	key = 'tedium',
-	config = { extra = { emult = 1, scale = .2, immutable = {base = 1,rounds = 0,interacted = true,lasthighlighted = false} } },
+	config = { extra = { emult = 1, scale = .2, immutable ={base = 1,rounds = 0,interacted = true,lasthighlighted = false} } },
 	dependencies = {
 		items = {
 			"set_cry_epic",
@@ -960,6 +1003,9 @@ addjkr( {
 			card.ability.extra.immutable.interacted = true
 		end
 	end,
+	set_ability = function(self, card, initial, delay_sprites)
+		card.ability.extra.emult = card.ability.extra.immutable.base
+	end,
 	calculate = function(self,card,context)
 		if context.joker_main or context.forcetrigger then
 			if card.ability.extra.emult==1 then return end
@@ -980,10 +1026,19 @@ addjkr( {
 				card.ability.extra.emult = card.ability.extra.immutable.base
 				return {message = localize('k_reset')}
 			else
-				card.ability.extra.immutable.rounds = card.ability.extra.immutable.rounds+1
-				card.ability.extra.emult = card.ability.extra.immutable.base + card.ability.extra.scale*card.ability.extra.immutable.rounds
+				SMODS.scale_card(card, {
+					ref_table = card.ability.extra,
+					ref_value = "emult",
+					scalar_value = "scale",
+				})
 				card.ability.extra.immutable.interacted = false
-				return {message = localize('k_upgrade_ex')}
+				--[[
+				SMODS.scale_card(card, {
+					ref_table = card.ability.extra, -- the table that has the value you are changing in
+					ref_value = "chips", -- the key to the value in the ref_table
+					scalar_value = "change", -- the key to the value to scale by, in the ref_table by default
+				})
+				]]
 			end
 		end
 	end,
@@ -1075,7 +1130,8 @@ addjkr( {
 				card.joker_display_values.stored = card.ability.extra.chips
 				if next(G.play.cards) then return end
 				local active = card.ability.extra.active
-				local _,_,cards = JokerDisplay.evaluate_hand(JokerDisplay.current_hand,true) 
+				local text,_,cards = JokerDisplay.evaluate_hand(JokerDisplay.current_hand,true) 
+				if text == 'Unknown' then card.joker_display_values.stored = '???' return end
 				local brightness = function(card)
 					local lite
 					local dark
@@ -1119,6 +1175,133 @@ addjkr( {
 			}
 		}
 		return ret
+	end
+})
+
+addjkr( {
+	key = 'rhapsody', -- thank you Squid Joker aka engineer2006 from the Balatro Discord for giving me an idea in #The Sheet Suggestions to springboard off of
+	config = { extra = { chips = 0,  incchips = 12 } },
+	loc_vars = function(self, info_queue, card)
+		table.insert(info_queue,{ set = "Other", key = "hypr_placeholder" })
+		local suffix = ''
+		if G.GAME.modifiers.enable_perishables_in_shop or BUNCOMOD then -- because bunco adds The Depths
+			table.insert(info_queue,{key = 'perishable', set = 'Other', vars = {G.GAME.perishable_rounds or 1, G.GAME.perishable_rounds or G.GAME.perishable_rounds}})
+			suffix = '_perishable'
+		end
+		return { 
+			key = self.key..suffix,
+			vars = {
+				card.ability.extra.incchips,
+				card.ability.extra.chips,
+				colours = {G.C.PERISHABLE}
+			}
+		}
+	end,
+	rarity = 3,
+	atlas = 'cards',
+	blueprint_compat = true,
+	perishable_compat = false, -- because the tooltip would get confusing
+	demicoloncompat = true,
+	eternal_compat = true,
+	pos = { x = 0, y = 4 },
+	cost = 5,
+	calculate = function(self, card, context)
+		if context.individual and context.cardarea == G.play and not context.end_of_round then
+			if context.other_card:get_id()==12 and not context.blueprint then
+				SMODS.scale_card(card, {
+					ref_table = card.ability.extra, 
+					ref_value = "chips", 
+					scalar_value = "incchips", 
+				})
+			end
+		end
+		if (context.before or context.end_of_round or context.drawing_cards) and card.joker_display_values then
+			card.joker_display_values.storedchips = card.ability.extra.chips
+		end
+		if context.selling_card and context.card.ability.set == 'Joker' then
+			if context.card.ability.perish_tally~=0 then
+				card.ability.extra.chips = 0
+				if card.joker_display_values.chips then card.joker_display_values.chips=0 end
+				return {message = localize('k_reset'), message_card=card}
+			end
+		end
+		if context.joker_main or context.forcetrigger then return {chips = card.ability.extra.chips} end
+	end,
+	joker_display_def = function(JokerDisplay)
+		---@type JDJokerDefinition
+		return {
+			text = {
+				{ text = "+" },
+				{ ref_table = "card.joker_display_values", ref_value = "calcchips", retrigger_type = "mult" }
+			},
+			text_config = { colour = G.C.CHIPS },
+			reminder_text = {
+				{ text = "(" },
+				{
+					ref_table = "card.joker_display_values",
+					ref_value = "localized_text",
+					colour = G.C.ORANGE
+				},
+				{ text = ")" },
+			},
+			calc_function = function(card)
+				local _,_,cards = JokerDisplay.evaluate_hand(JokerDisplay.current_hand,true) 
+				local count = 0
+				if not playing_hand then
+					if text ~= 'Unknown' then
+						for _, scoring_card in pairs(cards) do
+							if scoring_card:get_id()==12 then
+								count = count + JokerDisplay.calculate_card_triggers(scoring_card, scoring_hand)
+							end
+						end
+					end
+				end
+				if playing_hand then count = 0 end 
+				if not card.joker_display_values.storedchips then card.joker_display_values.storedchips=card.ability.extra.chips end
+				card.joker_display_values.calcchips = card.joker_display_values.storedchips+(card.ability.extra.incchips*count)
+				
+
+				--[[
+				card.joker_display_values.storedxchips^(card.ability.extra.exp^count)
+				]]
+				card.joker_display_values.localized_text = localize('Queen','ranks')
+			end
+		}
+	end
+})
+addjkr( {
+	key = 'widescreen', -- todo: figure out a) how to make it rotated 90 degrees, b) what it would do
+	config = { extra = { mult = 4 } },
+	loc_vars = function(self, info_queue, card)
+		return { vars = { card.ability.extra.mult } }
+	end,
+	rarity = 1,
+	atlas = 'cards',
+	blueprint_compat = true,
+	perishable_compat = true,
+	demicoloncompat = true,
+	eternal_compat = true,
+	in_pool = false,
+	no_collection = true,
+	pos = { x = 5, y = 0 },
+	cost = 2,
+	update = function(self,card,dt)
+
+	end,
+	calculate = function(self, card, context)
+		if context.joker_main or context.forcetrigger then return {mult = card.ability.extra.mult} end
+	end,
+	joker_display_def = function(JokerDisplay)
+		---@type JDJokerDefinition
+		return {
+			text = {
+				{ text = "+" },
+				{ ref_table = "card.ability.extra", ref_value = "mult", retrigger_type = "mult"}
+			},
+			text_config = {
+				colour = G.C.MULT
+			}
+		}
 	end
 })
 

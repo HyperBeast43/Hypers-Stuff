@@ -48,6 +48,7 @@ SMODS.Sticker {
 	should_apply = false, --dont show up naturally
 	atlas = 'cards',
 	no_collection = true,
+	no_sticker_sheet = true, -- cryptid
 	pos = { x = 3, y = 3 },
 	sets = {},
 	config = {},

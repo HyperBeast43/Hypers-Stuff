@@ -30,8 +30,8 @@ SMODS.DynaTextEffect {
 SMODS.DynaTextEffect {
     key = "circle",
     func = function (dynatext, index, letter) 
-		letter.offset.x = math.cos(G.TIMERS.REAL*2 + index/2)*5
-		letter.offset.y = math.sin(G.TIMERS.REAL*2 + index/2)*5
+		letter.offset.x = math.cos(G.TIMERS.REAL*2 + index/1.5)*3
+		letter.offset.y = math.sin(G.TIMERS.REAL*2 + index/1.5)*3
     end
 }
 
