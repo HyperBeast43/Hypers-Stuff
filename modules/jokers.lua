@@ -1204,7 +1204,7 @@ addjkr( {
 	demicoloncompat = true,
 	eternal_compat = true,
 	pos = { x = 0, y = 4 },
-	cost = 5,
+	cost = 10,
 	calculate = function(self, card, context)
 		if context.individual and context.cardarea == G.play and not context.end_of_round then
 			if context.other_card:get_id()==12 and not context.blueprint then
