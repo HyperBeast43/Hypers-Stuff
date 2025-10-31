@@ -1269,6 +1269,7 @@ addjkr( {
 		}
 	end
 })
+--[[
 addjkr( {
 	key = 'widescreen', -- todo: figure out a) how to make it rotated 90 degrees, b) what it would do
 	config = { extra = { mult = 4 } },
@@ -1304,7 +1305,7 @@ addjkr( {
 		}
 	end
 })
-
+]]
 
 local rarities = {
 	1,
