@@ -1180,7 +1180,7 @@ addjkr( {
 
 addjkr( {
 	key = 'rhapsody', -- thank you Squid Joker aka engineer2006 from the Balatro Discord for giving me an idea in #The Sheet Suggestions to springboard off of
-	config = { extra = { chips = 0,  incchips = 5 } },
+	config = { extra = { chips = 0,  incchips = 12 } },
 	loc_vars = function(self, info_queue, card)
 		table.insert(info_queue,{ set = "Other", key = "hypr_placeholder" })
 		local suffix = ''
