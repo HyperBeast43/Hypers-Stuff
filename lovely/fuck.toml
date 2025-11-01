@@ -29,24 +29,12 @@ match_indent = false
 times = 1
 
 [[patches]]
-[patches.pattern] # taken from Balt's Warehouse
-target = "engine/card.lua"
-pattern = "function Card:draw(layer)"
-position = "after"
-payload = '''
-	local landscape_r = ((self.config.center_key=='j_hypr_widescreen') and math.pi/2) or 0    
-	local landscape_s = ((self.config.center_key=='j_hypr_widescreen') and G.hypr.lscpscale) or 1
-'''
-match_indent = false
-times = 1
-
-[[patches]]
-[patches.pattern] # taken from Balt's Warehouse
+[patches.pattern] 
 target = "engine/card.lua"
 pattern = "self.ARGS.send_to_shader, nil, self.children.center"
 position = "after"
 payload = '''
-, landscape_s, landscape_r
+, nil, (((self.config.center_key=='j_hypr_widescreen') and math.pi/2) or 0)
 '''
 match_indent = false
 times = 1
