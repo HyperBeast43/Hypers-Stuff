@@ -357,7 +357,7 @@ addjkr( {
 	end
 })]]
 
---[[ --commented out for now
+
 G.hypr.ijhjokers = {}
 for k,v in pairs(G.P_CENTER_POOLS.Joker) do
 	if 
@@ -395,9 +395,14 @@ SMODS.Sticker {
 	no_sticker_sheet = true, -- cryptid
 	pos = { x = 3, y = 0 },
 	sets = {},
-	--hide_badge = true,
+	badge_colour = G.C.UI.TEXT_DARK,
 	loc_vars = function(self, info_queue, card)
-		info_queue[#info_queue + 1] = { set = "Joker", key = card.config.center_key, vars = card.config.center.loc_vars(self, info_queue, card) }
+		local a
+		if type(card.config.center.loc_vars)=='function' then
+			a = card.config.center.loc_vars(self, info_queue, card)
+		elseif type(card.config.center.loc_vars)=='table' then -- oh god my spaghetti code is cathing up to me
+			a = card.config.center.loc_vars
+		end
 	end,
 	calculate = function (self,card,context)
 		if context.ending_shop then
@@ -427,16 +432,27 @@ addjkr( {
 	blueprint_compat = true,
 	perishable_compat = false,
 	eternal_compat = false,
-	rarity = 3,
-	atlas = G.P_CENTERS['j_joker'].atlas,
-	pos = {x=0,y=0},
+	rarity = 2,
+	atlas = 'cards',
+	pos = {x=1,y=4},
 	cost = 7,
-	set_ability = function(self,card,_,_)
-		key = pseudorandom_element(G.hypr.ijhjokers).key
+	calculate = function(self,card,context)
+		if not context.ending_shop then return end
 		card.ability.hypr_ijh = true
-		ijhmanage(card,key)
+		key = pseudorandom_element(G.hypr.ijhjokers).key
+		play_sound('tarot1')
+			card:flip()
+			G.E_MANAGER:add_event(Event({
+				trigger = 'after', delay=1,
+				func = function()
+					ijhmanage(card,pseudorandom_element(G.hypr.ijhjokers).key)
+					play_sound('tarot2')
+					card:flip()
+					return true
+				end
+			}))
 	end
-})]]
+})
 
 drinks = {{2,1,"Spades",nil,true},{3,1,"Hearts",nil,true},{4,1,"Clubs",nil,true},{5,1,"Diamonds",nil,true}} 
 if SMODS.find_mod('paperback')[1]~=nil then
@@ -1269,9 +1285,22 @@ addjkr( {
 		}
 	end
 })
+
+local make_sideways = function(self, card, dt) -- taken from Balt's Warehouse
+	if card and card.children then
+		if not card.config.center.discovered then return end
+		if card.children.center then
+			card.children.center.sideways = true
+		end
+		if card.children.back then
+			card.children.back.sideways = true
+		end
+	end
+end
+
 --[[
 addjkr( {
-	key = 'widescreen', -- todo: figure out a) how to make it rotated 90 degrees, b) what it would do
+	key = 'widescreen', -- todo: figure out what it would do
 	config = { extra = { mult = 4 } },
 	loc_vars = function(self, info_queue, card)
 		return { vars = { card.ability.extra.mult } }
@@ -1282,13 +1311,11 @@ addjkr( {
 	perishable_compat = true,
 	demicoloncompat = true,
 	eternal_compat = true,
-	in_pool = false,
-	no_collection = true,
+	pixel_size = { w = 95, h = 71 },
+	no_collection = false,
 	pos = { x = 5, y = 0 },
 	cost = 2,
-	update = function(self,card,dt)
-
-	end,
+	update = make_sideways,
 	calculate = function(self, card, context)
 		if context.joker_main or context.forcetrigger then return {mult = card.ability.extra.mult} end
 	end,
@@ -1334,6 +1361,8 @@ more ideas:
 	Clown Nose (Common): Selling this joker gives %playername%(flavor text:That's you!) +4 mult for the rest of this run --player scores in context.before, i somehow need to spoof a joker
 	Melatonin:
 	--unlock something by reducing discard size to 0
-
+	The Heap - all played hands must contain a 3oak
+	The Reflection - Beat your highest scoring round this run
+	The Chisel - Chips cannot exceed Mult², and vice versa
 ]]
 	

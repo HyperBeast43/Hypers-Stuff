@@ -55,10 +55,10 @@ loc = {
 			hypr_ijh = {
 				name = 'Insert Joke Here',
 				text = {
-					"Copies a {C:green}random{} compatible joker",
-					"from your {C:dark_edition}Collection{}",
-					"Cannot copy self or above {C:rare}Rare{}",
-					"Keeps any scaling if scaled joker is rolled again"
+					"At end of shop, turns into a {C:green}random{}",
+					"compatible joker from your {C:dark_edition}Collection{}",
+					"Cannot copy rarities above {C:rare}Rare{}",
+					"{C:inactive,s:0.8}(Keeps any scaling if a scaled joker is rolled again)"
 				}
 			},
 		},
@@ -170,8 +170,14 @@ loc = {
 				}
 			},
 			j_hypr_ijh = {
-				name = 'Failsafe?!',
-				text = {"This should never show up"}
+				name = 'Insert Joke Here',
+				text = {
+					"At end of shop, turns into a {C:green}random{}",
+					"compatible joker from your {C:dark_edition}Collection{}",
+					"{C:attention}Keeps this ability once transformed{}",
+					"Cannot copy rarities above {C:rare}Rare{}",
+					"{C:inactive,s:0.8}(Keeps any scaling if a scaled joker is rolled again)",
+				}
 			},
 			j_hypr_tedium = {
 				name = 'Tedium',
@@ -286,8 +292,6 @@ loc = {
 			j_hypr_widescreen = {
 				name = 'Landscape Joker',
 				text = {
-					"Currently, this joker only exists for testing.",
-					"It's not supposed to be able to show up naturally.",
 					"{C:red}+#1#{} Mult"
 				}
 			}
@@ -309,7 +313,8 @@ loc = {
 			['hypr-Three Pair'] = "Three Pair"
 		},
 		labels = {
-			hypr_fakeRed = "Red Seal"
+			hypr_fakeRed = "Red Seal",
+			hypr_ijh = 'Insert Joke Here'
 		}
 	}
 }

@@ -1,6 +1,5 @@
 [manifest]
 version = "1.0.0"
-dump_lua = true
 priority = 20000
 
 [[patches]]
@@ -12,4 +11,42 @@ payload = '''
 or hyper_thcief_call()
 '''
 match_indent = true
+times = 1
+
+[[patches]]
+[patches.pattern] # taken from Balt's Warehouse
+target = "engine/sprite.lua"
+pattern = "love.graphics.setColor(overlay or G.BRUTE_OVERLAY or G.C.WHITE)"
+position = "after"
+payload = '''
+if self.sideways then
+	love.graphics.rotate(math.pi/2)
+	local transform = self.VT or self.T
+    love.graphics.translate(0, -transform.w*G.TILESIZE*1.75)
+end
+'''
+match_indent = false
+times = 1
+
+[[patches]]
+[patches.pattern] # taken from Balt's Warehouse
+target = "engine/card.lua"
+pattern = "function Card:draw(layer)"
+position = "after"
+payload = '''
+	local landscape_r = ((self.config.center_key=='j_hypr_widescreen') and math.pi/2) or 0    
+	local landscape_s = ((self.config.center_key=='j_hypr_widescreen') and G.hypr.lscpscale) or 1
+'''
+match_indent = false
+times = 1
+
+[[patches]]
+[patches.pattern] # taken from Balt's Warehouse
+target = "engine/card.lua"
+pattern = "self.ARGS.send_to_shader, nil, self.children.center"
+position = "after"
+payload = '''
+, landscape_s, landscape_r
+'''
+match_indent = false
 times = 1
