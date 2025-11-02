@@ -134,11 +134,136 @@ SMODS.Challenge {
 			{ id = 'bl_bunc_chasm', type='blind' },
 			{ id = 'bl_bunc_wind', type='blind' },
 			{ id = 'bl_bunc_depths', type='blind' },
-			{ id = 'bl_bunc_depths', type='blind' },
 		},'Bunco')
     },
 	deck = {
         type = 'Challenge Deck',
         no_ranks = { ['7'] = true } 
+	}
+}
+
+SMODS.Challenge {
+    key = '6d4',
+    rules = {
+        custom = {
+            { id = 'no_shop_jokers' },
+        },
+        modifiers = {
+            { id = 'joker_slots', value = 6 },
+        }
+    },
+    jokers = (function()
+		local j = {
+			{id = 'j_hypr_ijh'},
+			{id = 'j_hypr_ijh'},
+			{id = 'j_hypr_ijh'},
+			{id = 'j_hypr_ijh'},
+			{id = 'j_hypr_ijh'},
+			{id = 'j_hypr_ijh'}
+		}
+		for _, v in ipairs(j) do
+            if next(SMODS.find_mod('Cryptid')) then
+                v.stickers = { "cry_absolute" }
+            else
+                v.eternal = true
+            end
+        end
+		return j
+	end)(),
+    restrictions = {
+        banned_cards = addifmod(addifmod({
+            { id = 'c_judgement' },
+			{ id = 'c_chariot' },
+            { id = 'c_wraith' },
+            { id = 'c_soul' },
+            { id = 'v_antimatter' },
+            { id = 'p_buffoon_normal_1', ids = {
+                'p_buffoon_normal_1', 'p_buffoon_normal_2', 'p_buffoon_jumbo_1', 'p_buffoon_mega_1',
+				}
+            },
+			{ id = 'p_cry_meme_normal_1', ids = {
+                'p_cry_meme_normal_1', 'p_cry_meme_normal_2',
+				}
+            }
+		},{
+			{ id = 'c_cry_commit' },
+			{ id = 'c_cry_spaghetti' },
+			{ id = 'c_cry_hook' },
+			{ id = 'c_cry_quantify' },
+			{ id = 'c_cry_rework' },
+			{ id = 'c_cry_summoning' },
+			{ id = 'c_cry_meld' },
+			{ id = 'c_cry_gateway' },
+			{ id = 'c_cry_analog' },
+			{ id = 'c_cry_adversary' },
+			{ id = 'v_cry_fabric' },
+		},'Cryptid'),{
+			{ id = 'c_paperback_two_of_cups' },
+			{ id = 'c_paperback_nine_of_cups' },
+			{ id = 'c_paperback_eight_of_wands' },
+			{ id = 'c_paperback_queen_of_wands' },
+			{ id = 'c_paperback_king_of_wands' },
+			{ id = 'c_paperback_nine_of_swords' },
+			{ id = 'c_paperback_apostle_of_wands' },
+			{ id = 'c_paperback_apostle_of_swords' },
+		},'paperback'),
+        banned_tags = addifmod(addifmod(addifmod({
+			{ id = 'tag_uncommon' },
+			{ id = 'tag_rare' },
+			{ id = 'tag_negative' },
+			{ id = 'tag_foil' },
+			{ id = 'tag_holographic' },
+			{ id = 'tag_polychrome' },
+			{ id = 'tag_buffoon' },
+			{ id = 'tag_top_up' }
+		},{
+			{ id = 'tag_cry_gambler' },
+			{ id = 'tag_cry_epic' },
+			{ id = 'tag_cry_double_m' },
+			{ id = 'tag_cry_empowered' },
+			{ id = 'tag_cry_schematic' },
+			{ id = 'tag_cry_glitched' },
+			{ id = 'tag_cry_oversat' },
+			{ id = 'tag_cry_mosaic' },
+			{ id = 'tag_cry_gold' },
+			{ id = 'tag_cry_glass' },
+			{ id = 'tag_cry_blur' },
+			{ id = 'tag_cry_astral' },
+			{ id = 'tag_cry_m' },
+			{ id = 'tag_cry_banana' },
+			{ id = 'tag_cry_loss' },
+			{ id = 'tag_cry_gourmand' }, -- im sorry gourm but i have to
+			{ id = 'tag_cry_bettertop_up' },
+			{ id = 'tag_cry_rework' }
+		}, 'Cryptid'),{
+			{ id = 'tag_paperback_dichrome' }
+		}, 'paperback'),{
+			{ id = 'tag_bunc_glitter'},
+			{ id = 'tag_bunc_fluorescent'},
+		}, 'Bunco'),
+        banned_other = addifmod(addifmod({
+            { id = 'bl_final_heart', type = 'blind' },
+            { id = 'bl_final_leaf',  type = 'blind' },
+            { id = 'bl_final_acorn', type = 'blind' }
+		},{
+			{ id = 'bl_cry_trophy', type='blind' },
+			{ id = 'bl_cry_vermillion_virus', type='blind' },
+			{ id = 'bl_cry_landlord', type='blind' },
+			{ id = 'bl_cry_windmill', type='blind' },
+			{ id = 'bl_cry_decision', type='blind' },
+			{ id = 'bl_cry_pin', type='blind' },
+			{ id = 'bl_cry_box', type='blind' },
+			{ id = 'bl_cry_repulsor', type='blind' },
+			{ id = 'bl_cry_striker', type='blind' },
+			{ id = 'bl_cry_oldfish', type='blind' }
+        },'Cryptid'),{
+			{ id = 'bl_bunc_depths', type='blind' },
+			{ id = 'bl_bunc_chasm', type='blind' },
+			{ id = 'bl_bunc_wind', type='blind' },
+			{ id = 'bl_bunc_depths', type='blind' },
+		},'Bunco')
+    },
+	deck = {
+        type = 'Challenge Deck'
 	}
 }

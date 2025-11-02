@@ -61,7 +61,6 @@ loc = {
 					"{C:inactive,s:0.8}(Keeps any scaling if a scaled joker is rolled again)",
 					"Pool: {C:attention}#1#{}, {C:attention}#2#{},",
 					"{C:attention}#3#{}, {C:attention}#4#"
-					,"currently crashes on transform and i have no idea why do NOT push to main"
 				}
 			},
 		},
@@ -182,7 +181,6 @@ loc = {
 					"{C:inactive,s:0.8}(Keeps any scaling if a scaled joker is rolled again)",
 					"Pool: {C:attention}#1#{}, {C:attention}#2#{},",
 					"{C:attention}#3#{}, {C:attention}#4#"
-					,"currently crashes on transform and i have no idea why do NOT push to main"
 				}
 			},
 			j_hypr_tedium = {
@@ -305,7 +303,8 @@ loc = {
 	},
 	misc = {
 		challenge_names = {
-			c_hypr_no7 = "Point's On"
+			c_hypr_no7 = "Point's On",
+			c_hypr_6d4 = "Hyperfluous"
 		},
 		dictionary = {
 			k_hypr_empty = "Empty Deck!",

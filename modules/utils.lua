@@ -61,9 +61,5 @@ function ensure(v,typ)
 		elseif typ=='function' then return function() return v end 
 	end
 	::invcast::
-	--[[if next(SMODS.find_mod('DebugPlus')) then
-		--uhhh
-	else]]
-		print('WARN: ensure() called with invalid cast!')
-	--end
+	sendWarnMessage('WARN: ensure() called with invalid cast, returning nil!', 'Hyper\'s Stuff')
 end

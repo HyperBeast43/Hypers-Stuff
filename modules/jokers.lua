@@ -359,33 +359,38 @@ addjkr( {
 
 
 G.hypr.ijhjokers = {}
-for k,v in pairs(G.P_CENTER_POOLS.Joker) do
-	if 
-		v.inpool ~= false and 
-		v.rarity <= 3 and 
-		v.key ~= 'j_hypr_ijh' and
-		v.perishable_compat and
-		v.eternal_compat
-	then 
-		G.hypr.ijhjokers[k]=v
+G.E_MANAGER:add_event(Event({func = function() -- so modded jokers get loaded
+	for k,v in pairs(G.P_CENTER_POOLS.Joker) do
+		if 
+			v.inpool ~= false and 
+			type(v.rarity)=='number' and
+			v.rarity <= 3 and 
+			v.key ~= 'j_hypr_ijh' and
+			v.perishable_compat and
+			v.eternal_compat
+		then 
+			G.hypr.ijhjokers[k]=v
+		end
 	end
-end
+return true end}))
 
-local ijhmanage = function(modcard,tokey) -- this was written mostly in the DebugPlus console
-	local modkey = assert(modcard,'ijhmanage called with nil modcard!').config.center_key
-	local modabil = SMODS.shallow_copy(modcard.ability)
-	local modpool = SMODS.shallow_copy(modcard.ability.ijhpool)
+
+function Card:ijhmanage(tokey) -- this was written mostly in the DebugPlus console
+	local modkey = assert(self,'ijhmanage somehow called with nil card!').config.center_key
+	local modabil = SMODS.shallow_copy(self.ability)
+	local modpool = SMODS.shallow_copy(self.ability.ijhpool)
 	modabil.ijhpool = nil
 	assert(modabil.hypr_ijh, 'Tried to call ijhmanage on a card without hypr_ijh!')
 	if modkey == tokey then return false end
 	local ens = function(t) return t or {} end
 	modabil.extra = ens(modabil.extra)
-	modcard.ability.ijhstored = ens(modcard.ability.ijhstored)
-	local abil = modcard.ability.ijhstored[tokey]
-	modcard:set_ability(tokey)
-	if abil then modcard.ability = abil else modcard.ability.ijhstored[modkey] = modabil end
-	modcard.ability.extra = ens(modcard.ability.extra)
-	modcard.ability.ijhpool = modpool
+	self.ability.ijhstored = ens(self.ability.ijhstored)
+	local t = SMODS.shallow_copy(self.ability.ijhstored)
+	self:set_ability(tokey,true)
+	self.ability.ijhstored = t
+	if t[tokey] then self.ability = t[tokey]; self.ability.ijhstored = t elseif modkey~='j_hypr_ijh' then self.ability.ijhstored[modkey] = modabil end
+	self.ability.extra = ens(self.ability.extra)
+	self.ability.ijhpool = modpool
 	return true
 end
 
@@ -404,20 +409,27 @@ SMODS.Sticker {
 		local a = function(j)
 			return localize({type = 'name_text', key = j, set = 'Joker'})
 		end
-		return {vars = {a(card.ability.ijhpool[1]),a(card.ability.ijhpool[2]),a(card.ability.ijhpool[3]),a(card.ability.ijhpool[4])}}
+		local t = {}
+		for i=1,4 do
+			t[i] = a(card.ability.ijhpool[i])
+			--if card.ability.ijhpool[i]~=card.config.center_key then info_queue[#info_queue + 1] = { set = "Joker", key = card.ability.ijhpool[i]} end --the fucking loc_vars
+		end
+		return {vars = t}
 	end,
 	calculate = function (self,card,context)
 		if context.ending_shop then
+			local t = SMODS.shallow_copy(card.ability.ijhpool)
+			table.remove(t,where(t,card.config.center_key))
+			local jkey = pseudorandom_element(t)
 			play_sound('tarot1')
-			card:flip()
 			card:juice_up()
+			card:flip()
 			G.E_MANAGER:add_event(Event({
 				trigger = 'after', delay=1,
 				func = function()
-					ijhmanage(card,pseudorandom_element(card.ability.ijhpool))
+					card:ijhmanage(jkey)
 					play_sound('tarot2')
 					card:flip()
-					--assert(false,'Breakpoint Reached!')
 					return true
 				end
 			}))
@@ -436,7 +448,12 @@ addjkr( {
 		local a = function(j)
 			return localize({type = 'name_text', key = j, set = 'Joker'})
 		end
-		return {vars = {a(card.ability.ijhpool[1]),a(card.ability.ijhpool[2]),a(card.ability.ijhpool[3]),a(card.ability.ijhpool[4])}}
+		local t = {}
+		for i=1,4 do
+			t[i] = a(card.ability.ijhpool[i])
+			--info_queue[#info_queue + 1] = { set = "Joker", key = card.ability.ijhpool[i] } --the fucking loc_vars
+		end
+		return {vars = t}
 	end,
 	perishable_compat = true,
 	eternal_compat = true,
@@ -445,7 +462,17 @@ addjkr( {
 	pos = {x=1,y=4},
 	cost = 7,
 	set_ability = function(self,card)
+		if card.ability.ijhpool then return end
 		card.ability.ijhpool = {}
+		if G.SETTINGS.paused then
+			card.ability.ijhpool = {
+			'j_wrathful_joker',
+			'j_lusty_joker',
+			'j_gluttenous_joker', --(sic)
+			'j_greedy_joker',
+			}
+			return
+		end
 		for i=1,4 do
 			local a = 'dgfhkasdgfashf'
 			local fl = true
@@ -460,17 +487,20 @@ addjkr( {
 		if not context.ending_shop then return end
 		card.ability.hypr_ijh = true
 		local jkey = pseudorandom_element(card.ability.ijhpool)
-		play_sound('tarot1')
+		G.E_MANAGER:add_event(Event({func = function()
+			play_sound('tarot1')
+			card:juice_up()
 			card:flip()
 			G.E_MANAGER:add_event(Event({
 				trigger = 'after', delay=1,
 				func = function()
-					ijhmanage(card,jkey)
+					card:ijhmanage(jkey)
 					play_sound('tarot2')
 					card:flip()
 					return true
 				end
 			}))
+		return true end}))
 	end
 })
 
@@ -1357,6 +1387,7 @@ addjkr( {
 local rarities = {
 	1,
 	2,
+	'cry_candy',
 	3,
 	'cry_epic',
 	4,
