@@ -37,6 +37,13 @@ loc = {
 					"the {C:green}higher{} number"
 				}
 			},
+			hypr_buggy = {
+				name = "Unstable",
+				text = {
+					"Notably buggy, report any {C:red,E:hypr_2}crashes{} on",
+					"the Github repository's {C:attention}Issues{} tab!"
+				}
+			},
 			hypr_disadvantage = {
 				name = "Disdvantage",
 				text = {

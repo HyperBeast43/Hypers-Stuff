@@ -358,24 +358,8 @@ addjkr( {
 })]]
 
 
-G.hypr.ijhjokers = {}
-G.E_MANAGER:add_event(Event({func = function() -- so modded jokers get loaded
-	for k,v in pairs(G.P_CENTER_POOLS.Joker) do
-		if 
-			v.inpool ~= false and 
-			type(v.rarity)=='number' and
-			v.rarity <= 3 and 
-			v.key ~= 'j_hypr_ijh' and
-			v.perishable_compat and
-			v.eternal_compat
-		then 
-			G.hypr.ijhjokers[k]=v
-		end
-	end
-return true end}))
-
-
 function Card:ijhmanage(tokey) -- this was written mostly in the DebugPlus console
+	print(tokey)
 	local modkey = assert(self,'ijhmanage somehow called with nil card!').config.center_key
 	local modabil = SMODS.shallow_copy(self.ability)
 	local modpool = SMODS.shallow_copy(self.ability.ijhpool)
@@ -387,7 +371,7 @@ function Card:ijhmanage(tokey) -- this was written mostly in the DebugPlus conso
 	self.ability.ijhstored = ens(self.ability.ijhstored)
 	local t = SMODS.shallow_copy(self.ability.ijhstored)
 	self:set_ability(tokey,true)
-	self.ability.ijhstored = t
+	ens(self.ability)['ijhstored'] = t
 	if t[tokey] then self.ability = t[tokey]; self.ability.ijhstored = t elseif modkey~='j_hypr_ijh' then self.ability.ijhstored[modkey] = modabil end
 	self.ability.extra = ens(self.ability.extra)
 	self.ability.ijhpool = modpool
@@ -405,7 +389,8 @@ SMODS.Sticker {
 	sets = {},
 	badge_colour = G.C.UI.TEXT_DARK,
 	loc_vars = function(self, info_queue, card)
-		assert(card.ability.ijhpool)
+		info_queue[#info_queue + 1] = { set = "Other", key = "hypr_buggy" }
+		assert(card.ability.ijhpool,'ijhpool doesn\'t exist on a Joker with the ijh sticker!')
 		local a = function(j)
 			return localize({type = 'name_text', key = j, set = 'Joker'})
 		end
@@ -445,6 +430,7 @@ addjkr( {
 	key = 'ijh',
 	config = {},
 	loc_vars = function(self, info_queue, card)
+		info_queue[#info_queue + 1] = { set = "Other", key = "hypr_buggy" }
 		local a = function(j)
 			return localize({type = 'name_text', key = j, set = 'Joker'})
 		end
@@ -1383,6 +1369,23 @@ addjkr( {
 	end
 })
 ]]
+
+G.hypr.ijhjokers = {}
+--G.E_MANAGER:add_event(Event({func = function() -- so modded jokers get loaded, commented out because that tends to break shit
+	for k,v in pairs(G.P_CENTER_POOLS.Joker) do
+		if 
+			v.inpool ~= false and 
+			type(v.rarity)=='number' and
+			v.rarity <= 3 and 
+			v.key ~= 'j_hypr_ijh' and
+			not where(G.P_LOCKED,v) and
+			v.perishable_compat and
+			v.eternal_compat
+		then 
+			G.hypr.ijhjokers[k]=v
+		end
+	end
+--return true end}))
 
 local rarities = {
 	1,
