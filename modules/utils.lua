@@ -46,22 +46,24 @@ function dblog(a) print(a); return a end
 function ensure(v,typ)
 	if not typ then return end
 	if type(v)==typ then return v end
-	if typ=='boolean' then return not not v
-	elseif typ=='number' then
-		if type(v)=='boolean' then return (v and 1) or 0 
-		elseif type(v)=='string' then return tonumber(v) and tonumber(v) or 0 
-		elseif type(v)=='table' then 
-			local i = 0
-			for _,_ in pairs(v) do
-				i = i+1
-			end return i
-		else goto invcast end
-	elseif typ=='string' then return tostring(v) 
-	elseif typ=='function' then return function() return v end
-	else ::invcast::
+	if 
+		typ=='boolean' then return not not v
+		elseif typ=='number' then
+			if type(v)=='boolean' then return (v and 1) or 0 
+			elseif type(v)=='string' then return tonumber(v) and tonumber(v) or 0 
+			elseif type(v)=='table' then 
+				local i = 0
+				for _,_ in pairs(v) do
+					i = i+1
+				end return i
+			else goto invcast end
+		elseif typ=='string' then return tostring(v) 
+		elseif typ=='function' then return function() return v end 
+	end
+	::invcast::
 	--[[if next(SMODS.find_mod('DebugPlus')) then
 		--uhhh
 	else]]
 		print('WARN: ensure() called with invalid cast!')
-	end --end
+	--end
 end

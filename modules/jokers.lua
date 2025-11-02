@@ -400,6 +400,7 @@ SMODS.Sticker {
 	sets = {},
 	badge_colour = G.C.UI.TEXT_DARK,
 	loc_vars = function(self, info_queue, card)
+		assert(card.ability.ijhpool)
 		local a = function(j)
 			return localize({type = 'name_text', key = j, set = 'Joker'})
 		end
@@ -416,6 +417,7 @@ SMODS.Sticker {
 					ijhmanage(card,pseudorandom_element(card.ability.ijhpool))
 					play_sound('tarot2')
 					card:flip()
+					--assert(false,'Breakpoint Reached!')
 					return true
 				end
 			}))
@@ -443,17 +445,13 @@ addjkr( {
 	pos = {x=1,y=4},
 	cost = 7,
 	set_ability = function(self,card)
-		if not G.hypr.ijhpsr then G.hypr.ijhpsr = 0 end
-		G.hypr.ijhpsr = G.hypr.ijhpsr + (G.GAME and pseudoseed(G.GAME.pseudorandom.seed) or math.random())
 		card.ability.ijhpool = {}
-		local random_seed = (G.GAME and G.GAME.pseudorandom.seed or "")..G.hypr.ijhpsr
 		for i=1,4 do
 			local a = 'dgfhkasdgfashf'
 			local fl = true
 			while fl or where(card.ability.ijhpool,a) do
 				fl = false
-				random_seed = random_seed..pseudoseed(random_seed)
-				a=pseudorandom_element(G.hypr.ijhjokers,pseudoseed(random_seed)).key
+				a=pseudorandom_element(G.hypr.ijhjokers).key
 			end
 			card.ability.ijhpool[i]=a
 		end
