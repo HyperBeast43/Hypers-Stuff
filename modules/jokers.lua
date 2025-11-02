@@ -389,9 +389,6 @@ local ijhmanage = function(modcard,tokey) -- this was written mostly in the Debu
 	return true
 end
 
-function dblog(a) print(a); return a end
-
-
 
 SMODS.Sticker {
 	key = 'ijh',
@@ -446,8 +443,10 @@ addjkr( {
 	pos = {x=1,y=4},
 	cost = 7,
 	set_ability = function(self,card)
+		if not G.hypr.ijhpsr then G.hypr.ijhpsr = 0 end
+		G.hypr.ijhpsr = G.hypr.ijhpsr + (G.GAME and pseudoseed(G.GAME.pseudorandom.seed) or math.random())
 		card.ability.ijhpool = {}
-		local random_seed = (G.GAME and G.GAME.pseudorandom.seed or "")..pseudoseed(tablepeek(card)) --sure
+		local random_seed = (G.GAME and G.GAME.pseudorandom.seed or "")..G.hypr.ijhpsr
 		for i=1,4 do
 			local a = 'dgfhkasdgfashf'
 			local fl = true
