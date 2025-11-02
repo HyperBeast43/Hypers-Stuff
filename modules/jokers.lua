@@ -364,28 +364,34 @@ for k,v in pairs(G.P_CENTER_POOLS.Joker) do
 		v.inpool ~= false and 
 		v.rarity <= 3 and 
 		v.key ~= 'j_hypr_ijh' and
-		v.blueprint_compat and
-		not v.perishable_compat and
+		v.perishable_compat and
 		v.eternal_compat
 	then 
 		G.hypr.ijhjokers[k]=v
 	end
 end
 
-local ijhmanage = function(modcard,tokey) -- this was written interely in the DebugPlus console
+local ijhmanage = function(modcard,tokey) -- this was written mostly in the DebugPlus console
 	local modkey = assert(modcard,'ijhmanage called with nil modcard!').config.center_key
 	local modabil = SMODS.shallow_copy(modcard.ability)
+	local modpool = SMODS.shallow_copy(modcard.ability.ijhpool)
+	modabil.ijhpool = nil
 	assert(modabil.hypr_ijh, 'Tried to call ijhmanage on a card without hypr_ijh!')
 	if modkey == tokey then return false end
 	local ens = function(t) return t or {} end
 	modabil.extra = ens(modabil.extra)
-	modcard.ijhstored = ens(modcard.ijhstored)
-	local abil = modcard.ijhstored[tokey]
+	modcard.ability.ijhstored = ens(modcard.ability.ijhstored)
+	local abil = modcard.ability.ijhstored[tokey]
 	modcard:set_ability(tokey)
-	if abil then modcard.ability = abil else modcard.ijhstored[modkey] = modabil end
+	if abil then modcard.ability = abil else modcard.ability.ijhstored[modkey] = modabil end
 	modcard.ability.extra = ens(modcard.ability.extra)
+	modcard.ability.ijhpool = modpool
 	return true
 end
+
+function dblog(a) print(a); return a end
+
+
 
 SMODS.Sticker {
 	key = 'ijh',
@@ -397,21 +403,20 @@ SMODS.Sticker {
 	sets = {},
 	badge_colour = G.C.UI.TEXT_DARK,
 	loc_vars = function(self, info_queue, card)
-		local a
-		if type(card.config.center.loc_vars)=='function' then
-			a = card.config.center.loc_vars(self, info_queue, card)
-		elseif type(card.config.center.loc_vars)=='table' then -- oh god my spaghetti code is cathing up to me
-			a = card.config.center.loc_vars
+		local a = function(j)
+			return localize({type = 'name_text', key = j, set = 'Joker'})
 		end
+		return {vars = {a(card.ability.ijhpool[1]),a(card.ability.ijhpool[2]),a(card.ability.ijhpool[3]),a(card.ability.ijhpool[4])}}
 	end,
 	calculate = function (self,card,context)
 		if context.ending_shop then
 			play_sound('tarot1')
 			card:flip()
+			card:juice_up()
 			G.E_MANAGER:add_event(Event({
 				trigger = 'after', delay=1,
 				func = function()
-					ijhmanage(card,pseudorandom_element(G.hypr.ijhjokers).key)
+					ijhmanage(card,pseudorandom_element(card.ability.ijhpool))
 					play_sound('tarot2')
 					card:flip()
 					return true
@@ -428,24 +433,42 @@ SMODS.Sticker {
 addjkr( {
 	key = 'ijh',
 	config = {},
-	loc_vars = {},
-	blueprint_compat = true,
-	perishable_compat = false,
-	eternal_compat = false,
+	loc_vars = function(self, info_queue, card)
+		local a = function(j)
+			return localize({type = 'name_text', key = j, set = 'Joker'})
+		end
+		return {vars = {a(card.ability.ijhpool[1]),a(card.ability.ijhpool[2]),a(card.ability.ijhpool[3]),a(card.ability.ijhpool[4])}}
+	end,
+	perishable_compat = true,
+	eternal_compat = true,
 	rarity = 2,
 	atlas = 'cards',
 	pos = {x=1,y=4},
 	cost = 7,
+	set_ability = function(self,card)
+		card.ability.ijhpool = {}
+		local random_seed = (G.GAME and G.GAME.pseudorandom.seed or "")..pseudoseed(tablepeek(card)) --sure
+		for i=1,4 do
+			local a = 'dgfhkasdgfashf'
+			local fl = true
+			while fl or where(card.ability.ijhpool,a) do
+				fl = false
+				random_seed = random_seed..pseudoseed(random_seed)
+				a=pseudorandom_element(G.hypr.ijhjokers,pseudoseed(random_seed)).key
+			end
+			card.ability.ijhpool[i]=a
+		end
+	end,
 	calculate = function(self,card,context)
 		if not context.ending_shop then return end
 		card.ability.hypr_ijh = true
-		key = pseudorandom_element(G.hypr.ijhjokers).key
+		local jkey = pseudorandom_element(card.ability.ijhpool)
 		play_sound('tarot1')
 			card:flip()
 			G.E_MANAGER:add_event(Event({
 				trigger = 'after', delay=1,
 				func = function()
-					ijhmanage(card,pseudorandom_element(G.hypr.ijhjokers).key)
+					ijhmanage(card,jkey)
 					play_sound('tarot2')
 					card:flip()
 					return true

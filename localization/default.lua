@@ -27,7 +27,7 @@ loc = {
 			hypr_guest_art = {
 				name = "Guest Art",
 				text = {
-					"Art by {C:attention}#1#{}"
+					"Art by {C:attention}#1#"
 				}
 			},
 			hypr_advantage = {
@@ -55,10 +55,13 @@ loc = {
 			hypr_ijh = {
 				name = 'Insert Joke Here',
 				text = {
-					"At end of shop, turns into a {C:green}random{}",
-					"compatible joker from your {C:dark_edition}Collection{}",
-					"Cannot copy rarities above {C:rare}Rare{}",
-					"{C:inactive,s:0.8}(Keeps any scaling if a scaled joker is rolled again)"
+					"At end of shop, turns into a {C:green}random",
+					"joker from the pool defined below",
+					"Cannot copy rarities above {C:rare}Rare",
+					"{C:inactive,s:0.8}(Keeps any scaling if a scaled joker is rolled again)",
+					"Pool: {C:attention}#1#{}, {C:attention}#2#{},",
+					"{C:attention}#3#{}, {C:attention}#4#"
+					,"currently crashes on transform and i have no idea why do NOT push to main"
 				}
 			},
 		},
@@ -66,9 +69,9 @@ loc = {
 			c_hypr_recursion = {
 				name = "Recursion",
 				text = {
-					"Add a {C:red}Red Seal{}",
-					"to a random {C:attention}Joker,{}",
-					"{C:red}-#1#{} discard size{}"
+					"Add a {C:red}Red Seal",
+					"to a random {C:attention}Joker,",
+					"{C:red}-#1#{} discard size"
 				}
 			}
 		},
@@ -76,8 +79,8 @@ loc = {
 			b_hypr_solar={
 				name="Solar Deck",
 				text={
-					"{C:blue}+1{} cards {C:blue}playable per hand{}",
-					"{C:red}-1{} cards {C:red}discardable per discard{}"
+					"{C:blue}+1{} cards {C:blue}playable per hand",
+					"{C:red}-1{} cards {C:red}discardable per discard"
 				},
 			}
 		},
@@ -85,8 +88,8 @@ loc = {
 			sleeve_hypr_solar={
 				name="Solar Sleeve",
 				text={
-					"{C:blue}+1{} cards {C:blue}per hand{}",
-					"{C:red}-1{} cards {C:red}per discard{}"
+					"{C:blue}+1{} cards {C:blue}per hand",
+					"{C:red}-1{} cards {C:red}per discard"
 				},
 			}
 		},
@@ -105,7 +108,7 @@ loc = {
 				text = {
 					"Every {C:attention}7{} in your",
 					"{C:attention}full deck{} gives {X:mult,C:white}X#2#{} Mult,",
-					"stacking {C:attention}multiplicatively{}",
+					"stacking {C:attention}multiplicatively",
 					"{C:inactive}(Currently {X:mult,C:white}X#3#{C:inactive} Mult)"
 				}
 			},
@@ -123,7 +126,7 @@ loc = {
 					"{C:clubs}Clubs{} and {C:bunc_fleurons}Fleurons{} held in hand",
 					"give a random value from",
 					"{X:mult,C:white}X#1#{} up to {X:mult,C:white}X#2#{} Mult",
-					"{C:bunc_fleurons}Fleurons{} roll with {C:attention,E:hypr_2}advantage{}"
+					"{C:bunc_fleurons}Fleurons{} roll with {C:attention,E:hypr_2}advantage"
 				}
 			},
 			j_hypr_curator = {
@@ -143,14 +146,14 @@ loc = {
 				name = 'Five-Finger Discount',
 				text = {
 					"Everything is {C:attention,E:1}free{}, but",
-					"{C:green}rerolls{} are {C:red}disabled{}"
+					"{C:green}rerolls{} are {C:red}disabled"
 				}
 			},
 			j_hypr_jera = {
 				name = 'Runic Ruby',
 				text = {
 					"All {C:hearts}Hearts{} are retriggered",
-					"{C:attention}exactly once{}"
+					"{C:attention}exactly once"
 				}
 			},
 			j_hypr_bypass = {
@@ -164,7 +167,7 @@ loc = {
 			j_hypr_ = {
 				name = ' ',
 				text = {
-					"For every {C:attention}banished{}",
+					"For every {C:attention}banished",
 					"card, give {X:mult,C:white}X#1#{} Mult",
 					"{C:inactive}(Currently {X:mult,C:white}X#2#{C:inactive} Mult)"
 				}
@@ -172,11 +175,14 @@ loc = {
 			j_hypr_ijh = {
 				name = 'Insert Joke Here',
 				text = {
-					"At end of shop, turns into a {C:green}random{}",
-					"compatible joker from your {C:dark_edition}Collection{}",
-					"{C:attention}Keeps this ability once transformed{}",
-					"Cannot copy rarities above {C:rare}Rare{}",
+					"At end of shop, turns into a {C:green}random",
+					"joker from the pool defined below",
+					"{C:attention}Keeps this ability once transformed",
+					"Cannot copy rarities above {C:rare}Rare",
 					"{C:inactive,s:0.8}(Keeps any scaling if a scaled joker is rolled again)",
+					"Pool: {C:attention}#1#{}, {C:attention}#2#{},",
+					"{C:attention}#3#{}, {C:attention}#4#"
+					,"currently crashes on transform and i have no idea why do NOT push to main"
 				}
 			},
 			j_hypr_tedium = {
@@ -232,16 +238,16 @@ loc = {
 				name = 'Trick Coin',
 				text = 	{
 					"Once per round, on hand played,",
-					"{X:green,C:white}#1#%{} chance to {C:blue,E:1}refund used hand{}",
-					"+{X:green,C:white}1%{} after defeating a {C:attention}Boss Blind{}",
-					"{C:inactive}(Max chance is 33.3%){}"
+					"{X:green,C:white}#1#%{} chance to {C:blue,E:1}refund used hand",
+					"+{X:green,C:white}1%{} after defeating a {C:attention}Boss Blind",
+					"{C:inactive}(Max chance is 33.3%)"
 				}
 			},
 			j_hypr_coloredhoney = {
 				name = 'Colored Honey',
 				text = {
 					"When a suit is scored for the first time",
-					"after picking up this joker, give {C:money}$#1#{}",
+					"after picking up this joker, give {C:money}$#1#",
 					"{C:red,E:hypr_2}Self destructs{} if no suits remaining"
 				}
 			},
@@ -249,35 +255,35 @@ loc = {
 				name = 'Saltines',
 				text = {
 					"{X:mult,C:white}X#1#{} Mult, {C:dark_edition}^#2#{} per card scored",
-					"{C:red,E:hypr_2}Self destructs{} when below {X:mult,C:white}X#3#{}"
+					"{C:red,E:hypr_2}Self destructs{} when below {X:mult,C:white}X#3#"
 				}
 			},
 			j_hypr_melatonin = {
 				name = 'Lights Out',
 				text = {
-					"Gains {C:chips}+#1#{} Chips if a {C:hearts}Heart{} or {C:diamonds}Diamond{} is scored while {V:2}inactive{}",
-					"{C:red,E:hypr_2}Resets{} if a {C:hearts}Heart{} or {C:diamonds}Diamond{} is scored while {V:3}active{}",
+					"Gains {C:chips}+#1#{} Chips if a {C:hearts}Heart{} or {C:diamonds}Diamond{} is scored while {V:2}inactive",
+					"{C:red,E:hypr_2}Resets{} if a {C:hearts}Heart{} or {C:diamonds}Diamond{} is scored while {V:3}active",
 					"{V:3}Activates{} if a {C:spades}Spade{} or {C:clubs}Club{} is scored",
-					"Only triggers while {V:3}active{}",
-					"{C:inactive}(Currently {C:chips}+#2#{C:inactive} Chips, {B:1,C:white}#3#{C:inactive}){}"
+					"Only triggers while {V:3}active",
+					"{C:inactive}(Currently {C:chips}+#2#{C:inactive} Chips, {B:1,C:white}#3#{C:inactive})"
 				}
 			},
 			j_hypr_melatonin_pb = {
 				name = 'Lights Out',
 				text = {
-					"Gains {C:chips}+#1#{} Chips if a {C:paperback_light_suit}light suit{} is scored while {V:2}inactive{}",
-					"{C:red,E:hypr_2}Resets{} if a {C:paperback_light_suit}light suit{} is scored while {V:3}active{}",
+					"Gains {C:chips}+#1#{} Chips if a {C:paperback_light_suit}light suit{} is scored while {V:2}inactive",
+					"{C:red,E:hypr_2}Resets{} if a {C:paperback_light_suit}light suit{} is scored while {V:3}active",
 					"{V:3}Activates{} if a {C:paperback_dark_suit}dark suit{} is scored",
-					"Only triggers while {V:3}active{}",
-					"{C:inactive}(Currently {C:chips}+#2#{C:inactive} Chips, {B:1,C:white}#3#{C:inactive}){}"
+					"Only triggers while {V:3}active",
+					"{C:inactive}(Currently {C:chips}+#2#{C:inactive} Chips, {B:1,C:white}#3#{C:inactive})"
 				}
 			},
 			j_hypr_rhapsody = {
 				name = 'Bohemian Joker',
 				text = {
 					"When a {C:attention}Queen{} is scored, gain {C:chips}+#1#{} Chips",
-					"{C:red}Resets{} when a Joker is {C:money,E:hypr_2}sold{}",
-					"{C:inactive}(Currently {C:chips}+#2#{C:inactive} Chips){}"
+					"{C:red}Resets{} when a Joker is {C:money,E:hypr_2}sold",
+					"{C:inactive}(Currently {C:chips}+#2#{C:inactive} Chips)"
 				}
 			},
 			j_hypr_rhapsody_perishable = {
@@ -285,8 +291,8 @@ loc = {
 				text = {
 					"When a {C:attention}Queen{} is scored, gain {C:chips}+#1#{} Chips",
 					"{C:red}Resets{} when a Joker is {C:money,E:hypr_2}sold{} without",
-					"it being debuffed by {V:1,E:hypr_circle}Perishable{}",
-					"{C:inactive}(Currently {C:chips}+#2#{C:inactive} Chips){}"
+					"it being debuffed by {V:1,E:hypr_circle}Perishable",
+					"{C:inactive}(Currently {C:chips}+#2#{C:inactive} Chips)"
 				}
 			},
 			j_hypr_widescreen = {
