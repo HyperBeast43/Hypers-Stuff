@@ -149,7 +149,7 @@ SMODS.Challenge {
             { id = 'no_shop_jokers' },
         },
         modifiers = {
-            { id = 'joker_slots', value = 6 },
+            { id = 'joker_slots', value = 0 },
         }
     },
     jokers = (function()
