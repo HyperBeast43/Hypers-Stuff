@@ -890,15 +890,11 @@ addjkr( {
 			calc_function = function(card)
 				card.joker_display_values.calcmult = 1
 				local _,_,cards = JokerDisplay.evaluate_hand()
-				local playing_hand = next(G.play.cards)
 				if not cards then return end
 				local count = 0
-				if not playing_hand then 
-					for _,v in ipairs(cards) do
-						count = count + JokerDisplay.calculate_card_triggers(v,cards)
-					end
+				for _,v in ipairs(cards) do
+					count = count + JokerDisplay.calculate_card_triggers(v,cards)
 				end
-				if playing_hand then count = 0 end 
 				if not card.joker_display_values.storedxmult then card.joker_display_values.storedxmult=card.ability.extra.xmult end
 				
 				local notalis = not SMODS.find_mod('Talisman')[1]
