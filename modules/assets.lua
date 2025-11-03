@@ -41,6 +41,14 @@ local clamp = function(x)
 	return x
 end
 
+local psin = function(x)
+	local modx = x % math.pi
+    local s = 1
+    if x % (2*math.pi) > math.pi then s = -1 end
+    local y = 2*modx/math.pi - 1
+    return (1 - y*y) * s
+end
+
 local clamplow = function(x)
 	if x<0 then return 0 end
 	return x

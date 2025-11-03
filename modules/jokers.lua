@@ -195,13 +195,14 @@ addjkr( {
 				local playing_hand = next(G.play.cards)
 				local count = 0
 				local count2 = 0
+				local _,_,cards = JokerDisplay.evaluate_hand()
 				for _, playing_card in ipairs(G.hand.cards) do
 					if playing_hand or not playing_card.highlighted then
 						if not (playing_card.facing == 'back') and not playing_card.debuff and playing_card:get_id() then
 							if playing_card:is_suit("Clubs") then
-								count = count + JokerDisplay.calculate_card_triggers(playing_card, nil, true)
+								count = count + JokerDisplay.calculate_card_triggers(playing_card, cards, true)
 							elseif playing_card:is_suit("bunc_Fleurons") then
-								count2 = count2 + JokerDisplay.calculate_card_triggers(playing_card, nil, true)
+								count2 = count2 + JokerDisplay.calculate_card_triggers(playing_card, cards, true)
 							end
 						end
 					end
@@ -887,11 +888,14 @@ addjkr( {
 		---@type JDJokerDefinition
 		return {
 			calc_function = function(card)
-				local _,_,cards = JokerDisplay.evaluate_hand(JokerDisplay.current_hand,true) 
+				card.joker_display_values.calcmult = 1
+				local _,_,cards = JokerDisplay.evaluate_hand()
+				local playing_hand = next(G.play.cards)
+				if not cards then return end
 				local count = 0
 				if not playing_hand then 
 					for _,v in ipairs(cards) do
-						count = count + JokerDisplay.calculate_card_triggers(v)
+						count = count + JokerDisplay.calculate_card_triggers(v,cards)
 					end
 				end
 				if playing_hand then count = 0 end 
@@ -1171,7 +1175,7 @@ addjkr( {
 								active = false 
 								card.joker_display_values.stored = 0 
 							else
-								card.joker_display_values.stored = card.joker_display_values.stored + JokerDisplay.calculate_card_triggers(playing_card, nil, true)*card.ability.extra.inc_chips
+								card.joker_display_values.stored = card.joker_display_values.stored + JokerDisplay.calculate_card_triggers(playing_card, cards, true)*card.ability.extra.inc_chips
 							end
 						end
 					end
@@ -1263,11 +1267,12 @@ addjkr( {
 			calc_function = function(card)
 				local _,_,cards = JokerDisplay.evaluate_hand(JokerDisplay.current_hand,true) 
 				local count = 0
+				local playing_hand = next(G.play.cards)
 				if not playing_hand then
 					if text ~= 'Unknown' then
 						for _, scoring_card in pairs(cards) do
 							if scoring_card:get_id()==12 then
-								count = count + JokerDisplay.calculate_card_triggers(scoring_card, scoring_hand)
+								count = count + JokerDisplay.calculate_card_triggers(scoring_card, cards)
 							end
 						end
 					end
