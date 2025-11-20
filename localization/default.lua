@@ -187,6 +187,33 @@ loc = {
 					"{C:inactive}(Currently {X:dark_edition,C:white}^#2#{C:inactive} Mult)"
 				}
 			},
+			j_hypr_missingno = {
+				name = 'MissingNo.',
+				text = {
+					"{X:red,C:white}X#1#{} Mult, {C:green}#2# in #3#{} chance to",
+					"{C:red,E:hypr_tremble}crash the game{} instead",
+					"Outcome based on {C:attention}Round{} and {C:dark_edition}Run Seed{}",
+					"{C:inactive}(If it crashes once, it'll keep doing so)"
+				}
+			},
+			j_hypr_plane = {
+				name = 'Paper Airplane?',
+				text = { --
+					"+{C:chips}#1#{} Chips",
+					"{C:red}Disables{} skipping scoring animations",
+					"Creates a {C:attention}#2#{}",
+					"{C:red,E:hypr_2}Destroying one destroys the rest"
+				}
+			},
+			j_hypr_planefake = {
+				name = 'Paper Airplane?',
+				text = { --
+					"+{C:chips}#1#{} Chips",
+					"{C:red}Disables{} skipping scoring animations",
+					"Creates a {C:attention}#2#{}",
+					"{C:red,E:hypr_2}Destroying one destroys the rest"
+				}
+			},
 			--drinks
 				j_hypr_drink_spades = {
 					name = 'PhD Pepper',
@@ -307,7 +334,13 @@ loc = {
 			k_hypr_addhand = "+1 Hand",
 			k_hypr_active_true = "Active",
 			k_hypr_active_false = "Inactive",
-			k_hypr_jddebuffed = 'Card Debuffed!'
+			k_hypr_jddebuffed = 'Card Debuffed!',
+			--000crash starts at 2 because 1 would be a localization error, which fits too
+			k_hypr_000crash2 = 'dVKqPAKobgO6', 
+			k_hypr_000crash3 = '1001100010101101110',
+			k_hypr_000crash4 = 'Bcq/5F*&OK@;^0uA0>u4+D>>&Du',
+			k_hypr_000crash5 = 'b6g5g4g5g4d5g5d3g1g4g5g1h5a3d3g1a2b4a3g1a7g1c5g4h1f7a3g1a3h4g5g1c5f3g1c5f4f4'
+			
 		},
 		poker_hands = {
 			['hypr-Three Pair'] = "Three Pair"

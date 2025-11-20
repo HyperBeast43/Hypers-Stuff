@@ -1299,6 +1299,105 @@ local make_sideways = function(self, card, dt) -- taken from Balt's Warehouse
 	end
 end
 
+
+
+addjkr( {
+	key = 'missingno',
+	config = { extra = { xmult = 5, num=1, dom=5 } },
+	loc_vars = function(self, info_queue, card)
+		local a, b = SMODS.get_probability_vars(card, card.ability.extra.num, card.ability.extra.dom)
+		return { vars = { card.ability.extra.xmult, a, b}}
+	end,
+	rarity = 2,
+	atlas = 'cards',
+	blueprint_compat = true,
+	perishable_compat = true,
+	demicoloncompat = true,
+	eternal_compat = true,
+	pos = { x = 3, y = 4 },
+	soul_pos = { x = 4, y = 4 },
+	cost = 4,
+
+	calculate = function(self, card, context)
+		if context.joker_main or context.forcetrigger then 
+			math.randomseed(G.GAME.round+pseudoseed(G.GAME.pseudorandom.seed)*1000000)
+			local function div(a,b) return a/b end
+			if math.random()<div(SMODS.get_probability_vars(card, card.ability.extra.num, card.ability.extra.dom)) then
+				assert(false,localize("k_hypr_000crash"..tostring(math.ceil(math.random()*5))))
+			end
+			return {xmult = card.ability.extra.xmult} 
+		end
+	end,
+	joker_display_def = function(JokerDisplay)
+		---@type JDJokerDefinition
+		return {
+			text = {
+				{
+					border_nodes = {
+						{ text = "X" },
+						{ ref_table = "card.ability.extra", ref_value = "xmult", retrigger_type = "exp"}
+					}
+				}
+			}
+		}
+	end
+})
+
+addjkr( {
+	key = 'plane',
+	config = { extra = { chips = 1, making = false } },
+	loc_vars = function(self, info_queue, card)
+		return { vars = { card.ability.extra.chips, localize({type = 'name_text', key = self.key, set = 'Joker'})}}
+	end,
+	rarity = 2,
+	atlas = 'cards',
+	blueprint_compat = true,
+	perishable_compat = true,
+	demicoloncompat = true,
+	eternal_compat = true,
+	pos = { x = 2, y = 4 },
+	cost = 0,
+	calculate = function(self, card, context)
+		if context.joker_main or context.forcetrigger then 
+			if card.ability.extra.making then
+				G.E_MANAGER:add_event(Event({func = function()
+					SMODS.add_card({key=self.key, area=G.jokers})
+					return true
+				end}))
+			end
+			return {chips = card.ability.extra.chips} 
+		end
+		if context.press_play then
+			card.ability.extra.making = true
+		end
+		if context.selling_card and context.card.config.center_key == card.config.center_key then
+			card.getting_sliced = true
+			G.GAME.joker_buffer = G.GAME.joker_buffer - 1
+			G.E_MANAGER:add_event(Event({
+				func = function()
+					G.GAME.joker_buffer = 0
+					card:juice_up(0.8, 0.8)
+					card:start_dissolve({ HEX("57ecab") }, nil, 1.6)
+					return true
+				end,
+			}))
+			card:remove()
+		end
+	end,
+	joker_display_def = function(JokerDisplay)
+		---@type JDJokerDefinition
+		return {
+			text = {
+				{ text = "+" },
+				{ ref_table = "card.ability.extra", ref_value = "chips", retrigger_type = "mult"}
+			},
+			text_config = {
+				colour = G.C.CHIPS
+			}
+		}
+	end
+})
+
 --[[
 addjkr( {
 	key = 'widescreen', -- todo: figure out what it would do
