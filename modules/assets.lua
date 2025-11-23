@@ -65,7 +65,7 @@ SMODS.DynaTextEffect {
 SMODS.DynaTextEffect {
     key = "tremble",
     func = function (dynatext, index, letter) 
-        letter.r = (math.random()-.5)/3
+        letter.r = (math.random()-.5)/6
     end
 }
 
