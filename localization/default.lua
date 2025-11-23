@@ -199,8 +199,8 @@ loc = {
 			j_hypr_plane = {
 				name = 'Paper Airplane?',
 				text = { --
-					"+{C:chips}#1#{} Chips",
-					"{C:red}Disables{} skipping scoring animations",
+					"{C:green}#3# in #4#{} chance for +{C:chips}#1#{} Chips",
+					--"{C:red}Disables{} skipping scoring animations",
 					"Creates a {C:attention}#2#{}",
 					"{C:red,E:hypr_2}Destroying one destroys the rest"
 				}
@@ -208,8 +208,8 @@ loc = {
 			j_hypr_planefake = {
 				name = 'Paper Airplane?',
 				text = { --
-					"+{C:chips}#1#{} Chips",
-					"{C:red}Disables{} skipping scoring animations",
+					"{C:green}#3# in #4#{} chance for +{C:chips}#1#{} Chips",
+					--"{C:red}Disables{} skipping scoring animations",
 					"Creates a {C:attention}#2#{}",
 					"{C:red,E:hypr_2}Destroying one destroys the rest"
 				}
@@ -336,10 +336,10 @@ loc = {
 			k_hypr_active_false = "Inactive",
 			k_hypr_jddebuffed = 'Card Debuffed!',
 			--000crash starts at 2 because 1 would be a localization error, which fits too
-			k_hypr_000crash2 = 'dVKqPAKobgO6', 
-			k_hypr_000crash3 = '1001100010101101110',
-			k_hypr_000crash4 = 'Bcq/5F*&OK@;^0uA0>u4+D>>&Du',
-			k_hypr_000crash5 = 'b6g5g4g5g4d5g5d3g1g4g5g1h5a3d3g1a2b4a3g1a7g1c5g4h1f7a3g1a3h4g5g1c5f3g1c5f4f4'
+			k_hypr_000crash2 = 'dVKqPAKobgO6', -- hey since you're looking through the code, might as well tell you:
+			k_hypr_000crash3 = '1001100010101101110', -- every crash text is an encrypted message
+			k_hypr_000crash4 = 'Bcq/5F*&OK@;^0uA0>u4+D>>&Du', -- i don't remember how i encrypted them so. good luck
+			k_hypr_000crash5 = 'b6g5g4g5g4d5g5d3g1g4g5g1h5a3d3g1a2b4a3g1a7g1c5g4h1f7a3g1a3h4g5g1c5f3g1c5f4f4' -- (except this one i remember how i did this one)
 			
 		},
 		poker_hands = {

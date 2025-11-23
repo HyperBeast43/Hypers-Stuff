@@ -71,7 +71,7 @@ addjkr( {
 	calculate = function(self,card,context)
 		if context.joker_main or context.forcetrigger then
 			return {
-				chips = 0, -- this is so editions that fire upon joker trigger do something, like cryptid's Golden
+				xmult = 1, -- this is so editions that fire upon joker trigger do something, like cryptid's Golden
 				remove_default_message = true
 			}
 		end
@@ -127,7 +127,7 @@ addjkr( {
 		else c = {.7,0,.7,1} end-- shouldnt show w/o bunco
 		return { vars = { card.ability.extra.low, card.ability.extra.high }, colours = {unpack(c)}, key=self.key..suffix }
 	end,
-	rarity = 2,
+	rarity = 3,
 	blueprint_compat = true,
 	perishable_compat = true,
 	demicoloncompat = true,
@@ -468,7 +468,7 @@ if SMODS.find_mod('Bunco')[1]~=nil then
 end
 
 function shuffle(t)
-	for i = #t, 2, -1 do
+	for i = #t, 1, -1 do
 		local j = math.random(i)
 		t[i], t[j] = t[j], t[i]
 	end
@@ -646,14 +646,38 @@ addjkr( {
 				card.ability.extra.chance = card.ability.extra.chance + 100
 			end
 		end
+	end,
+	joker_display_def = function(JokerDisplay)
+		---@type JDJokerDefinition
+		return {
+			extra = {
+				{
+					{
+						border_nodes = {
+							{ ref_table = "card.joker_display_values", ref_value = "pct", 
+								retrigger_type = function(number, triggers)
+									local norm = number/10000
+									return (1-math.pow(1-(norm),triggers))*100
+								end
+							},
+							{ text = "%" }
+						},
+						border_colour = G.C.GREEN
+					}
+				}
+			},
+			calc_function = function(card)
+				card.joker_display_values.pct, _ = SMODS.get_probability_vars(card, card.ability.extra.chance, 0)
+			end
+		}
 	end
 })
 
 addjkr( {
 	key = 'bypass',
-	config = { extra = {odds = 2}, bypassed = {}},
+	config = { extra = {num = 2, dom = 7}, bypassed = {}},
 	loc_vars = function(self, info_queue, card)
-		local numerator, denominator = SMODS.get_probability_vars(card, card.ability.extra.odds, 7, 'hypr_bypass')
+		local numerator, denominator = SMODS.get_probability_vars(card, card.ability.extra.num, card.ability.extra.dom, 'hypr_bypass')
 		info_queue[#info_queue + 1] = { set = "Other", key = "hypr_placeholder" }
 		return { vars = { numerator, denominator} }
 	end,
@@ -670,21 +694,21 @@ addjkr( {
 		local bypassed = 0
 		if context.before then
 			for _, v in pairs(G.playing_cards) do
-				if SMODS.pseudorandom_probability(card, 'hypr_bypass', card.ability.extra.odds, 7) then
+				if SMODS.pseudorandom_probability(card, 'hypr_bypass', card.ability.extra.num, card.ability.extra.dom) then
 					SMODS.debuff_card(v,'prevent_debuff',v.unique_val)
 					card.ability.bypassed[v.unique_val] = true
 					bypassed = bypassed+1
 				end
 			end	
 			for _, v in pairs(G.jokers.cards) do
-				if SMODS.pseudorandom_probability(card, 'hypr_bypass', card.ability.extra.odds, 7) then
+				if SMODS.pseudorandom_probability(card, 'hypr_bypass', card.ability.extra.num, card.ability.extra.dom) then
 					SMODS.debuff_card(v,'prevent_debuff',v.unique_val)
 					card.ability.bypassed[v.unique_val] = true
 					bypassed = bypassed+1
 				end
 			end	
 			for _, v in pairs(G.consumeables.cards) do
-				if SMODS.pseudorandom_probability(card, 'hypr_bypass', card.ability.extra.odds, 7) then
+				if SMODS.pseudorandom_probability(card, 'hypr_bypass', card.ability.extra.num, card.ability.extra.dom) then
 					SMODS.debuff_card(v,'prevent_debuff',v.unique_val)
 					card.ability.bypassed[v.unique_val] = true
 					bypassed = bypassed+1
@@ -715,6 +739,23 @@ addjkr( {
 				end
 			end	
 		end
+	end,
+	joker_display_def = function(JokerDisplay)
+		---@type JDJokerDefinition
+		return {
+			extra = {
+				{
+					{ text = "(" },
+					{ ref_table = "card.joker_display_values", ref_value = "odds" },
+					{ text = ")" }
+				}
+			},
+			extra_config = { colour = G.C.GREEN, scale = 0.3 },
+			calc_function = function(card)
+				local numerator, denominator = SMODS.get_probability_vars(card, card.ability.extra.num, card.ability.extra.dom, "hypr_bypass")
+				card.joker_display_values.odds = localize({type = 'variable', key = "jdis_odds", vars = {numerator, denominator}})
+			end
+		}
 	end
 })
 
@@ -868,7 +909,7 @@ addjkr( {
 		if not card.ability.extra.init then
 			card.ability.extra.init = card.ability.extra.xmult 
 		end
-		if card.ability.extra.exp > 0.99 then card.ability.extra.exp = 0.99 end
+		if cmp(card.ability.extra.exp,0.99)==1 then card.ability.extra.exp = 0.99 end
 	end,
 	calculate = function(self, card, context)
 		if (context.before or context.end_of_round or context.drawing_cards) and card.joker_display_values then
@@ -878,7 +919,7 @@ addjkr( {
 			card.ability.extra.xmult = card.ability.extra.xmult^card.ability.extra.exp
 		end
 		if context.joker_main or context.forcetrigger then 
-			if card.ability.extra.xmult<(card.ability.extra.min) and not card.ability.extra.eaten then 
+			if cmp(card.ability.extra.xmult,card.ability.extra.min)==1 and not card.ability.extra.eaten then 
 				card.ability.extra.eaten=true
 			end
 			return {xmult = card.ability.extra.xmult, func = function() if card.ability.extra.eaten==true then expire_joker(card,'k_eaten_ex','tarot1',G.C.RED) card.ability.extra.eaten='sent' end end } 
@@ -1320,9 +1361,8 @@ addjkr( {
 
 	calculate = function(self, card, context)
 		if context.joker_main or context.forcetrigger then 
-			math.randomseed(G.GAME.round+pseudoseed(G.GAME.pseudorandom.seed)*1000000)
-			local function div(a,b) return a/b end
-			if math.random()<div(SMODS.get_probability_vars(card, card.ability.extra.num, card.ability.extra.dom)) then
+			local tdiv = function(x,y) if notalis then return x/y else return Big:ensureBig(x):div(y) end end
+			if cmp(pseudoseed(G.GAME.pseudorandom.seed..'|'..tostring(G.GAME.round)),tdiv(SMODS.get_probability_vars(card, card.ability.extra.num, card.ability.extra.dom)))==-1 then
 				assert(false,localize("k_hypr_000crash"..tostring(math.ceil(math.random()*5))))
 			end
 			return {xmult = card.ability.extra.xmult} 
@@ -1338,18 +1378,30 @@ addjkr( {
 						{ ref_table = "card.ability.extra", ref_value = "xmult", retrigger_type = "exp"}
 					}
 				}
-			}
+			},
+			extra = {
+				{
+					{ text = "(" },
+					{ ref_table = "card.joker_display_values", ref_value = "odds" },
+					{ text = ")" }
+				}
+			},
+			extra_config = { colour = G.C.GREEN, scale = 0.3 },
+			calc_function = function(card)
+				local numerator, denominator = SMODS.get_probability_vars(card, card.ability.extra.num, card.ability.extra.dom, "hypr_missingno")
+				card.joker_display_values.odds = localize({type = 'variable', key = "jdis_odds", vars = {numerator, denominator}})
+			end
 		}
 	end
 })
 
 addjkr( {
 	key = 'plane',
-	config = { extra = { chips = 1, making = false } },
+	config = { extra = { chips = 20, num=1, dom=2, making = false } },
 	loc_vars = function(self, info_queue, card)
-		return { vars = { card.ability.extra.chips, localize({type = 'name_text', key = self.key, set = 'Joker'})}}
+		return { vars = { card.ability.extra.chips, localize({type = 'name_text', key = self.key, set = 'Joker'}), SMODS.get_probability_vars(card, card.ability.extra.num, card.ability.extra.dom, 'hypr_plane')}}
 	end,
-	rarity = 2,
+	rarity = 1,
 	atlas = 'cards',
 	blueprint_compat = true,
 	perishable_compat = true,
@@ -1365,23 +1417,32 @@ addjkr( {
 					return true
 				end}))
 			end
-			return {chips = card.ability.extra.chips} 
+			return SMODS.pseudorandom_probability(card, 'hypr_plane', card.ability.extra.num, card.ability.extra.dom) and {chips = card.ability.extra.chips} or 
+			{message = localize("k_nope_ex"), sound = 'tarot2', volume=0.4}
 		end
 		if context.press_play then
 			card.ability.extra.making = true
 		end
-		if context.selling_card and context.card.config.center_key == card.config.center_key then
-			card.getting_sliced = true
-			G.GAME.joker_buffer = G.GAME.joker_buffer - 1
+		if card.toslice and not card.getout then
+			card.getout = true
+			card:start_dissolve({ HEX("57ecab") }, nil, 1.6)
 			G.E_MANAGER:add_event(Event({
+				trigger = 'after',
+				delay = 1.6,
 				func = function()
-					G.GAME.joker_buffer = 0
-					card:juice_up(0.8, 0.8)
-					card:start_dissolve({ HEX("57ecab") }, nil, 1.6)
+					card:remove()
 					return true
 				end,
 			}))
-			card:remove()
+		end
+	end,
+	remove_from_deck = function(self, card, from_debuff)
+		if not from_debuff and not card.getout then
+			for _,v in ipairs(G.jokers.cards) do
+				if v.config.center_key == card.config.center_key then
+					v.toslice = true
+				end
+			end
 		end
 	end,
 	joker_display_def = function(JokerDisplay)
@@ -1393,7 +1454,19 @@ addjkr( {
 			},
 			text_config = {
 				colour = G.C.CHIPS
-			}
+			},
+			extra = {
+				{
+					{ text = "(" },
+					{ ref_table = "card.joker_display_values", ref_value = "odds" },
+					{ text = ")" }
+				}
+			},
+			extra_config = { colour = G.C.GREEN, scale = 0.3 },
+			calc_function = function(card)
+				local numerator, denominator = SMODS.get_probability_vars(card, card.ability.extra.num, card.ability.extra.dom, "hypr_bypass")
+				card.joker_display_values.odds = localize({type = 'variable', key = "jdis_odds", vars = {numerator, denominator}})
+			end
 		}
 	end
 })
