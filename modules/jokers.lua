@@ -1354,7 +1354,7 @@ addjkr( {
 	blueprint_compat = true,
 	perishable_compat = true,
 	demicoloncompat = true,
-	eternal_compat = true,
+	eternal_compat = false,
 	pos = { x = 3, y = 4 },
 	soul_pos = { x = 4, y = 4 },
 	cost = 4,
