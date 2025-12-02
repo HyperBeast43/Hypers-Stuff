@@ -612,11 +612,11 @@ addjkr( {
 
 addjkr( {
 	key = 'trickcoin',
-	config = {extra={ chance = 1000, used=false}},
+	config = {extra={ chance = 10, inc = 2.5, used=false}},
 	loc_vars = function(self, info_queue, card)
 		info_queue[#info_queue + 1] = { set = "Other", key = "hypr_placeholder" }
-		roll, _ = SMODS.get_probability_vars(card, card.ability.extra.chance, 0) 
-		return { vars = {math.min(roll/100,100/3)}}
+		roll, inc = SMODS.get_probability_vars(card, card.ability.extra.chance, card.ability.extra.inc) 
+		return { vars = {string.format("%g",math.min(roll,100/3)),string.format("%g",inc)}}
 	end,
 	eternal_compat = true,
 	perishable_compat = true,
@@ -627,14 +627,14 @@ addjkr( {
 	pos = { x = 1, y = 2 },
 	cost = 6,
 	update = function(self,card,dt)
-		card.ability.extra.chance=math.min(card.ability.extra.chance,10000/3)
+		card.ability.extra.chance=math.min(card.ability.extra.chance,100/3)
 	end,
 	calculate = function(self,card,context)
 		if context.before and not card.ability.extra.used then
 			local random_seed = (G.GAME and G.GAME.pseudorandom.seed or "") .. "." .. "hypr_trickcoin"
 			local a,_ = SMODS.get_probability_vars(card, card.ability.extra.chance, 0) 
-			a = math.min(a,10000/3)
-			if SMODS.pseudorandom_probability(card, 'hypr_trickcoin', a, 10000) then
+			a = math.min(a,100/3)
+			if SMODS.pseudorandom_probability(card, 'hypr_trickcoin', a, 100) then
 			card.ability.extra.used = true
 			
 			return {message = G.localization.misc.dictionary['k_hypr_addhand'], func = function() ease_hands_played(1) end }
@@ -643,7 +643,7 @@ addjkr( {
 		if context.end_of_round then
 			card.ability.extra.used = false
 			if context.beat_boss then
-				card.ability.extra.chance = card.ability.extra.chance + 100
+				card.ability.extra.chance = card.ability.extra.chance + card.ability.extra.inc
 			end
 		end
 	end,
@@ -656,7 +656,7 @@ addjkr( {
 						border_nodes = {
 							{ ref_table = "card.joker_display_values", ref_value = "pct", 
 								retrigger_type = function(number, triggers)
-									local norm = number/10000
+									local norm = number/100
 									return (1-math.pow(1-(norm),triggers))*100
 								end
 							},
@@ -667,7 +667,8 @@ addjkr( {
 				}
 			},
 			calc_function = function(card)
-				card.joker_display_values.pct, _ = SMODS.get_probability_vars(card, card.ability.extra.chance, 0)
+				local p, _ = SMODS.get_probability_vars(card, card.ability.extra.chance, 0)
+				card.joker_display_values.pct = card.ability.extra.used and 0 or p
 			end
 		}
 	end
@@ -1036,23 +1037,23 @@ end
 if SMODS.find_mod('Cryptid')[1] then
 addjkr( {
 	key = 'tedium',
-	config = { extra = { emult = 1, scale = .2, immutable ={base = 1,rounds = 0,interacted = true,lasthighlighted = false} } },
+	config = { extra = { emult = 1, scale = .5, immutable ={base = 1,rounds = 0,interacted = true,lasthighlighted = false} } },
 	dependencies = {
 		items = {
-			"set_cry_epic",
+			"set_cry_exotic",
 		},
 	},
 	loc_vars = function(self, info_queue, card)
 		--table.insert(info_queue,{ set = "Other", key = "hypr_devart" }) --you know what no this works
 		return { vars = { card.ability.extra.scale, card.ability.extra.emult } }
 	end,
-	rarity = 'cry_epic',
+	rarity = 'cry_exotic',
 	atlas = 'placeholder',
 	blueprint_compat = true,
 	perishable_compat = true,
 	demicoloncompat = true,
 	eternal_compat = true,
-	pos = { x = 0, y = 0 },
+	pos = { x = 0, y = 0 }, -- todo: add the gold border exotic cards have
 	cost = 5,
 	update = function(self,card,dt)
 		if card.ability.extra.immutable.lasthighlighted ~= card.highlighted then
@@ -1473,6 +1474,39 @@ addjkr( {
 
 --[[
 addjkr( {
+	key = 'komoderg',
+	config = { extra = { num = 2, dom = 5}},
+	loc_vars = function(self, info_queue, card)
+		return { vars = { card.ability.extra.num, card.ability.extra.dom } }
+	end,
+	rarity = 3,
+	atlas = 'placeholder',
+	blueprint_compat = true,
+	perishable_compat = true,
+	demicoloncompat = true,
+	eternal_compat = true,
+	pos = { x = 1, y = 5 },
+	--unlock condition should be to reach whatever stake adds perishable
+	cost = 9,
+	update = function(self,card,dt)
+		if card.ability.extra.mult ~= math.pi then card.ability.extra.mult = math.pi end
+	end,
+	calculate = function(self, card, context)
+		if context.individual then 
+			local joker = context.other_card -- check that this is the case
+			if SMODS.pseudorandom_probability(joker, 'hypr_komoderg', joker.ability.extra.num, joker.ability.extra.dom) then
+				--handle face card checks, then inside of that apply stickers
+			end
+		end -- ok thats enough for now im gonna go play tetris effect
+	end
+	-- no joker_display_def
+})
+
+--oh also, add the sticker - it's incompat w/ rental solely because i wanted to put it where rental is visually
+]]
+
+--[[
+addjkr( {
 	key = 'widescreen', -- todo: figure out what it would do
 	config = { extra = { mult = 4 } },
 	loc_vars = function(self, info_queue, card)
@@ -1530,7 +1564,8 @@ end
 
 --[[
 more ideas:
-	Pliers (Rare,$10): Selling this joker destroys a random joker, prioritizes Eternals
+	Fragile (Sticker): Debuffing this card destroys it
+	Komodo Dragon (Rare): Played face cards have a 2 in 5 chance to become Perishable and Fragile 
 	Clown Nose (Common): Selling this joker gives %playername%(flavor text:That's you!) +4 mult for the rest of this run --player scores in context.before, i somehow need to spoof a joker
 	Melatonin:
 	--unlock something by reducing discard size to 0
