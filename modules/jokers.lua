@@ -121,7 +121,7 @@ addjkr( {
 		local c
 		local suffix = ''
 		if SMODS.find_mod('Bunco')[1] then 
-			c = G.C.SUITS["bunc_Fleurons"] 
+			c = G.C.SUITS["bunc_Halberds"] 
 			table.insert(info_queue,{ set = "Other", key = "hypr_advantage" })
 			suffix = '_exotic'
 		else c = {.7,0,.7,1} end-- shouldnt show w/o bunco
@@ -149,8 +149,8 @@ addjkr( {
 			random_seed = (G.GAME and G.GAME.pseudorandom.seed or "") .. random_seed
 			local factor = pseudorandom(pseudoseed(random_seed))
 			if context.other_card then -- forcetrigger doesnt have context.other_card afaik
-				if not (context.other_card:is_suit("Clubs") or context.other_card:is_suit("bunc_Fleurons")) then return end
-				if context.other_card:is_suit("bunc_Fleurons") then
+				if not (context.other_card:is_suit("Clubs") or context.other_card:is_suit("bunc_Halberds")) then return end
+				if context.other_card:is_suit("bunc_Halberds") then
 					factor = math.sqrt(factor) -- sqrt(rand) statistically equals max(rand,rand)
 				end
 			end
@@ -166,7 +166,7 @@ addjkr( {
 		if SMODS.find_mod('Bunco')[1] then
 			if BUNCOMOD.funcs.exotic_in_pool then
 				table.insert(jdrem,{ text = ", "})
-				table.insert(jdrem,{ text = localize("bunc_Fleurons", 'suits_plural')})
+				table.insert(jdrem,{ text = localize("bunc_Halberds", 'suits_plural')})
 			end
 		end
 		table.insert(jdrem,{ text = ")" })
@@ -201,7 +201,7 @@ addjkr( {
 						if not (playing_card.facing == 'back') and not playing_card.debuff and playing_card:get_id() then
 							if playing_card:is_suit("Clubs") then
 								count = count + JokerDisplay.calculate_card_triggers(playing_card, cards, true)
-							elseif playing_card:is_suit("bunc_Fleurons") then
+							elseif playing_card:is_suit("bunc_Halberds") then
 								count2 = count2 + JokerDisplay.calculate_card_triggers(playing_card, cards, true)
 							end
 						end
@@ -1526,12 +1526,12 @@ addjkr( {
 	loc_vars = function(self, info_queue, card)
 		table.insert(info_queue,{ set = "Other", key = "hypr_devart" })
 		table.insert(info_queue,{key = 'hypr_delicate', set = 'Other'})
-		return { vars = {colours = {HEX("71D0E4")} } }
+		return { vars = {colours = {HEX("71D0E4"),G.C.PERISHABLE} } }
 	end,
 	rarity = 3,
 	atlas = 'cards',
 	blueprint_compat = true,
-	perishable_compat = true,
+	perishable_compat = false,
 	delicate_compat = false,
 	demicoloncompat = false,
 	eternal_compat = true,
@@ -1540,8 +1540,9 @@ addjkr( {
 	calculate = function(self, card, context)
 		if context.discard and G.GAME.current_round.discards_left<=1 then 
 			if not SMODS.is_eternal(context.other_card) then
-				local notify = not context.other_card.ability.delicate
+				local notify = not (context.other_card.ability.delicate and context.other_card.ability.perishable)
 				context.other_card.ability.hypr_delicate = true
+				context.other_card.ability.hypr_perishable = true
 				return notify and {
 					message = localize('k_hypr_bitten'),
 					sound = "gold_seal",

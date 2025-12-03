@@ -130,10 +130,10 @@ loc = {
 			j_hypr_creacher_exotic = {
 				name = 'Creature Feature',
 				text = {
-					"{C:clubs}Clubs{} and {C:bunc_fleurons}Fleurons{} held in hand",
+					"{C:clubs}Clubs{} and {C:bunc_halberds}Halberds{} held in hand",
 					"give a random value from",
 					"{X:mult,C:white}X#1#{} up to {X:mult,C:white}X#2#{} Mult",
-					"{C:bunc_fleurons}Fleurons{} roll with {C:attention,E:hypr_2}advantage{}"
+					"{C:bunc_halberds}Halberds{} roll with {C:attention,E:hypr_2}advantage{}"
 				}
 			},
 			j_hypr_curator = {
@@ -334,8 +334,8 @@ loc = {
 			j_hypr_komoderg = {
 				name = 'Komodo Dragon',
 				text = 	{
-					"On {C:attention}final discard{} of round,",
-					"{C:red,E:hypr_2}discarded{} cards become {V:1,E:hypr_circle}Delicate{}"
+					"On {C:attention}final discard{} of round, {C:red,E:hypr_2}discarded{}",
+					"cards become {V:1,E:hypr_circle}Delicate{} and {V:2,E:hypr_circle}Perishable{}"
 				}
 			},
 		}
