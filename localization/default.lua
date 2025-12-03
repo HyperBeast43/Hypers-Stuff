@@ -270,8 +270,7 @@ loc = {
 				text = 	{
 					"Once per round, on hand played,",
 					"{X:green,C:white}#1#%{} chance to {C:blue,E:1}refund used hand{}",
-					"+{X:green,C:white}#2#%{} after defeating a {C:attention}Boss Blind{}",
-					"{C:inactive}(Max chance is 33.3%){}"
+					"+{X:green,C:white}#2#%{} after defeating a {C:attention}Boss Blind{}"
 				}
 			},
 			j_hypr_coloredhoney = {

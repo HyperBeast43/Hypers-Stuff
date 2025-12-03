@@ -645,11 +645,11 @@ addjkr( {
 
 addjkr( {
 	key = 'trickcoin',
-	config = {extra={ chance = 10, inc = 2.5, used=false}},
+	config = {extra={ chance = 10, inc = 5, used=false}},
 	loc_vars = function(self, info_queue, card)
 		info_queue[#info_queue + 1] = { set = "Other", key = "hypr_placeholder" }
 		local roll, inc = SMODS.get_probability_vars(card, card.ability.extra.chance, card.ability.extra.inc) 
-		return { vars = {string.format("%g",math.min(roll,100/3)),string.format("%g",inc)}}
+		return { vars = {roll,inc}}
 	end,
 	eternal_compat = true,
 	perishable_compat = true,
@@ -659,24 +659,32 @@ addjkr( {
 	atlas = 'cards',
 	pos = { x = 1, y = 2 },
 	cost = 6,
-	update = function(self,card,dt)
-		card.ability.extra.chance=math.min(card.ability.extra.chance,100/3)
-	end,
 	calculate = function(self,card,context)
 		if context.before and not card.ability.extra.used then
 			local random_seed = (G.GAME and G.GAME.pseudorandom.seed or "") .. "." .. "hypr_trickcoin"
 			local a,_ = SMODS.get_probability_vars(card, card.ability.extra.chance, 0) 
-			a = math.min(a,100/3)
-			if SMODS.pseudorandom_probability(card, 'hypr_trickcoin', a, 100) then
-			card.ability.extra.used = true
-			
-			return {message = G.localization.misc.dictionary['k_hypr_addhand'], func = function() ease_hands_played(1) end }
+			local triggers = 0
+			local temp = a
+			_=nil
+			if temp==0 then goto continue end
+			for _=1,math.ceil(a/100) do -- 150% is +1 hand with a 50% chance of another
+				if temp>100 then
+					triggers = triggers+1
+					temp = temp-100
+				else
+					triggers = triggers+(SMODS.pseudorandom_probability(card, 'hypr_trickcoin', temp, 100) and 1 or 0)
+				end
 			end
+			::continue::
+			if triggers == 0 then return end
+			card.ability.extra.used = true
+			if triggers == 1 then return {message = localize('k_hypr_addhand'), func = function() ease_hands_played(1) end } end
+			return {message = localize({ type = 'variable', key = 'a_hands', vars = {triggers}}), func = function() ease_hands_played(triggers) end }
 		end
 		if context.end_of_round then
 			card.ability.extra.used = false
 			if context.game_over == false and context.main_eval and context.beat_boss then
-				return {message = localize('k_upgrade_ex'), func = SMODS.scale_card(card, {
+				return {func = SMODS.scale_card(card, {
 					ref_table = card.ability.extra,
 					ref_value = 'chance',
 					scalar_value = 'inc'
