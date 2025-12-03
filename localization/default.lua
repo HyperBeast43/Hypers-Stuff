@@ -334,8 +334,8 @@ loc = {
 			j_hypr_komoderg = {
 				name = 'Komodo Dragon',
 				text = 	{
-					"Played face cards have a {C:green}#1# in #2#{} chance",
-					"to become both {V:1,E:hypr_circle}Perishable{} and {V:2,E:hypr_circle}Delicate{}"
+					"On {C:attention}final discard{} of round,",
+					"{C:red,E:hypr_2}discarded{} cards become {V:1,E:hypr_circle}Delicate{}"
 				}
 			},
 		}
@@ -348,6 +348,7 @@ loc = {
 			k_hypr_empty = "Empty Deck!",
 			k_hypr_failsafe = "Failsafe?!",
 			k_hypr_addhand = "+1 Hand",
+			k_hypr_bitten = "Bitten!",
 			k_hypr_active_true = "Active",
 			k_hypr_active_false = "Inactive",
 			k_hypr_jddebuffed = 'Card Debuffed!',

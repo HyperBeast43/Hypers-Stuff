@@ -77,7 +77,7 @@ addjkr( {
 		end
 	end
 })
-if SMODS.find_mod('Talisman')[1] ~= nil then trimsci = function(s,b)
+local trimsci = function(s,b)
   local t = {}
   local i = 0
   local sci
@@ -111,7 +111,7 @@ if SMODS.find_mod('Talisman')[1] ~= nil then trimsci = function(s,b)
 	end
   end
   return table.concat(t)
-end end
+end 
 
 addjkr( {
 	key = 'creacher',
@@ -214,7 +214,7 @@ addjkr( {
 				local b = hi
 				local n = count
 				local m = count2
-				if SMODS.find_mod('Talisman')[1] ~= nil then
+				if next(SMODS.find_mod('Talisman')) ~= nil then
 					a = Big:ensureBig(lo)
 					b = Big:ensureBig(hi) 
 					n = Big:ensureBig(count)
@@ -685,7 +685,7 @@ addjkr( {
 			card.ability.extra.used = false
 			if context.game_over == false and context.main_eval and context.beat_boss then
 				return {func = SMODS.scale_card(card, {
-					ref_table = card.ability.extra,
+					ref_table = card.ability.extra, 
 					ref_value = 'chance',
 					scalar_value = 'inc'
 				})}
@@ -992,22 +992,12 @@ addjkr( {
 				end
 				if not card.joker_display_values.storedxmult then card.joker_display_values.storedxmult=card.ability.extra.xmult end
 				
-				local notalis = not SMODS.find_mod('Talisman')[1]
-				if notalis then card.joker_display_values.calcmult = card.joker_display_values.storedxmult^(card.ability.extra.exp^count)
-				else card.joker_display_values.calcmult = Big:ensureBig(card.joker_display_values.storedxmult):pow(Big:ensureBig(card.ability.extra.exp):pow(count))
-				end
-				local maximum = function(x,y)
-					if notalis then return math.max(x,y)
-					else return Big:ensureBig(x):max(y) end
-				end
-				local ln = function(x) if notalis then return math.log(x) else return Big:ensureBig(x):ln() end end
-				local tfloor = function(x) if notalis then return math.floor(x) else return Big:ensureBig(x):floor() end end
-				local tsucc = function(x) if notalis then return x+1 else return Big:ensureBig(x):add(Big:create(1)) end end --it's called that because it's the succession operator
-				local tdiv = function(x,y) if notalis then return x/y else return Big:ensureBig(x):div(y) end end
-				local talistr = function(x) if notalis then return tostring(x) else return OmegaMeta.__tostring(x) end end
-				local f = function(a,b,c) return tsucc(tfloor(tdiv(ln(tdiv(ln(c),ln(a))),ln(b)))) end
+				local talis = not not Talisman
+				card.joker_display_values.calcmult = card.joker_display_values.storedxmult^(card.ability.extra.exp^count)
+				local talistr = talis and OmegaMeta.__tostring or tostring
+				local f = function(a,b,c) return math.floor((math.log(math.log(c)/math.log(a))/math.log(b)))+1 end
 				card.joker_display_values.fullamt = talistr(f(card.ability.extra.init,card.ability.extra.exp,card.ability.extra.min))
-				card.joker_display_values.remamt = talistr(maximum(0,f(card.joker_display_values.calcmult,card.ability.extra.exp,card.ability.extra.min)))
+				card.joker_display_values.remamt = talistr(math.max(0,f(card.joker_display_values.calcmult,card.ability.extra.exp,card.ability.extra.min)))
 			end,
 			text = {
 				{
@@ -1090,7 +1080,7 @@ end
 if SMODS.find_mod('Cryptid')[1] then
 addjkr( {
 	key = 'tedium',
-	config = { extra = { emult = 1, scale = .5, immutable ={base = 1,rounds = 0,interacted = true,lasthighlighted = false} } },
+	config = { extra = { emult = 1, scale = .1, immutable ={base = 1,rounds = 0,interacted = true,lasthighlighted = false} } },
 	dependencies = {
 		items = {
 			"set_cry_exotic",
@@ -1139,7 +1129,7 @@ addjkr( {
 				return {message = localize('k_reset')}
 			else
 				SMODS.scale_card(card, {
-					ref_table = card.ability.extra,
+					ref_table = card.ability.extra, 
 					ref_value = "emult",
 					scalar_value = "scale",
 				})
@@ -1184,7 +1174,7 @@ addjkr( {
 
 addjkr( {
 	key = 'melatonin',
-	config = { extra = { active = false, chips = 0, inc_chips = 3 } },
+	config = { extra = { active = false, chips = 0, inc_chips = 3} },
 	loc_vars = function(self, info_queue, card)
 		local suffix = ''
 		if PB_UTIL and not G.hypr.forcenopb then -- G.hypr.forcenopb is set manually in DebugPlus with eval. it's a debugging feature i don't need a proper config for it
@@ -1228,7 +1218,7 @@ addjkr( {
 					card.ability.extra.active = true
 				elseif lite then
 					SMODS.scale_card(card, {
-					ref_table'card.ability.extra',
+					ref_table = card.ability.extra,
 					ref_value = 'chips',
 					scalar_value = 'inc_chips'
 					})
@@ -1419,8 +1409,8 @@ addjkr( {
 
 	calculate = function(self, card, context)
 		if context.joker_main or context.forcetrigger then 
-			local tdiv = function(x,y) if notalis then return x/y else return Big:ensureBig(x):div(y) end end
-			if cmp(pseudoseed(G.GAME.pseudorandom.seed..'|'..tostring(G.GAME.round)),tdiv(SMODS.get_probability_vars(card, card.ability.extra.num, card.ability.extra.dom)))==-1 then
+			local div = function(x,y) return x/y end
+			if cmp(pseudoseed(G.GAME.pseudorandom.seed..'|'..tostring(G.GAME.round)),div(SMODS.get_probability_vars(card, card.ability.extra.num, card.ability.extra.dom)))==-1 then
 				assert(false,localize("k_hypr_000crash"..tostring(math.ceil(math.random()*5))))
 			end
 			return {xmult = card.ability.extra.xmult} 
@@ -1532,46 +1522,32 @@ addjkr( {
 
 addjkr( {
 	key = 'komoderg',
-	config = { extra = { num = 2, dom = 5}},
+	config = {},
 	loc_vars = function(self, info_queue, card)
 		table.insert(info_queue,{ set = "Other", key = "hypr_devart" })
-		table.insert(info_queue,{key = 'perishable', set = 'Other', vars = {G.GAME.perishable_rounds or 1, G.GAME.perishable_rounds or G.GAME.perishable_rounds}})
 		table.insert(info_queue,{key = 'hypr_delicate', set = 'Other'})
-		return { vars = { card.ability.extra.num, card.ability.extra.dom, colours = {G.C.PERISHABLE,HEX("71D0E4")} } }
+		return { vars = {colours = {HEX("71D0E4")} } }
 	end,
-	--[[
-	locked_loc_vars = function(self, info_queue, card)
-		return { set = "Other", key = 'deck_locked_stake', vars = {'Purple Stake', colours = G.C.PURPLE }} --im not figuring out how to get the localized name for purple stake
-	end,
-    check_for_unlock = function(self, args)
-        return args.type == 'win_deck' and get_deck_win_stake('b_purple') and true
-    end,
-	unlocked = false,
-	]]
 	rarity = 3,
 	atlas = 'cards',
 	blueprint_compat = true,
-	perishable_compat = false,
+	perishable_compat = true,
 	delicate_compat = false,
-	demicoloncompat = true,
+	demicoloncompat = false,
 	eternal_compat = true,
 	pos = { x = 1, y = 5 },
 	cost = 9,
 	calculate = function(self, card, context)
-		if context.individual then 
-			local joker = context.other_card -- check that this is the case
-			if SMODS.pseudorandom_probability(joker, 'hypr_komoderg', joker.ability.extra.num, joker.ability.extra.dom) then
-				if card:is_face() and not SMODS.is_eternal(card) then
-					local notify = not (card.ability.perishable or card.ability.delicate)
-					card.ability.perishable = true
-					card.ability.delicate = true
-					return notify and {
-						message = "Bitten!",
-						sound = "gold_seal",
-						pitch = 1.2,
-						volume = 0.4
-					}
-				end
+		if context.discard and G.GAME.current_round.discards_left<=1 then 
+			if not SMODS.is_eternal(context.other_card) then
+				local notify = not context.other_card.ability.delicate
+				context.other_card.ability.hypr_delicate = true
+				return notify and {
+					message = localize('k_hypr_bitten'),
+					sound = "gold_seal",
+					pitch = 1.2,
+					volume = 0.4
+				}
 			end
 		end
 	end
@@ -1589,11 +1565,7 @@ SMODS.Sticker {
 		return G.GAME.modifiers.enable_delicates_in_shop and not card.eternal
 	end, -- should i make a stake where this shows up?
 	calculate = function(self, card, context)
-		if context.destroy_card and context.destroy_card == card then
-			if card.debuff then
-				return {remove = true}
-			end
-		end
+		if card.debuff then card:remove() end
 	end
 }
 
