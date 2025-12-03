@@ -677,7 +677,7 @@ addjkr( {
 			card.ability.extra.used = false
 			if context.game_over == false and context.main_eval and context.beat_boss then
 				return {message = localize('k_upgrade_ex'), func = SMODS.scale_card(card, {
-					ref_table = 'card.ability.extra',
+					ref_table = card.ability.extra,
 					ref_value = 'chance',
 					scalar_value = 'inc'
 				})}
