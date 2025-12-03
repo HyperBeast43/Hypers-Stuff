@@ -1,6 +1,10 @@
 SMODS.Back {
 	key = "solar",
 	atlas = 'cards', pos = { x = 0, y = 0 },
+	check_for_unlock = function (self, args)
+		return G.GAME.starting_params.discard_limit<=0
+	end,
+	unlocked = false,
 	apply = function (self, back)
 		G.E_MANAGER:add_event(Event({
 			trigger = "after",

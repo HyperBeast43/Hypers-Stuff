@@ -115,7 +115,7 @@ end end
 
 addjkr( {
 	key = 'creacher',
-	config = { extra = { low = 0.9, high = 1.66666666666667 } },
+	config = { extra = { low = 0.9, high = 1.5 } },
 	loc_vars = function(self, info_queue, card)
 		table.insert(info_queue,{ set = "Other", key = "hypr_devart" })
 		local c
@@ -183,9 +183,9 @@ addjkr( {
 			reminder_text = jdrem,
 			extra = {
 				{
-					{ text = "(Precision: " },
-					{ ref_table = "card.joker_display_values", ref_value = "precision"},
-					{ text = "%)" }
+					{ text = "(StDev: " },
+					{ ref_table = "card.joker_display_values", ref_value = "stdev"},
+					{ text = ")" }
 				}
 			},
 			extra_config = { colour = G.C.GREEN, scale = 0.3 },
@@ -209,27 +209,60 @@ addjkr( {
 				end
 				card.joker_display_values.count = count*JokerDisplay.calculate_joker_triggers(card)
 				card.joker_display_values.count2 = count2*JokerDisplay.calculate_joker_triggers(card)
+				hastalis = not not next(SMODS.find_mod('Talisman'))
+				local a = lo
+				local b = hi
+				local n = count
+				local m = count2
 				if SMODS.find_mod('Talisman')[1] ~= nil then
-					lo = Big:ensureBig(lo)
-					hi = Big:ensureBig(hi) 
-					card.joker_display_values.ideal = OmegaMeta.__tostring(OmegaMeta.__pow((lo:add(hi):div(Big:create(2))),Big:ensureBig(count)):mul(OmegaMeta.__pow(hi,Big:ensureBig(count2))))
-					card.joker_display_values.precision = trimsci(OmegaMeta.__tostring(Big:create(100):mul(
-						(
-							Big:create(B.E):pow(
-								hi:mul(hi:ln())
-								  :sub(lo:mul(lo:ln()))
-								  :sub(hi:sub(lo))
-								  :div(hi:sub(lo))
-							)
-							:div(
-								(lo:add(hi)):div(Big:create(2))
-							)
-						):pow(Big:ensureBig(card.joker_display_values.count+(card.joker_display_values.count2/2)))
-					)),4)
-				else
-					card.joker_display_values.ideal = (((lo+hi)/2)^count)*(hi^count2)
-					card.joker_display_values.precision = 100*math.pow(math.exp((hi*math.log(hi)-lo*math.log(lo)-(hi-lo))/(hi-lo))/((lo+hi)/2), (card.joker_display_values.count+(2*card.joker_display_values.count2)))
+					a = Big:ensureBig(lo)
+					b = Big:ensureBig(hi) 
+					n = Big:ensureBig(count)
+					m = Big:ensureBig(count2)
 				end
+				card.joker_display_values.ideal = (((a+b)/2)^n)*(b^m)
+				card.joker_display_values.stdev =
+				math.sqrt((
+					(
+						(
+							(
+								(
+									a*a
+								)+(
+									a*b
+								)+(
+									b*b
+								)
+							)/3
+						)^n
+					)*(
+						(
+							(
+								(
+									a*a
+								)+(
+									2*a*b
+								)+(
+									3*b*b
+								)
+							)/6
+						)^m
+					)
+				)-(
+					(
+						(
+							(a+b)/2
+						)^(
+							2*n
+						)
+					)*(
+						(
+							(a+(2*b))/3
+						)^(
+							2*m
+						)
+					)
+				))
 			end
 		}
 	end
@@ -615,7 +648,7 @@ addjkr( {
 	config = {extra={ chance = 10, inc = 2.5, used=false}},
 	loc_vars = function(self, info_queue, card)
 		info_queue[#info_queue + 1] = { set = "Other", key = "hypr_placeholder" }
-		roll, inc = SMODS.get_probability_vars(card, card.ability.extra.chance, card.ability.extra.inc) 
+		local roll, inc = SMODS.get_probability_vars(card, card.ability.extra.chance, card.ability.extra.inc) 
 		return { vars = {string.format("%g",math.min(roll,100/3)),string.format("%g",inc)}}
 	end,
 	eternal_compat = true,
@@ -642,8 +675,12 @@ addjkr( {
 		end
 		if context.end_of_round then
 			card.ability.extra.used = false
-			if context.beat_boss then
-				card.ability.extra.chance = card.ability.extra.chance + card.ability.extra.inc
+			if context.game_over == false and context.main_eval and context.beat_boss then
+				return {message = localize('k_upgrade_ex'), func = SMODS.scale_card(card, {
+					ref_table'card.ability.extra',
+					ref_value = 'chance',
+					scalar_value = 'inc'
+				})}
 			end
 		end
 	end,
@@ -918,6 +955,14 @@ addjkr( {
 		end
 		if context.individual and context.cardarea == G.play then
 			card.ability.extra.xmult = card.ability.extra.xmult^card.ability.extra.exp
+			--[[SMODS.scale_card(card, {
+				ref_table'card.ability.extra',
+				ref_value = 'xmult',
+				scalar_value = 'exp',
+				operation = function(ref_table, ref_value, initial, modifier)
+					ref_table[ref_value] = initial ^ modifier
+				end
+			})]]
 		end
 		if context.joker_main or context.forcetrigger then 
 			if cmp(card.ability.extra.xmult,card.ability.extra.min)==1 and not card.ability.extra.eaten then 
@@ -1048,12 +1093,13 @@ addjkr( {
 		return { vars = { card.ability.extra.scale, card.ability.extra.emult } }
 	end,
 	rarity = 'cry_exotic',
-	atlas = 'placeholder',
+	atlas = 'tedium',
 	blueprint_compat = true,
 	perishable_compat = true,
 	demicoloncompat = true,
 	eternal_compat = true,
 	pos = { x = 0, y = 0 }, -- todo: add the gold border exotic cards have
+	soul_pos = { x = 2, y = 0, extra = { x = 1, y = 0 } },
 	cost = 5,
 	update = function(self,card,dt)
 		if card.ability.extra.immutable.lasthighlighted ~= card.highlighted then
@@ -1173,7 +1219,11 @@ addjkr( {
 				if dark then
 					card.ability.extra.active = true
 				elseif lite then
-					card.ability.extra.chips = card.ability.extra.chips+card.ability.extra.inc_chips
+					SMODS.scale_card(card, {
+					ref_table'card.ability.extra',
+					ref_value = 'chips',
+					scalar_value = 'inc_chips'
+					})
 				end
 			end
 			return
@@ -1240,7 +1290,6 @@ addjkr( {
 	key = 'rhapsody', -- thank you Squid Joker aka engineer2006 from the Balatro Discord for giving me an idea in #The Sheet Suggestions to springboard off of
 	config = { extra = { chips = 0,  incchips = 12 } },
 	loc_vars = function(self, info_queue, card)
-		table.insert(info_queue,{ set = "Other", key = "hypr_placeholder" })
 		local suffix = ''
 		if G.GAME.modifiers.enable_perishables_in_shop or BUNCOMOD then -- because bunco adds The Depths
 			table.insert(info_queue,{key = 'perishable', set = 'Other', vars = {G.GAME.perishable_rounds or 1, G.GAME.perishable_rounds or G.GAME.perishable_rounds}})
@@ -1472,38 +1521,74 @@ addjkr( {
 	end
 })
 
---[[
+
 addjkr( {
 	key = 'komoderg',
 	config = { extra = { num = 2, dom = 5}},
 	loc_vars = function(self, info_queue, card)
-		return { vars = { card.ability.extra.num, card.ability.extra.dom } }
+		table.insert(info_queue,{ set = "Other", key = "hypr_devart" })
+		table.insert(info_queue,{key = 'perishable', set = 'Other', vars = {G.GAME.perishable_rounds or 1, G.GAME.perishable_rounds or G.GAME.perishable_rounds}})
+		table.insert(info_queue,{key = 'hypr_delicate', set = 'Other'})
+		return { vars = { card.ability.extra.num, card.ability.extra.dom, colours = {G.C.PERISHABLE,HEX("71D0E4")} } }
 	end,
+	--[[
+	locked_loc_vars = function(self, info_queue, card)
+		return { set = "Other", key = 'deck_locked_stake', vars = {'Purple Stake', colours = G.C.PURPLE }} --im not figuring out how to get the localized name for purple stake
+	end,
+    check_for_unlock = function(self, args)
+        return args.type == 'win_deck' and get_deck_win_stake('b_purple') and true
+    end,
+	unlocked = false,
+	]]
 	rarity = 3,
-	atlas = 'placeholder',
+	atlas = 'cards',
 	blueprint_compat = true,
-	perishable_compat = true,
+	perishable_compat = false,
+	delicate_compat = false,
 	demicoloncompat = true,
 	eternal_compat = true,
 	pos = { x = 1, y = 5 },
-	--unlock condition should be to reach whatever stake adds perishable
 	cost = 9,
-	update = function(self,card,dt)
-		if card.ability.extra.mult ~= math.pi then card.ability.extra.mult = math.pi end
-	end,
 	calculate = function(self, card, context)
 		if context.individual then 
 			local joker = context.other_card -- check that this is the case
 			if SMODS.pseudorandom_probability(joker, 'hypr_komoderg', joker.ability.extra.num, joker.ability.extra.dom) then
-				--handle face card checks, then inside of that apply stickers
+				if card:is_face() and not SMODS.is_eternal(card) then
+					local notify = not (card.ability.perishable or card.ability.delicate)
+					card.ability.perishable = true
+					card.ability.delicate = true
+					return notify and {
+						message = "Bitten!",
+						sound = "gold_seal",
+						pitch = 1.2,
+						volume = 0.4
+					}
+				end
 			end
-		end -- ok thats enough for now im gonna go play tetris effect
+		end
 	end
 	-- no joker_display_def
 })
 
---oh also, add the sticker - it's incompat w/ rental solely because i wanted to put it where rental is visually
-]]
+SMODS.Sticker {
+	key = 'delicate',
+	atlas = 'cards',
+	pos = { x = 0, y = 5 },
+	sets = {},
+	config = {},
+	badge_colour = HEX("71D0E4"),
+	should_apply = function(self, card, center, area, bypass_roll)
+		return G.GAME.modifiers.enable_delicates_in_shop and not card.eternal
+	end, -- should i make a stake where this shows up?
+	calculate = function(self, card, context)
+		if context.destroy_card and context.destroy_card == card then
+			if card.debuff then
+				return {remove = true}
+			end
+		end
+	end
+}
+
 
 --[[
 addjkr( {

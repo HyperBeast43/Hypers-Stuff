@@ -6,8 +6,8 @@ SMODS.Atlas {
 }
 
 SMODS.Atlas {
-	key = "placeholder",
-	path = "placeholder.png",
+	key = "tedium",
+	path = "tedium.png",
 	px = 71,
 	py = 95
 }

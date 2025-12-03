@@ -34,7 +34,7 @@ SMODS.Consumable {
 					conv_card.ability.hypr_fakeRed = true
 					card:juice_up(0.4, 0.3)
 					play_sound('gold_seal', 1.2, 0.4) -- the seal sound is called that because only gold seals existed in the demo
-					assert(type(self.config.discard_cut)=='number','damn you talisman (type(self.config.discard_cut)~=\'number\')')
+					assert(type(self.config.discard_cut)=='number',"damn you talisman (type(self.config.discard_cut)~='number')")
 					SMODS.change_discard_limit(-1*self.config.discard_cut)
 					return true
 				end

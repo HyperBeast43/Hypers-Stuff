@@ -61,6 +61,13 @@ loc = {
 					"{C:inactive,s:0.8}(Keeps any scaling if a scaled joker is rolled again)"
 				}
 			},
+			hypr_delicate = {
+				name = 'Delicate',
+				text = {
+					"On {C:red,E:hypr_2}debuff{}, this",
+					"card is {C:red,E:hypr_2}destroyed{}"
+				}
+			},
 		},
 		Spectral = {
 			c_hypr_recursion = {
@@ -79,6 +86,9 @@ loc = {
 					"{C:blue}+1{} cards {C:blue}playable per hand{}",
 					"{C:red}-1{} cards {C:red}discardable per discard{}"
 				},
+                unlock = {
+                    "Reduce your {C:red}discard size{} to {C:attention}0{}"
+                }
 			}
 		},
 		Sleeve = {
@@ -250,7 +260,7 @@ loc = {
 			j_hypr_junkdrawer = {
 				name = 'Junk Drawer',
 				text = 	{
-					"Triggers a random card",
+					"Triggers a {C:green}random{} card",
 					"from your {C:attention}remaining deck{} as",
 					"both played {C:attention}and{} held in hand"
 				}
@@ -321,7 +331,14 @@ loc = {
 				text = {
 					"{C:red}+#1#{} Mult"
 				}
-			}
+			},
+			j_hypr_komoderg = {
+				name = 'Komodo Dragon',
+				text = 	{
+					"Played face cards have a {C:green}#1# in #2#{} chance",
+					"to become both {V:1,E:hypr_circle}Perishable{} and {V:2,E:hypr_circle}Delicate{}"
+				}
+			},
 		}
 	},
 	misc = {
@@ -347,7 +364,8 @@ loc = {
 		},
 		labels = {
 			hypr_fakeRed = "Red Seal",
-			hypr_ijh = 'Insert Joke Here'
+			hypr_ijh = 'Insert Joke Here',
+			hypr_delicate = "Delicate"
 		}
 	}
 }
