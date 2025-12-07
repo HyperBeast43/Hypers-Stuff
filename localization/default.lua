@@ -206,6 +206,15 @@ loc = {
 					"{C:inactive}(If it crashes once, it'll keep doing so)"
 				}
 			},
+			j_hypr_missingno_qual = {
+				name = "'M",
+				text = {
+					"{X:red,C:white}X#1#{} Mult, {C:green}#2# in #3#{} chance to",
+					"{C:red,E:hypr_tremble}crash the game{} instead",
+					"Outcome based on {C:attention}Round{} and {C:dark_edition}Run Seed{}",
+					"{C:inactive}(If it crashes once, it'll keep doing so)"
+				}
+			},
 			j_hypr_plane = {
 				name = 'Paper Airplane?',
 				text = { --

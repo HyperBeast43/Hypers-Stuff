@@ -1046,6 +1046,7 @@ addjkr( {
 				i = i+1
 			end
 		end
+		if G.GAME.pool_flags.final_goodbye_triggered then i=i+1 end -- qualatro final goodbye
 		card.ability.extra.xmult = card.ability.extra.immutable.base + card.ability.extra.scale*i
 		if card.ability.extra.immutable.lastknown ~= i then
 			card.ability.extra.immutable.lastknown = i
@@ -1395,7 +1396,8 @@ addjkr( {
 	config = { extra = { xmult = 5, num=1, dom=5 } },
 	loc_vars = function(self, info_queue, card)
 		local a, b = SMODS.get_probability_vars(card, card.ability.extra.num, card.ability.extra.dom)
-		return { vars = { card.ability.extra.xmult, a, b}}
+		local suffix = (next(SMODS.find_mod('Qualatro')) and '_qual') or ''
+		return { vars = { card.ability.extra.xmult, a, b}, key=self.key..suffix}
 	end,
 	rarity = 2,
 	atlas = 'cards',
@@ -1406,7 +1408,6 @@ addjkr( {
 	pos = { x = 3, y = 4 },
 	soul_pos = { x = 4, y = 4 },
 	cost = 4,
-
 	calculate = function(self, card, context)
 		if context.joker_main or context.forcetrigger then 
 			local div = function(x,y) return x/y end
@@ -1526,6 +1527,7 @@ addjkr( {
 	loc_vars = function(self, info_queue, card)
 		table.insert(info_queue,{ set = "Other", key = "hypr_devart" })
 		table.insert(info_queue,{key = 'hypr_delicate', set = 'Other'})
+		table.insert(info_queue,{key = 'perishable', set = 'Other', vars = {G.GAME.perishable_rounds or 1, G.GAME.perishable_rounds or G.GAME.perishable_rounds}})
 		return { vars = {colours = {HEX("71D0E4"),G.C.PERISHABLE} } }
 	end,
 	rarity = 3,
