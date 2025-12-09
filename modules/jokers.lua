@@ -1,4 +1,5 @@
 local jkrs = {}
+-- you may see pronouns specified here. this is because of https://github.com/balt-dev/WOKElatro
 
 local function addjkr(joker)
 	jkrs[#jkrs+1]=joker
@@ -43,7 +44,7 @@ end
 
 addjkr( {
 	key = 'curator',
-	config = {},
+	config = { pronouns = 'pn_she_it'},
 	loc_vars = function(self, info_queue, card)
 		return 
 	end,
@@ -115,7 +116,7 @@ end
 
 addjkr( {
 	key = 'creacher',
-	config = { extra = { low = 0.9, high = 1.5 } },
+	config = { extra = { low = 0.9, high = 1.5 }, pronouns = 'pn_they_it'},
 	loc_vars = function(self, info_queue, card)
 		table.insert(info_queue,{ set = "Other", key = "hypr_devart" })
 		local c
@@ -308,7 +309,7 @@ addjkr( {
 
 addjkr( {
 	key = 'hypa',
-	config = { extra = { a = 1.2, seven_tally = 0, guh = 2.1} },
+	config = { extra = { a = 1.2, seven_tally = 0, guh = 2.1}, pronouns = "pn_he_they" }, 
 	loc_vars = function(self, info_queue, card)
 		info_queue[#info_queue + 1] = { set = "Other", key = "hypr_guest_art", vars = {"baltdev (GitHub)"} }
 		return { vars = { card.ability.extra.seven_tally, card.ability.extra.a, card.ability.extra.guh } }
@@ -365,7 +366,7 @@ addjkr( {
 
 --[[addjkr( {
 	key = 'jera',
-	config = {},
+	config = {pronouns = 'pn_any_all'}, -- based on a frien
 	loc_vars = function(self, info_queue, card)
 		info_queue[#info_queue + 1] = { set = "Other", key = "hypr_placeholder" }
 		return { vars = {} }
@@ -461,7 +462,7 @@ SMODS.Sticker {
 
 addjkr( {
 	key = 'ijh',
-	config = {},
+	config = {pronouns = {key = 'pn_mirror', color = blend(G.C.BLUE, G.C.WHITE)}},
 	loc_vars = {},
 	blueprint_compat = true,
 	perishable_compat = false,
@@ -598,7 +599,7 @@ end
 
 addjkr( {
 	key = 'junkdrawer',
-	config = {extra={}},
+	config = {extra={}, pronouns='pn_any_all'},
 	loc_vars = function(self, info_queue, card)
 		info_queue[#info_queue + 1] = { set = "Other", key = "hypr_placeholder" }
 		return {}
@@ -721,7 +722,7 @@ addjkr( {
 
 addjkr( {
 	key = 'bypass',
-	config = { extra = {num = 2, dom = 7}, bypassed = {}},
+	config = { extra = {num = 2, dom = 7}, bypassed = {}, pronouns='pn_she_her'},
 	loc_vars = function(self, info_queue, card)
 		local numerator, denominator = SMODS.get_probability_vars(card, card.ability.extra.num, card.ability.extra.dom, 'hypr_bypass')
 		info_queue[#info_queue + 1] = { set = "Other", key = "hypr_placeholder" }
@@ -1022,7 +1023,7 @@ addjkr( {
 if Cryptid or PB_UTIL then
 addjkr( {
 	key = '',
-	config = { extra = { xmult = 1, scale = .5, immutable = {base = 1, lastknown = 0}} },
+	config = { extra = { xmult = 1, scale = .5, immutable = {base = 1, lastknown = 0}}, pronouns = 'pn_no_pronouns' },
 	loc_vars = function(self, info_queue, card)
 		return { vars = { card.ability.extra.scale, card.ability.extra.xmult } }
 	end,
@@ -1393,7 +1394,7 @@ end
 
 addjkr( {
 	key = 'missingno',
-	config = { extra = { xmult = 5, num=1, dom=5 } },
+	config = { extra = { xmult = 5, num=1, dom=5 }, pronouns = {key='pn_any_none',color=blend( 	G.C.UI.TEXT_INACTIVE, G.C.WHITE)}},
 	loc_vars = function(self, info_queue, card)
 		local a, b = SMODS.get_probability_vars(card, card.ability.extra.num, card.ability.extra.dom)
 		local suffix = (next(SMODS.find_mod('Qualatro')) and '_qual') or ''
@@ -1523,7 +1524,7 @@ addjkr( {
 
 addjkr( {
 	key = 'komoderg',
-	config = {},
+	config = {pronouns='pn_she_her'},
 	loc_vars = function(self, info_queue, card)
 		table.insert(info_queue,{ set = "Other", key = "hypr_devart" })
 		table.insert(info_queue,{key = 'hypr_delicate', set = 'Other'})
@@ -1632,8 +1633,6 @@ end
 
 --[[
 more ideas:
-	Fragile (Sticker): Debuffing this card destroys it
-	Komodo Dragon (Rare): Played face cards have a 2 in 5 chance to become Perishable and Fragile 
 	Clown Nose (Common): Selling this joker gives %playername%(flavor text:That's you!) +4 mult for the rest of this run --player scores in context.before, i somehow need to spoof a joker
 	Melatonin:
 	--unlock something by reducing discard size to 0

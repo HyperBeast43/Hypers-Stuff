@@ -365,8 +365,9 @@ loc = {
 			k_hypr_000crash2 = 'dVKqPAKobgO6', -- hey since you're looking through the code, might as well tell you:
 			k_hypr_000crash3 = '1001100010101101110', -- every crash text is an encrypted message
 			k_hypr_000crash4 = 'Bcq/5F*&OK@;^0uA0>u4+D>>&Du', -- i don't remember how i encrypted them so. good luck
-			k_hypr_000crash5 = 'b6g5g4g5g4d5g5d3g1g4g5g1h5a3d3g1a2b4a3g1a7g1c5g4h1f7a3g1a3h4g5g1c5f3g1c5f4f4' -- (except this one i remember how i did this one)
-			
+			k_hypr_000crash5 = 'b6g5g4g5g4d5g5d3g1g4g5g1h5a3d3g1a2b4a3g1a7g1c5g4h1f7a3g1a3h4g5g1c5f3g1c5f4f4', -- (except this one i remember how i did this one)
+			pn_mirror = "mirror prns.",
+			pn_any_none = "any/none",
 		},
 		poker_hands = {
 			['hypr-Three Pair'] = "Three Pair"

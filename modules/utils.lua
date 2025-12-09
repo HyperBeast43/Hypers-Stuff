@@ -40,3 +40,13 @@ function count_if(t, predicate)
     end
     return count
 end
+
+function blend(a, b, weight) -- from WOKElatro
+	weight = weight or 0.5
+	return {
+		a[1]*(1-weight)+b[1]*weight,
+		a[2]*(1-weight)+b[2]*weight,
+		a[3]*(1-weight)+b[3]*weight,
+		a[4]*(1-weight)+b[4]*weight
+	}
+end
